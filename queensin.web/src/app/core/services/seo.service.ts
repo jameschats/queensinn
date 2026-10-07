@@ -41,6 +41,18 @@ export class SeoService {
     link.setAttribute('href', url);
   }
 
+  /** Structured data for search engines. `<` is escaped so the JSON can never close the script tag. */
+  setJsonLd(data: object | null): void {
+    const id = 'qi-jsonld';
+    this.doc.getElementById(id)?.remove();
+    if (!data) return;
+    const script = this.doc.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(data).replace(/</g, '\\u003c');
+    this.doc.head.appendChild(script);
+  }
+
   private tag(attr: 'name' | 'property', key: string, content?: string): void {
     const selector = `${attr}="${key}"`;
     if (content) this.meta.updateTag({ [attr]: key, content }, selector);

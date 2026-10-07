@@ -40,6 +40,31 @@ app.get('/config.js', (_req, res, next) => {
   next();
 });
 
+// Search engines. A test site (NOINDEX=true, the default for any domain other than the real one) hides itself completely;
+// the real site is open to crawlers except for the admin, and publishes a sitemap.
+const noindex = process.env['NOINDEX'] === 'true';
+const siteUrl = (process.env['SITE_URL'] ?? '').replace(/\/$/, '');
+const PUBLIC_PATHS = ['/', '/bookroom', '/kvr-mahal', '/about-us', '/activities', '/contact', '/terms-conditions', '/cancellation-policy', '/privacy-policy'];
+
+app.use((req, res, next) => {
+  if (noindex || req.path.startsWith('/admin')) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
+
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain').send(
+    noindex
+      ? 'User-agent: *\nDisallow: /\n'
+      : `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/admin\n${siteUrl ? `\nSitemap: ${siteUrl}/sitemap.xml\n` : ''}`,
+  );
+});
+
+app.get('/sitemap.xml', (_req, res) => {
+  if (noindex || !siteUrl) { res.status(404).type('text/plain').send('Not found'); return; }
+  const urls = PUBLIC_PATHS.map((p) => `  <url><loc>${siteUrl}${p === '/' ? '' : p}</loc></url>`).join('\n');
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
+});
+
 app.use(express.static(browserDistFolder, { maxAge: '1y', index: false, redirect: false }));
 
 app.use((req, res, next) => {

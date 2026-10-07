@@ -114,6 +114,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
       },
       {
+        path: 'testimonials',
+        canActivate: [permissionGuard(Perm.CmsManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/testimonials/testimonials-admin.component').then((m) => m.TestimonialsAdminComponent),
+      },
+      {
         path: 'attractions',
         canActivate: [permissionGuard(Perm.CmsManage)],
         canDeactivate: [unsavedChangesGuard],

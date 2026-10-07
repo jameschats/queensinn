@@ -185,3 +185,8 @@
   .fld input:user-invalid, .fld textarea:user-invalid, .fld select:user-invalid { border-color: #B42318; }
   @media (max-width: 640px) { .fm { grid-template-columns: 1fr; gap: 24px; } }
 }
+
+/* Touch targets: inline phone, email and WhatsApp links stay at least 24px tall (WCAG 2.2 target size). */
+@layer base {
+  a[href^="tel:"], a[href^="mailto:"], a[href^="https://wa.me"] { display: inline-block; padding-block: 3px; }
+}

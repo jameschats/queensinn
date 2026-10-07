@@ -49,6 +49,22 @@ export interface SavePage {
   slots?: Record<string, number | null>;
 }
 
+export interface TestimonialAdmin {
+  id: number;
+  quote: string;
+  guestName: string;
+  origin: string | null;
+  visible: boolean;
+}
+
+export interface SaveTestimonial {
+  id?: number;
+  quote: string;
+  guestName: string;
+  origin: string;
+  visible: boolean;
+}
+
 export interface AttractionAdmin {
   id: number;
   name: string;
@@ -229,6 +245,16 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- guest quotes ---
+
+  testimonials(): Observable<TestimonialAdmin[]> {
+    return this.http.get<ApiResponse<TestimonialAdmin[]>>(`${this.base}/testimonials`).pipe(map((r) => r.data ?? []));
+  }
+
+  saveTestimonials(items: SaveTestimonial[]): Observable<TestimonialAdmin[]> {
+    return this.http.put<ApiResponse<TestimonialAdmin[]>>(`${this.base}/testimonials`, items).pipe(map((r) => r.data ?? []));
   }
 
   // --- attractions (Experiences) ---

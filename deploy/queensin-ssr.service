@@ -10,6 +10,7 @@ Environment=PORT=4030
 Environment=API_BASE_URL=__SCHEME__://__DOMAIN__/api
 Environment=SITE_URL=__SCHEME__://__DOMAIN__
 Environment=ALLOWED_HOSTS=www.__DOMAIN__
+Environment=NOINDEX=__NOINDEX__
 Restart=always
 RestartSec=10
 User=www-data

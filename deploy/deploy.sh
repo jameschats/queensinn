@@ -8,6 +8,9 @@ set -euo pipefail
 HOST="${HOST:-root@62.72.59.84}"
 DOMAIN="${DOMAIN:-carbrand.in}"
 SCHEME="${SCHEME:-https}"
+# Any domain other than the real one is a test site and keeps itself out of search engines (robots.txt + X-Robots-Tag).
+# Go-live: DOMAIN=queensinn.co.in ./deploy/deploy.sh (or force with NOINDEX=false).
+if [ "$DOMAIN" = "queensinn.co.in" ]; then NOINDEX="${NOINDEX:-false}"; else NOINDEX="${NOINDEX:-true}"; fi
 REPLACE_KEYS="${REPLACE_KEYS:-}"      # e.g. REPLACE_KEYS=hero-dusk re-processes just that seed photo
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$(mktemp -d)"; trap 'rm -rf "$OUT"' EXIT
@@ -20,7 +23,7 @@ cat > "$OUT/web/browser/config.js" <<CFG
 window.__APP_CONFIG__ = { apiBaseUrl: '$SCHEME://$DOMAIN/api', siteUrl: '$SCHEME://$DOMAIN' };
 CFG
 mkdir -p "$OUT/mig" "$OUT/seed"; cp "$ROOT"/database/migrations/0*.sql "$OUT/mig/"; cp "$ROOT/deploy/seed/media-manifest.json" "$ROOT/database/seed/link-media.sql" "$OUT/seed/"
-render() { sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__SCHEME__#$SCHEME#g" "$1"; }
+render() { sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__SCHEME__#$SCHEME#g" -e "s#__NOINDEX__#$NOINDEX#g" "$1"; }
 render "$ROOT/deploy/queensin-ssr.service"  > "$OUT/queensin-ssr.service"
 render "$ROOT/deploy/nginx-queensinn.conf"  > "$OUT/nginx-queensinn.conf"
 cp "$ROOT/deploy/queensin-api.service" "$OUT/"

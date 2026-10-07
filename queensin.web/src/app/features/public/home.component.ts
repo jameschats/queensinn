@@ -6,6 +6,7 @@ import { HOME_AMENITY_ICONS, heroShadePercent } from '../../core/content/page-sc
 import { MediaItem } from '../../core/models/content.model';
 import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
+import { SITE_URL } from '../../core/api.config';
 import { SiteService } from '../../core/services/site.service';
 import { IconComponent } from '../../shared/icon.component';
 import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
@@ -73,7 +74,9 @@ export class HomeComponent {
 
   constructor() {
     const seo = this.cs.seo('home');
-    inject(SeoService).set({ title: seo.title, description: seo.description, path: '/', image: seo.image ? absUrl(seo.image) : undefined });
+    const seoService = inject(SeoService);
+    seoService.set({ title: seo.title, description: seo.description, path: '/', image: seo.image ? absUrl(seo.image) : undefined });
+    seoService.setJsonLd(this.hotelData());
 
     const destroyRef = inject(DestroyRef);
     afterNextRender(() => {
@@ -84,6 +87,29 @@ export class HomeComponent {
       }, 7000);
       destroyRef.onDestroy(() => clearInterval(timer));
     });
+  }
+
+  /** schema.org "Hotel" data built from Site settings and the rooms, so search results can show the hotel's details. */
+  private hotelData(): object {
+    const s = this.site;
+    const prices = this.content().rooms.map((r) => r.startingTariff).filter((p): p is number => !!p);
+    const first = this.content().pages['home']?.heroPhotos?.[0];
+    const social = ['FacebookUrl', 'InstagramUrl', 'YouTubeUrl'].map((k) => s.get(k)).filter(Boolean);
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Hotel',
+      name: `Hotel ${s.hotelName()}, ${s.get('LocationLine')}`,
+      url: SITE_URL,
+      telephone: s.get('Phone1'),
+      email: s.get('ReservationsEmail'),
+      image: first ? absUrl(first.url) : undefined,
+      priceRange: prices.length ? `₹${Math.min(...prices).toLocaleString('en-IN')} – ₹${Math.max(...prices).toLocaleString('en-IN')}` : undefined,
+      checkinTime: s.get('CheckInTime') || undefined,
+      checkoutTime: s.get('CheckOutTime') || undefined,
+      address: { '@type': 'PostalAddress', streetAddress: s.get('Address'), addressLocality: s.get('LocationLine'), addressCountry: 'IN' },
+      geo: s.get('Latitude') && s.get('Longitude') ? { '@type': 'GeoCoordinates', latitude: s.get('Latitude'), longitude: s.get('Longitude') } : undefined,
+      sameAs: social.length ? social : undefined,
+    };
   }
 
   /** The admin's wording for a field on this page, or the built-in default. */

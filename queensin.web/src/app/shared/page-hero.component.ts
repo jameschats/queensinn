@@ -43,11 +43,12 @@ import { ImageComponent } from './image.component';
         }
         <ng-content />
         @if (slides().length > 1 && !playingVideo()) {
-          <div class="mt-10 flex gap-2" role="tablist" aria-label="Hero photos">
+          <div class="mt-8 flex gap-1" role="tablist" aria-label="Hero photos">
             @for (s of slides(); track s.id; let i = $index) {
               <button type="button" role="tab" [attr.aria-selected]="i === active()" [attr.aria-label]="'Show photo ' + (i + 1)"
-                      class="h-[3px] w-10 border-0 p-0 transition-colors" [class]="i === active() ? 'bg-accent' : 'bg-on-primary/35 hover:bg-on-primary/60'"
-                      (click)="go(i)"></button>
+                      class="group relative h-6 w-10 border-0 bg-transparent p-0" (click)="go(i)">
+                <span class="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 transition-colors" [class]="i === active() ? 'bg-accent' : 'bg-on-primary/35 group-hover:bg-on-primary/60'"></span>
+              </button>
             }
           </div>
         }
