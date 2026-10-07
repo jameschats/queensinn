@@ -46,6 +46,6 @@ public sealed class SiteController : ControllerBase
     {
         var result = await _site.UpdateThemeAsync(User.UserId(), theme, ct);
         await _cache.EvictByTagAsync(CacheTag, ct);
-        return Ok(ApiResponse<ThemeDto>.Ok(result, "Theme saved. The website now uses these colours."));
+        return Ok(ApiResponse<ThemeDto>.Ok(result, "Theme saved. The website now uses these colours and fonts."));
     }
 }

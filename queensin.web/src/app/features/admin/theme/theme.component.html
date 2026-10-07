@@ -1,7 +1,7 @@
 <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <div>
     <h1 class="text-[22px] font-medium">Theme</h1>
-    <p class="mt-0.5 text-[13.5px] text-[#6B7485]">Three colours drive the whole website.</p>
+    <p class="mt-0.5 text-[13.5px] text-[#6B7485]">Three colours and your choice of fonts drive the whole website.</p>
   </div>
   <div class="flex gap-2">
     <button type="button" class="abtn" (click)="resetDefault()">Use default</button>
@@ -78,3 +78,69 @@
     </div>
   </div>
 </div>
+
+<section class="card mt-5" aria-labelledby="typo-h">
+  <b id="typo-h" class="mb-1 block font-medium">Fonts &amp; text</b>
+  <p class="ahint mb-4">Pick a ready-made pairing, or choose your own from the full list. The preview above updates as you go; Save publishes it.</p>
+
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3">
+    @for (p of pairings; track p.name) {
+      <button type="button" (click)="usePairing(p)" class="rounded-lg border border-[#E3E6EB] bg-white p-4 text-left"
+              [class.outline]="matchedPairing() === p && !customOpen()" [class.outline-2]="matchedPairing() === p && !customOpen()" [class.outline-accent]="matchedPairing() === p && !customOpen()">
+        <span class="block text-[24px] leading-tight text-[#1D2430]" [style.font-family]="stack(p.headingFont)" [style.font-weight]="p.headingWeight">Rest, well considered</span>
+        <span class="mt-1.5 block text-[13.5px] text-[#4A5465]" [style.font-family]="stack(p.bodyFont)" [style.font-weight]="p.bodyWeight">Garden and balcony views, a short walk from the basilica.</span>
+        <span class="mt-2.5 block text-[12px] text-[#6B7485]"><b class="font-medium text-[#1D2430]">{{ p.name }}</b> · {{ p.headingFont }} + {{ p.bodyFont }}</span>
+      </button>
+    }
+    <button type="button" (click)="openCustom()" class="rounded-lg border border-dashed border-[#B8BFCC] bg-white p-4 text-left"
+            [class.outline]="customOpen()" [class.outline-2]="customOpen()" [class.outline-accent]="customOpen()">
+      <span class="block text-[24px] leading-tight text-[#1D2430]">Choose your own</span>
+      <span class="mt-1.5 block text-[13.5px] text-[#4A5465]">Pick any heading and body font from the list.</span>
+      <span class="mt-2.5 block text-[12px] text-[#6B7485]">{{ fontCount }} fonts available</span>
+    </button>
+  </div>
+
+  @if (customOpen()) {
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <label class="alabel">Heading font
+        <select class="ainput" (change)="setFont('heading', $any($event.target).value)">
+          <optgroup label="Serif">
+            @for (f of serifFonts; track f.name) { <option [value]="f.name" [selected]="f.name === draft().headingFont">{{ f.name }}</option> }
+          </optgroup>
+          <optgroup label="Sans-serif">
+            @for (f of sansFonts; track f.name) { <option [value]="f.name" [selected]="f.name === draft().headingFont">{{ f.name }}</option> }
+          </optgroup>
+        </select>
+      </label>
+      <label class="alabel">Body font
+        <select class="ainput" (change)="setFont('body', $any($event.target).value)">
+          <optgroup label="Sans-serif">
+            @for (f of sansFonts; track f.name) { <option [value]="f.name" [selected]="f.name === draft().bodyFont">{{ f.name }}</option> }
+          </optgroup>
+          <optgroup label="Serif">
+            @for (f of serifFonts; track f.name) { <option [value]="f.name" [selected]="f.name === draft().bodyFont">{{ f.name }}</option> }
+          </optgroup>
+        </select>
+      </label>
+    </div>
+  }
+
+  <div class="mt-5 grid gap-4 sm:grid-cols-3">
+    <label class="alabel">Heading weight
+      <select class="ainput" (change)="setWeight('heading', $any($event.target).value)">
+        @for (w of headingWeights(); track w.value) { <option [value]="w.value" [selected]="w.value === draft().headingWeight">{{ w.label }}</option> }
+      </select>
+    </label>
+    <label class="alabel">Body weight
+      <select class="ainput" (change)="setWeight('body', $any($event.target).value)">
+        @for (w of bodyWeights(); track w.value) { <option [value]="w.value" [selected]="w.value === draft().bodyWeight">{{ w.label }}</option> }
+      </select>
+      <span class="ahint">Choose Regular or Medium if text looks thin.</span>
+    </label>
+    <label class="alabel">Text size
+      <select class="ainput" (change)="setSize($any($event.target).value)">
+        @for (z of textSizes; track z.value) { <option [value]="z.value" [selected]="z.value === draft().baseSize">{{ z.label }} ({{ z.value }}px)</option> }
+      </select>
+    </label>
+  </div>
+</section>

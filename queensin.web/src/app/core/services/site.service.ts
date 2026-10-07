@@ -4,6 +4,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
 import { ApiResponse } from '../models/api.model';
+import { fontStack, googleFontsUrl } from '../models/fonts';
 import { DEFAULT_SETTINGS, DEFAULT_THEME, SiteData, Theme } from '../models/site.model';
 
 /**
@@ -60,6 +61,37 @@ export class SiteService {
     style.setProperty('--color-primary', theme.primary);
     style.setProperty('--color-accent', theme.accent);
     style.setProperty('--color-surface', theme.surface);
+
+    // Typography. --font-weight-light is Tailwind's font-light, so the many `font-light`
+    // utilities follow the admin's body weight instead of staying hairline.
+    style.setProperty('--font-serif', fontStack(theme.headingFont));
+    style.setProperty('--font-sans', fontStack(theme.bodyFont));
+    style.setProperty('--heading-weight', String(theme.headingWeight));
+    style.setProperty('--body-weight', String(theme.bodyWeight));
+    style.setProperty('--font-weight-light', String(theme.bodyWeight));
+    style.setProperty('--base-size', `${theme.baseSize}px`);
+    style.setProperty('--font-scale', String(theme.baseSize / DEFAULT_THEME.baseSize));
+    this.setFontLink('qi-fonts', googleFontsUrl([
+      { name: theme.headingFont, role: 'heading' },
+      { name: theme.bodyFont, role: 'body' },
+    ]));
+  }
+
+  /** Loads extra families so the admin can show them in previews before they are chosen. */
+  preloadFonts(names: string[]): void {
+    if (names.length) this.setFontLink('qi-fonts-preview', googleFontsUrl(names.map((name) => ({ name, role: 'heading' as const }))));
+  }
+
+  private setFontLink(id: string, href: string): void {
+    const head = this.doc.head;
+    let link = head.querySelector<HTMLLinkElement>(`link#${id}`);
+    if (!link) {
+      link = this.doc.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      head.appendChild(link);
+    }
+    if (link.getAttribute('href') !== href) link.setAttribute('href', href);
   }
 
   /** Called by the admin screens after a successful save. */

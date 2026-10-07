@@ -18,6 +18,10 @@ public sealed partial class SiteService : ISiteService
 {
     public static readonly ThemeDto DefaultTheme = new("#0F243E", "#C5A880", "#FBFBF9");
 
+    private static readonly int[] HeadingWeights = [400, 500, 600, 700];
+    private static readonly int[] BodyWeights = [300, 400, 500, 600];
+    private const int MinBaseSize = 14, MaxBaseSize = 22;
+
     /// <summary>
     /// Settings the admin may edit. Anything else is rejected rather than silently stored,
     /// so a typo in a key can't create a setting nothing reads.
@@ -82,11 +86,25 @@ public sealed partial class SiteService : ISiteService
         if (Contrast(theme.Primary, theme.Surface) < 4.5)
             throw new AppException("Primary and Surface are too close in brightness for readable text (needs 4.5:1).");
 
+        // Font names are written into a stylesheet URL and CSS on the public site, so only
+        // plain family names are accepted (letters, digits, spaces); the catalogue lives in the web app.
+        foreach (var (label, name) in new[] { ("Heading font", theme.HeadingFont), ("Body font", theme.BodyFont) })
+            if (!FontName().IsMatch(name ?? "")) throw new AppException($"{label} must be a font family name (letters, numbers and spaces, up to 40 characters).");
+        if (!HeadingWeights.Contains(theme.HeadingWeight)) throw new AppException("Heading weight must be 400, 500, 600 or 700.");
+        if (!BodyWeights.Contains(theme.BodyWeight)) throw new AppException("Body weight must be 300, 400, 500 or 600.");
+        if (theme.BaseSize is < MinBaseSize or > MaxBaseSize) throw new AppException($"Text size must be between {MinBaseSize} and {MaxBaseSize} px.");
+
         var rows = await _db.ThemeSettings.ToListAsync(ct);
+        Set(rows, "HeadingFont", theme.HeadingFont.Trim());
+        Set(rows, "BodyFont", theme.BodyFont.Trim());
+        Set(rows, "HeadingWeight", theme.HeadingWeight.ToString());
+        Set(rows, "BodyWeight", theme.BodyWeight.ToString());
+        Set(rows, "BaseSize", theme.BaseSize.ToString());
         Set(rows, "PrimaryColor", theme.Primary.ToUpperInvariant());
         Set(rows, "AccentColor", theme.Accent.ToUpperInvariant());
         Set(rows, "SurfaceColor", theme.Surface.ToUpperInvariant());
-        _audit.Record(actorId, "Update", "Theme", null, $"{theme.Primary} / {theme.Accent} / {theme.Surface}");
+        _audit.Record(actorId, "Update", "Theme", null,
+            $"{theme.Primary} / {theme.Accent} / {theme.Surface} · {theme.HeadingFont} {theme.HeadingWeight} / {theme.BodyFont} {theme.BodyWeight} · {theme.BaseSize}px");
         await _db.SaveChangesAsync(ct);
         return await GetThemeAsync(ct);
     }
@@ -99,7 +117,12 @@ public sealed partial class SiteService : ISiteService
         return new ThemeDto(
             t.GetValueOrDefault("PrimaryColor") ?? DefaultTheme.Primary,
             t.GetValueOrDefault("AccentColor") ?? DefaultTheme.Accent,
-            t.GetValueOrDefault("SurfaceColor") ?? DefaultTheme.Surface);
+            t.GetValueOrDefault("SurfaceColor") ?? DefaultTheme.Surface,
+            t.GetValueOrDefault("HeadingFont") ?? DefaultTheme.HeadingFont,
+            t.GetValueOrDefault("BodyFont") ?? DefaultTheme.BodyFont,
+            int.TryParse(t.GetValueOrDefault("HeadingWeight"), out var hw) ? hw : DefaultTheme.HeadingWeight,
+            int.TryParse(t.GetValueOrDefault("BodyWeight"), out var bw) ? bw : DefaultTheme.BodyWeight,
+            int.TryParse(t.GetValueOrDefault("BaseSize"), out var bs) ? bs : DefaultTheme.BaseSize);
     }
 
     private void Set(List<ThemeSetting> rows, string key, string value)
@@ -128,6 +151,9 @@ public sealed partial class SiteService : ISiteService
 
     [GeneratedRegex("^#[0-9a-fA-F]{6}$")]
     private static partial Regex Hex();
+
+    [GeneratedRegex("^[A-Za-z0-9][A-Za-z0-9 ]{1,39}$")]
+    private static partial Regex FontName();
 
     [GeneratedRegex("^[0-9]{10,15}$")]
     private static partial Regex Digits();

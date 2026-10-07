@@ -2,6 +2,14 @@ export interface Theme {
   primary: string;
   accent: string;
   surface: string;
+  headingFont: string;
+  bodyFont: string;
+  /** 400-700 */
+  headingWeight: number;
+  /** 300-600 */
+  bodyWeight: number;
+  /** Body text size in px (14-22). */
+  baseSize: number;
 }
 
 export interface SiteData {
@@ -9,7 +17,16 @@ export interface SiteData {
   theme: Theme;
 }
 
-export const DEFAULT_THEME: Theme = { primary: '#0F243E', accent: '#C5A880', surface: '#FBFBF9' };
+export const DEFAULT_THEME: Theme = {
+  primary: '#0F243E',
+  accent: '#C5A880',
+  surface: '#FBFBF9',
+  headingFont: 'Cormorant Garamond',
+  bodyFont: 'Jost',
+  headingWeight: 500,
+  bodyWeight: 400,
+  baseSize: 17,
+};
 
 /** Used until /api/site answers, and if it never does, so the site still renders. */
 export const DEFAULT_SETTINGS: Record<string, string> = {
@@ -27,7 +44,7 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   CheckOutTime: '11:00 AM',
 };
 
-export const THEME_PRESETS: (Theme & { name: string })[] = [
+export const THEME_PRESETS: (Pick<Theme, 'primary' | 'accent' | 'surface'> & { name: string })[] = [
   { name: 'Royal Navy & Gold', primary: '#0F243E', accent: '#C5A880', surface: '#FBFBF9' },
   { name: 'Emerald & Brass', primary: '#12352B', accent: '#C2A46B', surface: '#FAF9F5' },
   { name: 'Burgundy & Champagne', primary: '#3E1220', accent: '#D4B98C', surface: '#FCFAF7' },
