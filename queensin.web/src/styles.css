@@ -81,6 +81,16 @@
   .on-dark .btn-ghost { border-color: color-mix(in srgb, var(--color-accent) 70%, transparent); color: var(--color-on-primary); }
   .on-dark .btn-ghost:hover { background: var(--color-accent); color: var(--color-primary); border-color: var(--color-accent); }
 
+  /* Header links: the underline grows from the centre outwards; the current page keeps it drawn. */
+  .navlink { position: relative; padding-block: 6px; transition: color .2s ease, transform .1s ease; }
+  .navlink::after {
+    content: ""; position: absolute; left: 50%; right: 50%; bottom: 0; height: 2px; border-radius: 2px;
+    background: color-mix(in srgb, var(--color-accent) 70%, #1a1208);
+    transition: left .18s ease, right .18s ease;
+  }
+  .navlink:hover::after, .navlink:focus-visible::after, .navlink.is-active::after { left: 0; right: 0; }
+  .navlink:active { transform: scale(.95); }
+
   .link {
     display: inline-block; font-size: 12.5px; letter-spacing: .2em; text-transform: uppercase; padding-bottom: 6px;
     background: linear-gradient(var(--color-accent), var(--color-accent)) 0 100% / 100% 1px no-repeat;
@@ -137,9 +147,11 @@
 }
 
 /* ---------- page transitions (Router withViewTransitions) ----------
-   Pages cross-fade; the fixed header is its own named layer so it stays put instead of fading with the page. */
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: .38s; animation-timing-function: var(--ease-lux); }
+   Pages cross-fade. The header is its own layer and only the live (new) one is shown, so it never ghosts. */
 ::view-transition-group(site-header) { animation: none; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .38s; animation-timing-function: var(--ease-lux); }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }

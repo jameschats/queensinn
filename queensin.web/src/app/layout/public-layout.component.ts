@@ -34,6 +34,8 @@ export class PublicLayoutComponent {
   protected readonly scrolled = signal(false);
   protected readonly solidRoute = signal(false);
   protected readonly menuOpen = signal(false);
+  /** True while a page change resets the scroll position, so the header snaps to its new state instead of fading. */
+  protected readonly instant = signal(false);
   protected readonly year = new Date().getFullYear();
 
   protected readonly nav: NavItem[] = [
@@ -58,14 +60,15 @@ export class PublicLayoutComponent {
     let lastPath = this.router.url.split(/[?#]/)[0];
     const instantUntilScrolled = this.router.events.subscribe((e) => {
       if (e instanceof NavigationStart) {
-        if (e.url.split(/[?#]/)[0] !== lastPath) root.classList.add('no-smooth');
+        if (e.url.split(/[?#]/)[0] !== lastPath) { root.classList.add('no-smooth'); this.instant.set(true); }
       } else if (e instanceof NavigationEnd) {
         lastPath = e.urlAfterRedirects.split(/[?#]/)[0];
-        setTimeout(() => root.classList.remove('no-smooth'), 600);   // safety net
+        setTimeout(() => { root.classList.remove('no-smooth'); this.instant.set(false); }, 600);   // safety net
       } else if (e instanceof Scroll) {
-        setTimeout(() => root.classList.remove('no-smooth'), 80);
+        setTimeout(() => { root.classList.remove('no-smooth'); this.instant.set(false); }, 120);
       } else if (e instanceof NavigationCancel || e instanceof NavigationError) {
         root.classList.remove('no-smooth');
+        this.instant.set(false);
       }
     });
     inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); });
