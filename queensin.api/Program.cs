@@ -78,6 +78,8 @@ builder.Services.AddAuthorization(o =>
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IStaffUserService, StaffUserService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
+builder.Services.AddScoped<queensin.api.Features.Media.IMediaService, queensin.api.Features.Media.MediaService>();
+builder.Services.AddScoped<queensin.api.Features.Content.IPublicContentService, queensin.api.Features.Content.PublicContentService>();
 
 // --- Platform ------------------------------------------------------------
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
@@ -114,6 +116,10 @@ builder.Services.AddRateLimiter(o =>
 });
 
 var app = builder.Build();
+
+// Operator commands run instead of the web server: `dotnet queensin.api.dll import-media <manifest.json>`.
+if (args.Length >= 2 && args[0] == queensin.api.Features.Media.MediaImporter.Command)
+    return await queensin.api.Features.Media.MediaImporter.RunAsync(app.Services, args[1]);
 
 // --- Pipeline ------------------------------------------------------------
 app.UseForwardedHeaders();
@@ -153,3 +159,4 @@ app.MapControllers();
 app.MapHealthChecks("/api/health/ready");
 
 app.Run();
+return 0;

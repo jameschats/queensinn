@@ -1,0 +1,243 @@
+<qi-page-hero [full]="true" [title]="headline()" [lede]="sub()" [slides]="heroSlides()" art="dusk">
+  <div class="mt-10 flex flex-wrap gap-3.5">
+    <a routerLink="/bookroom" fragment="reserve" class="btn btn-gold">Request tariff</a>
+    <a routerLink="/kvr-mahal" class="btn btn-ghost">Discover KVR Mahal</a>
+  </div>
+</qi-page-hero>
+
+<!-- Welcome -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="grid items-center gap-[clamp(40px,8vw,140px)] md:grid-cols-[1.05fr_1fr]">
+      <div>
+        <span class="kicker">Welcome to Queen's Inn</span>
+        <h2 class="h-display max-w-[18ch]">Half a kilometre from the Basilica. A world away from the crowd.</h2>
+        <hr class="rule" />
+        <p class="lede">Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.</p>
+        <p class="mt-5 max-w-[52ch] text-muted">Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017.</p>
+        <a routerLink="/about-us" class="link mt-8 inline-block">Read our story</a>
+      </div>
+      <div class="relative pb-[18%]">
+        <div class="relative ml-auto w-[78%]">
+          <div class="pointer-events-none absolute inset-[-14px_14px_14px_-14px] rounded-t-full border border-accent"></div>
+          <qi-image class="relative aspect-[3/4] rounded-t-full" [media]="slot('intro-main')" art="dusk" sizes="(min-width: 768px) 40vw, 80vw" />
+        </div>
+        <qi-image class="absolute bottom-0 left-0 aspect-[3/4] w-[46%] border-[10px] border-surface" [media]="slot('intro-accent')" art="arch" sizes="25vw" />
+      </div>
+    </div>
+
+    <div class="mt-[clamp(64px,8vw,110px)] grid grid-cols-2 border-t border-line md:grid-cols-4">
+      @for (s of stats; track s.n) {
+        <div class="border-line pr-6 pt-7 pb-7 md:mr-6 md:border-r md:pb-0 md:last:mr-0 md:last:border-r-0">
+          <b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none">{{ s.n }}</b>
+          <span class="mt-3 block max-w-[20ch] text-sm leading-normal text-muted">{{ s.t }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Rooms -->
+<section class="sec bg-tint" id="rooms">
+  <div class="wrap">
+    <div class="mb-[clamp(44px,6vw,80px)] flex flex-wrap items-end justify-between gap-8">
+      <div><span class="kicker">Rooms &amp; suites</span><h2 class="h-display">Rest, well considered</h2></div>
+      <p class="m-0 max-w-[44ch] text-muted">Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.</p>
+    </div>
+
+    @if (room(); as r) {
+      <div class="grid items-start gap-[clamp(32px,6vw,96px)] md:grid-cols-[minmax(260px,.8fr)_1.6fr]">
+        <ul class="m-0 flex list-none gap-6 overflow-x-auto border-0 p-0 md:block md:overflow-visible md:border-t md:border-line" role="tablist" aria-label="Room categories">
+          @for (x of rooms(); track x.id; let i = $index) {
+            <li class="flex-none md:border-b md:border-line">
+              <button type="button" role="tab" [attr.aria-selected]="i === roomIndex()" (click)="roomIndex.set(i)"
+                      class="flex w-full items-baseline justify-between gap-4 border-b border-transparent bg-transparent pb-2.5 text-left transition-colors md:border-b-0 md:py-6"
+                      [class]="i === roomIndex() ? 'text-ink border-accent' : 'text-muted hover:text-ink'">
+                <span class="font-serif text-[clamp(22px,2.2vw,32px)] leading-tight" [class.italic]="i === roomIndex()">{{ x.name }}</span>
+                <span class="hidden whitespace-nowrap text-[13px] tracking-[.06em] md:inline">from {{ inr(x.startingTariff) }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+
+        <div>
+          <div class="relative aspect-[3/2]">
+            @for (x of rooms(); track x.id; let i = $index) {
+              <div class="absolute inset-0 transition-opacity duration-1000" [class.opacity-0]="i !== roomIndex()" [attr.aria-hidden]="i !== roomIndex()">
+                <qi-image class="h-full w-full" [media]="x.image" [art]="i === 3 ? 'suite' : 'room'" [alt]="x.name" sizes="(min-width: 768px) 60vw, 100vw" />
+              </div>
+            }
+          </div>
+          <div class="mt-9 grid gap-10 md:grid-cols-[1.3fr_1fr]">
+            <div>
+              <h3 class="text-[clamp(26px,2.4vw,34px)]">{{ r.name }}</h3>
+              <p class="mt-3.5 text-muted">{{ r.description }}</p>
+            </div>
+            <div>
+              <div class="grid grid-cols-2 content-start gap-x-7 gap-y-3.5 text-[14.5px]">
+                @if (r.sizeSqFt) { <div class="flex items-center gap-3"><qi-icon name="sqft" class="text-gold-ink" />{{ r.sizeSqFt }} sq ft</div> }
+                @if (r.bedType) { <div class="flex items-center gap-3"><qi-icon name="bed" class="text-gold-ink" />{{ r.bedType }}</div> }
+                @if (r.viewType) { <div class="flex items-center gap-3"><qi-icon name="eye" class="text-gold-ink" />{{ r.viewType }}</div> }
+                <div class="flex items-center gap-3"><qi-icon name="guest" class="text-gold-ink" />Up to {{ r.maxGuests }} guests</div>
+              </div>
+              @if (r.startingTariff) {
+                <p class="mt-[18px] font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">per night {{ r.taxNote || '+ GST' }}</small></p>
+              }
+              <div class="mt-5 flex flex-wrap items-center gap-5">
+                <a routerLink="/bookroom" fragment="reserve" class="btn">Enquire</a>
+                <a routerLink="/bookroom" class="link">All rooms</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Dining -->
+<section id="restaurant" class="relative">
+  <qi-image class="h-[min(86vh,820px)]" [media]="slot('restaurant')" art="dine" sizes="100vw" />
+  <div class="wrap">
+    <div class="relative z-[5] ml-auto -mt-20 w-[min(560px,92%)] bg-surface p-[clamp(36px,4.5vw,64px)] md:-mt-[200px]">
+      <span class="kicker">Q Multi-Cuisine Restaurant</span>
+      <h2 class="text-[clamp(34px,3.6vw,50px)]">From temple-town breakfasts to coastal suppers</h2>
+      <p class="mt-[22px] text-muted">South Indian and Chettinad classics, North Indian and Continental plates, and seafood from the Nagapattinam coast. Vegetarian and non-vegetarian dishes are prepared in separate kitchens.</p>
+      <dl class="mt-2 grid gap-2.5 border-t border-line pt-[22px] text-[14.5px]">
+        @for (d of dining; track d[0]) {
+          <div class="flex justify-between gap-4"><dt>{{ d[0] }}</dt><dd class="m-0">{{ d[1] }}</dd></div>
+        }
+      </dl>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="mt-[clamp(56px,7vw,100px)] grid grid-cols-2 gap-[clamp(12px,1.6vw,22px)] md:grid-cols-3">
+      <qi-image class="aspect-[4/5]" [media]="slot('dish-1')" art="leaf" sizes="(min-width: 768px) 30vw, 50vw" />
+      <qi-image class="aspect-[4/5] md:mt-[60px]" [media]="slot('dish-2')" art="dine" sizes="(min-width: 768px) 30vw, 50vw" />
+      <qi-image class="hidden aspect-[4/5] md:block" [media]="slot('dish-3')" art="sea" sizes="30vw" />
+    </div>
+  </div>
+</section>
+
+<!-- KVR Mahal -->
+<section class="sec on-dark bg-primary text-on-primary">
+  <div class="wrap grid items-center gap-[clamp(48px,8vw,140px)] md:grid-cols-[1fr_1.1fr]">
+    <div class="relative max-w-[420px] md:max-w-none">
+      <div class="pointer-events-none absolute inset-[-14px_14px_14px_-14px] rounded-t-full border border-accent/70"></div>
+      <qi-image class="relative aspect-[2/3] rounded-t-full" [media]="slot('mahal-feature')" art="mandap" alt="The ceremonial stage at KVR Mahal" sizes="(min-width: 768px) 40vw, 80vw" />
+    </div>
+    <div>
+      <span class="kicker">On the same campus</span>
+      <div class="font-serif text-[clamp(64px,8vw,124px)] font-light leading-[.9] tracking-[-.015em] text-on-primary">KVR Mahal</div>
+      <p class="lede mt-7">Where sacred vows meet timeless hospitality.</p>
+      <p class="mt-5 max-w-[52ch] text-on-primary-muted">Velankanni's grandest fully air-conditioned mandapam, with a 300-seat dining pavilion and every guest room a short garden walk away. Your families arrive, celebrate and rest without leaving the gates.</p>
+      <div class="mt-11 grid grid-cols-2 border-t border-accent/35">
+        <div class="mr-6 border-r border-accent/35 pr-6 pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">1,000</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">guests in the ceremonial hall</span></div>
+        <div class="pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">300+</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">seats in the dining pavilion</span></div>
+      </div>
+      <div class="mt-10 flex flex-wrap gap-3.5">
+        <a routerLink="/kvr-mahal" class="btn btn-gold">Discover KVR Mahal</a>
+        <a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="btn btn-ghost">Plan your event</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Amenities -->
+<section class="sec">
+  <div class="wrap">
+    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">Within the gates</span><h2 class="h-display">Everything close at hand</h2></div>
+    <div class="grid grid-cols-2 border-l border-t border-line lg:grid-cols-5">
+      @for (a of amenities; track a.t) {
+        <div class="border-b border-r border-line px-[26px] pb-[30px] pt-[34px] text-[14.5px] leading-normal">
+          <qi-icon [name]="a.i" [size]="28" class="mb-[22px] text-gold-ink" />
+          <b class="mb-1 block font-serif text-xl font-medium">{{ a.t }}</b>
+          <span class="text-muted">{{ a.d }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Experiences -->
+<section class="sec bg-tint">
+  <div class="wrap">
+    <div class="mb-[clamp(44px,6vw,80px)] flex flex-wrap items-end justify-between gap-8">
+      <div><span class="kicker">Around Velankanni</span><h2 class="h-display">Pilgrim trails and coastal days</h2></div>
+      <a routerLink="/activities" class="link">All experiences</a>
+    </div>
+    <div class="grid gap-[clamp(20px,3vw,44px)] md:grid-cols-3">
+      @for (x of attractions(); track x.a.id) {
+        <a routerLink="/activities" class="group block">
+          <qi-image class="aspect-[4/3] md:aspect-[3/4]" [media]="x.a.image" [art]="x.art" [alt]="x.a.name" sizes="(min-width: 768px) 30vw, 100vw" />
+          <div class="mb-1 mt-[22px] font-serif text-[19px] italic text-gold-ink">{{ x.a.distanceKm }} km away</div>
+          <h3 class="text-[clamp(24px,2.2vw,30px)]">{{ x.a.name }}</h3>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="sec" id="gallery">
+  <div class="wrap">
+    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">Gallery</span><h2 class="h-display">A look inside</h2></div>
+    @if (gallery().length) {
+      <div class="columns-1 gap-4 sm:columns-2 lg:columns-4">
+        @for (g of gallery(); track g.id; let i = $index) {
+          <button type="button" class="mb-4 block w-full cursor-zoom-in break-inside-avoid border-0 bg-transparent p-0" [attr.aria-label]="'Open photo ' + (i + 1)" (click)="openLightbox(i)">
+            <qi-image class="w-full" [class]="shape(i)" [media]="g" art="room" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
+          </button>
+        }
+      </div>
+    } @else {
+      <p class="text-muted">Photographs are on their way.</p>
+    }
+  </div>
+</section>
+
+<!-- Guest words -->
+@if (quotes().length) {
+  <section class="sec on-dark bg-primary text-center text-on-primary">
+    <div class="wrap">
+      <qi-icon name="quote" [size]="40" class="mx-auto mb-[30px] text-accent" />
+      @if (quotes()[quoteIndex()]; as q) {
+        <blockquote class="mx-auto my-0 max-w-[28ch] font-serif text-[clamp(28px,3.4vw,48px)] font-light italic leading-[1.3]">{{ q.quote }}</blockquote>
+        <cite class="mt-8 block text-[13px] uppercase not-italic tracking-[.18em] text-accent">{{ q.guestName }}@if (q.origin) {, {{ q.origin }}}</cite>
+      }
+    </div>
+  </section>
+}
+
+<!-- Enquiry -->
+<section class="sec" id="enquiry">
+  <div class="wrap grid gap-[clamp(48px,8vw,140px)] md:grid-cols-[.9fr_1.1fr]">
+    <div>
+      <span class="kicker">Room enquiry</span>
+      <h2 class="h-display">Tell us when you're coming</h2>
+      <p class="mt-6 max-w-[46ch] text-muted">Share your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.</p>
+      <div class="mt-10 grid gap-[26px] text-[15px]">
+        <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Call</b><a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a> · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a></span></div>
+        <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="wa" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">WhatsApp</b><a [href]="site.whatsapp()" target="_blank" rel="noopener">Message the front desk</a></span></div>
+        <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Email</b><a [href]="'mailto:' + site.get('ReservationsEmail')">{{ site.get('ReservationsEmail') }}</a></span></div>
+      </div>
+    </div>
+    <div class="self-center">
+      <p class="lede">The fastest way to reach us is WhatsApp or a call. The online enquiry form is coming soon.</p>
+      <div class="mt-8 flex flex-wrap gap-3.5">
+        <a [href]="site.whatsapp()" target="_blank" rel="noopener" class="btn btn-gold">WhatsApp us</a>
+        <a [href]="site.tel('Phone1')" class="btn btn-ghost">Call {{ site.get('Phone1') }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+@if (lightboxItem(); as item) {
+  <div class="fixed inset-0 z-[80] flex items-center justify-center bg-deep/95" role="dialog" aria-modal="true" aria-label="Photo gallery" (click)="closeLightbox()">
+    <qi-image class="h-[82vh] w-[min(1200px,90vw)] !bg-transparent" [media]="item" fit="contain" sizes="90vw" (click)="$event.stopPropagation()" />
+    <button type="button" class="absolute right-4 top-4 h-14 w-14 border-0 bg-transparent text-on-primary" aria-label="Close" (click)="closeLightbox(); $event.stopPropagation()"><qi-icon name="x" [size]="28" /></button>
+    <button type="button" class="absolute left-3 top-1/2 h-14 w-14 -translate-y-1/2 border-0 bg-transparent text-on-primary" aria-label="Previous photo" (click)="step(-1); $event.stopPropagation()"><qi-icon name="arrowL" [size]="28" /></button>
+    <button type="button" class="absolute right-3 top-1/2 h-14 w-14 -translate-y-1/2 border-0 bg-transparent text-on-primary" aria-label="Next photo" (click)="step(1); $event.stopPropagation()"><qi-icon name="arrowR" [size]="28" /></button>
+  </div>
+}

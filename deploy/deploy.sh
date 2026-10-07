@@ -18,7 +18,7 @@ cp -r "$ROOT/queensin.web/dist/queensin-web" "$OUT/web"
 cat > "$OUT/web/browser/config.js" <<CFG
 window.__APP_CONFIG__ = { apiBaseUrl: '$SCHEME://$DOMAIN/api', siteUrl: '$SCHEME://$DOMAIN' };
 CFG
-mkdir -p "$OUT/mig"; cp "$ROOT"/database/migrations/0*.sql "$OUT/mig/"
+mkdir -p "$OUT/mig" "$OUT/seed"; cp "$ROOT"/database/migrations/0*.sql "$OUT/mig/"; cp "$ROOT/deploy/seed/media-manifest.json" "$OUT/seed/"
 render() { sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__SCHEME__#$SCHEME#g" "$1"; }
 render "$ROOT/deploy/queensin-ssr.service"  > "$OUT/queensin-ssr.service"
 render "$ROOT/deploy/nginx-queensinn.conf"  > "$OUT/nginx-queensinn.conf"
@@ -59,8 +59,8 @@ else
   sed -i "s#^Cors__Origins__0=.*#Cors__Origins__0=$SCHEME://$DOMAIN#; s#^Cors__Origins__1=.*#Cors__Origins__1=$SCHEME://www.$DOMAIN#" /etc/queensinn/api.env
 fi
 
-echo "   migrations"
-for f in $(ls $S/mig/0*.sql | sort); do mysql queensinn < "$f"; done
+migrate() { for f in $(ls $S/mig/0*.sql | sort); do mysql queensinn < "$f"; done; }
+echo "   migrations"; migrate
 
 systemctl stop queensin-api queensin-ssr 2>/dev/null || true
 rm -rf $R/api $R/web; mkdir -p $R/api $R/web
@@ -69,6 +69,13 @@ chown -R www-data:www-data $R/api $R/web
 cp $S/queensin-api.service $S/queensin-ssr.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable --now queensin-api queensin-ssr
+
+# Bring the seed photos into the media library (skips any already imported), then link them to
+# hero slides / rooms / gallery / slots. systemd-run applies the env file the same way the service does.
+echo "   importing photos"
+systemd-run --quiet --wait --pipe -p User=www-data -p EnvironmentFile=/etc/queensinn/api.env   -p WorkingDirectory=$R/api /usr/bin/dotnet $R/api/queensin.api.dll import-media $S/seed/media-manifest.json | tail -3
+migrate
+systemctl restart queensin-api
 
 if [ ! -f /etc/nginx/sites-available/queensinn ]; then
   cp $S/nginx-queensinn.conf /etc/nginx/sites-available/queensinn

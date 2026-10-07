@@ -1,0 +1,149 @@
+[
+  {
+    "key": "hero-dusk",
+    "url": "https://static.wixstatic.com/media/8ab1a8_abf85ce7c5174e31bcee85170e747e56~mv2.png/v1/fit/w_2200,h_2200,q_85,enc_auto/img.png",
+    "category": "Campus",
+    "alt": "Hotel Queen's Inn from ECR Main Road",
+    "caption": "Hotel Queen's Inn from ECR Main Road"
+  },
+  {
+    "key": "hero-garden",
+    "url": "https://static.wixstatic.com/media/8ab1a8_6cc8340bc2f446348136cfbb3d80ff0c~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Campus",
+    "alt": "Garden lawn set for an event, with white chairs and evening lights",
+    "caption": "Garden lawn set for an event, with white chairs and evening lights"
+  },
+  {
+    "key": "hero-lobby",
+    "url": "https://static.wixstatic.com/media/8ab1a8_174b94e2ddd747b0b8a751ff5af843ce~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Campus",
+    "alt": "Reception and lobby",
+    "caption": "Reception and lobby"
+  },
+  {
+    "key": "room-deluxe",
+    "url": "https://static.wixstatic.com/media/8ab1a8_76c8b895cd1f4ca6bb998c54550d70c2~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Rooms",
+    "alt": "Deluxe Double Room with garden view",
+    "caption": "Deluxe Double Room with garden view"
+  },
+  {
+    "key": "room-executive",
+    "url": "https://static.wixstatic.com/media/8ab1a8_2f93c0f439f84a41bf5b4d928587e677~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Rooms",
+    "alt": "Executive Triple Room with city view",
+    "caption": "Executive Triple Room with city view"
+  },
+  {
+    "key": "room-family",
+    "url": "https://static.wixstatic.com/media/8ab1a8_f20b31a0bbf84dd5ab2597455d7f348d~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Rooms",
+    "alt": "Family Room with private balcony",
+    "caption": "Family Room with private balcony"
+  },
+  {
+    "key": "room-suite",
+    "url": "https://static.wixstatic.com/media/8ab1a8_232b208344874608880be72ded7009c2~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Rooms",
+    "alt": "The Queen's Suite living lounge",
+    "caption": "The Queen's Suite living lounge"
+  },
+  {
+    "key": "room-twin",
+    "url": "https://static.wixstatic.com/media/8ab1a8_d8c5570ec36a421eb069d0d5c27a9b4d~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Rooms",
+    "alt": "Twin room",
+    "caption": "Twin room"
+  },
+  {
+    "key": "dish-breakfast",
+    "url": "https://static.wixstatic.com/media/8ab1a8_7376abd213d94fd899d429fcf19b5844~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Dining",
+    "alt": "Dining hall at the Q Multi-Cuisine Restaurant",
+    "caption": "Dining hall at the Q Multi-Cuisine Restaurant"
+  },
+  {
+    "key": "dish-thali",
+    "url": "https://static.wixstatic.com/media/8ab1a8_eaed86886ba54f859dfbe58de8fe2e8b~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Dining",
+    "alt": "Restaurant seating",
+    "caption": "Restaurant seating"
+  },
+  {
+    "key": "dish-seafood",
+    "url": "https://static.wixstatic.com/media/8ab1a8_ed7a98230db24ef280ea3a33f9a452f5~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Dining",
+    "alt": "Long dining table at the restaurant",
+    "caption": "Long dining table at the restaurant"
+  },
+  {
+    "key": "meeting-hall",
+    "url": "https://static.wixstatic.com/media/8ab1a8_47f4fd5bbf0d4b3eb285e4f2c853210e~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "Events",
+    "alt": "Banquet hall laid out for an event",
+    "caption": "Banquet hall laid out for an event"
+  },
+  {
+    "key": "gallery-01",
+    "url": "https://static.wixstatic.com/media/8ab1a8_48fa19e768694934ab488b74435342ac~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 1",
+    "caption": null
+  },
+  {
+    "key": "gallery-02",
+    "url": "https://static.wixstatic.com/media/8ab1a8_d00ef27f735f424cbe26d2eba6473487~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 2",
+    "caption": null
+  },
+  {
+    "key": "gallery-03",
+    "url": "https://static.wixstatic.com/media/8ab1a8_bc6c575a896d4a579142f8c7cadca3d2~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 3",
+    "caption": null
+  },
+  {
+    "key": "gallery-04",
+    "url": "https://static.wixstatic.com/media/8ab1a8_f4d88b9981964f9f9c32a9e3a13695a3~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 4",
+    "caption": null
+  },
+  {
+    "key": "gallery-05",
+    "url": "https://static.wixstatic.com/media/8ab1a8_c4e7787d62e248d48415e04ba83c8e49~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 5",
+    "caption": null
+  },
+  {
+    "key": "gallery-06",
+    "url": "https://static.wixstatic.com/media/8ab1a8_20ecbc417a5b4111986e68ede055e699~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 6",
+    "caption": null
+  },
+  {
+    "key": "gallery-07",
+    "url": "https://static.wixstatic.com/media/8ab1a8_1724b73ed7be446ebbca9b07842d21dd~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 7",
+    "caption": null
+  },
+  {
+    "key": "gallery-08",
+    "url": "https://static.wixstatic.com/media/8ab1a8_48df30262c744f4990c1828f4d757773~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 8",
+    "caption": null
+  },
+  {
+    "key": "gallery-09",
+    "url": "https://static.wixstatic.com/media/8ab1a8_1ee4dbbc9a3f463b83134d05a47159d9~mv2.jpg/v1/fit/w_2200,h_2200,q_85,enc_auto/img.jpg",
+    "category": "General",
+    "alt": "Hotel Queen's Inn photo 9",
+    "caption": null
+  }
+]
