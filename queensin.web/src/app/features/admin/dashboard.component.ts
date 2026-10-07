@@ -50,6 +50,9 @@ import { EnquiryCountsService } from '../../core/services/enquiry-counts.service
       @if (auth.can(perm.CmsManage)) {
         <a routerLink="/admin/pages" class="card hover:border-accent"><b class="font-medium">Pages &amp; content</b><p class="mt-1 text-[13px] text-[#6B7485]">Headings, photos, video and search text for each page.</p></a>
       }
+      @if (auth.can(perm.CmsManage)) {
+        <a routerLink="/admin/attractions" class="card hover:border-accent"><b class="font-medium">Experiences</b><p class="mt-1 text-[13px] text-[#6B7485]">Places to visit near the hotel, with distances and photos.</p></a>
+      }
       @if (auth.can(perm.MediaManage)) {
         <a routerLink="/admin/gallery" class="card hover:border-accent"><b class="font-medium">Galleries</b><p class="mt-1 text-[13px] text-[#6B7485]">The sliding photo strip and the photo collage.</p></a>
       }

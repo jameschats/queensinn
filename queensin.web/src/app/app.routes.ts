@@ -53,7 +53,11 @@ export const routes: Routes = [
         resolve: withContent,
         loadComponent: () => import('./features/public/about.component').then((m) => m.AboutComponent),
       },
-      contentRoute('activities', { slug: 'activities', path: '/activities', art: 'sea' }),
+      {
+        path: 'activities',
+        resolve: withContent,
+        loadComponent: () => import('./features/public/activities.component').then((m) => m.ActivitiesComponent),
+      },
       {
         path: 'contact',
         resolve: withContent,
@@ -108,6 +112,12 @@ export const routes: Routes = [
         canActivate: [permissionGuard(Perm.CmsManage)],
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
+      },
+      {
+        path: 'attractions',
+        canActivate: [permissionGuard(Perm.CmsManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/attractions/attractions-admin.component').then((m) => m.AttractionsAdminComponent),
       },
       {
         path: 'rooms',

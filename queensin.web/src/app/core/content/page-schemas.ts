@@ -391,8 +391,22 @@ export const PAGES: PageDef[] = [
       title: "Things to Do Near Velankanni | Hotel Queen's Inn",
       description: 'Velankanni Basilica, Nagore Dargah, Thirunallar, Point Calimere, Muthupet mangroves and Tranquebar, with distances from the hotel.',
     },
-    sections: [heroSection('Experiences', 'Pilgrim trails and coastal days', 'A gentle base for the sacred sites and wild coast of the Cauvery delta.', false)],
-    slots: [],
+    sections: [
+      heroSection('Experiences', 'Pilgrim trails and coastal days', 'A gentle base for the sacred sites and wild coast of the Cauvery delta.', false),
+      {
+        key: 'desk',
+        title: 'Travel desk',
+        hint: 'The places themselves (names, distances, photos) are under Experiences in the main menu.',
+        fields: [
+          t('kicker', 'Small line', 'Travel desk'),
+          t('title', 'Heading', 'Let us plan the day'),
+          area('body', 'Text', "Our front desk arranges cars and drivers, temple timings and boat trips at Muthupet. Tell us what you'd like to see.", 4),
+          t('buttonText', 'Button', 'Plan on WhatsApp'),
+          t('message', 'WhatsApp message', "Hello, I would like help planning a day trip from Queen's Inn.", { hint: 'What the guest’s WhatsApp is typed with when they tap the button.' }),
+        ],
+      },
+    ],
+    slots: [{ key: 'travel-desk', label: 'Travel desk photo', hint: 'Shown beside the travel desk text. Themed artwork shows until you add one.' }],
   },
   {
     slug: 'contact',

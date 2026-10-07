@@ -71,6 +71,7 @@ export class AdminLayoutComponent {
     { link: '/admin/enquiries', label: 'Enquiries', icon: 'inbox', perm: Perm.EnquiryManage, badge: true },
     { link: '/admin/rooms', label: 'Rooms', icon: 'bed', perm: Perm.RoomManage },
     { link: '/admin/media', label: 'Media library', icon: 'image', perm: Perm.MediaManage },
+    { link: '/admin/attractions', label: 'Experiences', icon: 'pin', perm: Perm.CmsManage },
     { link: '/admin/gallery', label: 'Galleries', icon: 'grid', perm: Perm.MediaManage },
     { link: '/admin/pages', label: 'Pages & content', icon: 'doc', perm: Perm.CmsManage },
     { link: '/admin/theme', label: 'Theme', icon: 'palette', perm: Perm.ThemeManage },

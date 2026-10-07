@@ -50,7 +50,7 @@ export class HomeComponent {
   // --- other sections ---
   protected readonly gallery = computed(() => this.content().gallery);
   protected readonly attractions = computed(() =>
-    [0, 1, 3].map((i) => ({ a: this.content().attractions[i], art: ATTRACTION_ART[i] })).filter((x) => !!x.a));
+    this.content().attractions.slice(0, 3).map((a, i) => ({ a, art: ATTRACTION_ART[i % ATTRACTION_ART.length] })));
   protected readonly quotes = computed(() => this.content().testimonials);
   protected readonly strip = computed(() => this.content().strip);
   /** Sliding-strip speed in pixels per second, from the admin's Slow / Medium / Fast choice. */

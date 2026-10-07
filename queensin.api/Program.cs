@@ -83,6 +83,7 @@ builder.Services.AddScoped<queensin.api.Features.Media.IMediaService, queensin.a
 builder.Services.AddScoped<queensin.api.Features.Content.IPublicContentService, queensin.api.Features.Content.PublicContentService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IPageAdminService, queensin.api.Features.Content.PageAdminService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IGalleryAdminService, queensin.api.Features.Content.GalleryAdminService>();
+builder.Services.AddScoped<queensin.api.Features.Content.IAttractionsAdminService, queensin.api.Features.Content.AttractionsAdminService>();
 builder.Services.AddScoped<queensin.api.Features.Rooms.IRoomsAdminService, queensin.api.Features.Rooms.RoomsAdminService>();
 builder.Services.AddScoped<queensin.api.Features.Enquiries.IEnquiryNotifier, queensin.api.Features.Enquiries.SmtpEnquiryNotifier>();
 builder.Services.AddScoped<queensin.api.Features.Enquiries.IEnquiryService, queensin.api.Features.Enquiries.EnquiryService>();

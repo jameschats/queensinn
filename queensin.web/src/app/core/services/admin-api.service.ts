@@ -49,6 +49,24 @@ export interface SavePage {
   slots?: Record<string, number | null>;
 }
 
+export interface AttractionAdmin {
+  id: number;
+  name: string;
+  distanceKm: number;
+  description: string | null;
+  media: MediaItem | null;
+  visible: boolean;
+}
+
+export interface SaveAttraction {
+  id?: number;
+  name: string;
+  distanceKm: number;
+  description: string;
+  mediaId: number | null;
+  visible: boolean;
+}
+
 export interface AmenityAdmin {
   id: number;
   name: string;
@@ -211,6 +229,16 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- attractions (Experiences) ---
+
+  attractions(): Observable<AttractionAdmin[]> {
+    return this.http.get<ApiResponse<AttractionAdmin[]>>(`${this.base}/attractions`).pipe(map((r) => r.data ?? []));
+  }
+
+  saveAttractions(items: SaveAttraction[]): Observable<AttractionAdmin[]> {
+    return this.http.put<ApiResponse<AttractionAdmin[]>>(`${this.base}/attractions`, items).pipe(map((r) => r.data ?? []));
   }
 
   // --- rooms ---
