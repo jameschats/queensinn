@@ -94,6 +94,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
       },
       {
+        path: 'gallery',
+        canActivate: [permissionGuard(Perm.MediaManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/gallery/gallery-admin.component').then((m) => m.GalleryAdminComponent),
+      },
+      {
         path: 'media',
         canActivate: [permissionGuard(Perm.MediaManage)],
         loadComponent: () => import('./features/admin/media/media.component').then((m) => m.MediaComponent),

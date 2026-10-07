@@ -121,6 +121,11 @@
                   </span>
                   @if (f.type === 'textarea') {
                     <textarea class="ainput" [rows]="f.rows ?? 4" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key"></textarea>
+                  } @else if (f.type === 'select') {
+                    <select class="ainput" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key">
+                      <option value="">Built-in ({{ optionLabel(f, f.default) }})</option>
+                      @for (o of f.options; track o.value) { <option [value]="o.value">{{ o.label }}</option> }
+                    </select>
                   } @else {
                     <input class="ainput" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key" />
                   }

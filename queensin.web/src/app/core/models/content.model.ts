@@ -32,6 +32,15 @@ export interface Room {
   amenities: string[];
 }
 
+/** A card in the sliding strip on the home page. */
+export interface StripItem {
+  id: number;
+  title: string | null;
+  caption: string | null;
+  linkUrl: string | null;
+  image: MediaItem;
+}
+
 export interface Attraction {
   id: number;
   name: string;
@@ -60,6 +69,7 @@ export interface PageContent {
 export interface PublicContent {
   rooms: Room[];
   gallery: MediaItem[];
+  strip: StripItem[];
   attractions: Attraction[];
   testimonials: Testimonial[];
   /** Named photo positions (e.g. 'restaurant'); a missing key means no photo yet. */
@@ -68,4 +78,4 @@ export interface PublicContent {
   pages: Record<string, PageContent>;
 }
 
-export const EMPTY_CONTENT: PublicContent = { rooms: [], gallery: [], attractions: [], testimonials: [], slots: {}, pages: {} };
+export const EMPTY_CONTENT: PublicContent = { rooms: [], gallery: [], strip: [], attractions: [], testimonials: [], slots: {}, pages: {} };

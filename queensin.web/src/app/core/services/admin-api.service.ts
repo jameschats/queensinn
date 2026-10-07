@@ -49,6 +49,25 @@ export interface SavePage {
   slots?: Record<string, number | null>;
 }
 
+export interface GalleryItemAdmin {
+  id: number;
+  mediaId: number;
+  media: MediaItem | null;
+  title: string | null;
+  caption: string | null;
+  linkUrl: string | null;
+  visible: boolean;
+}
+
+export interface SaveGalleryItem {
+  id?: number;
+  mediaId: number;
+  title: string;
+  caption: string;
+  linkUrl: string;
+  visible: boolean;
+}
+
 export interface PolicyEdit {
   slug: string;
   title: string;
@@ -109,6 +128,16 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- galleries ---
+
+  gallery(placement: 'collage' | 'strip'): Observable<GalleryItemAdmin[]> {
+    return this.http.get<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`).pipe(map((r) => r.data ?? []));
+  }
+
+  saveGallery(placement: 'collage' | 'strip', items: SaveGalleryItem[]): Observable<GalleryItemAdmin[]> {
+    return this.http.put<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`, items).pipe(map((r) => r.data ?? []));
   }
 
   // --- pages & content ---

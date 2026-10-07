@@ -48,6 +48,7 @@ public static class MediaImporter
                 await using var stream = await http.GetStreamAsync(uri);
                 var dto = await media.SaveImageAsync(stream, e.Key, e.Category, e.Alt, e.Caption, actorId: null);
                 Console.WriteLine($"{e.Key}={dto.Id}");
+                Console.Error.WriteLine($"imported {e.Key}");      // deploy.sh links the seed photos only when this appears
             }
             catch (Exception ex)
             {

@@ -82,6 +82,7 @@ builder.Services.AddScoped<IFaviconService, FaviconService>();
 builder.Services.AddScoped<queensin.api.Features.Media.IMediaService, queensin.api.Features.Media.MediaService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IPublicContentService, queensin.api.Features.Content.PublicContentService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IPageAdminService, queensin.api.Features.Content.PageAdminService>();
+builder.Services.AddScoped<queensin.api.Features.Content.IGalleryAdminService, queensin.api.Features.Content.GalleryAdminService>();
 
 // --- Platform ------------------------------------------------------------
 builder.Services.Configure<ForwardedHeadersOptions>(o =>

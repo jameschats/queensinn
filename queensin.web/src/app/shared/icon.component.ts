@@ -35,6 +35,10 @@ const PATHS: Record<string, string> = {
   quote: 'M10 7c-3 1-5 3.5-5 7v3h5v-5H7.5c0-2 1-3.5 3-4.3zM19 7c-3 1-5 3.5-5 7v3h5v-5h-2.5c0-2 1-3.5 3-4.3z',
   arrowL: 'M15 5l-7 7 7 7',
   arrowR: 'M9 5l7 7-7 7',
+  up: 'M12 19V5M6 11l6-6 6 6',
+  down: 'M12 5v14M6 13l6 6 6-6',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
+  grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
   menu: 'M4 7h16M4 12h16M4 17h16',
   x: 'M5 5l14 14M19 5L5 19',
 };

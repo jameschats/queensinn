@@ -141,6 +141,10 @@ export class PageEditorComponent implements HasUnsavedChanges {
     this.touch();
   }
 
+  protected optionLabel(f: FieldDef, value: string): string {
+    return f.options?.find((o) => o.value === value)?.label ?? value;
+  }
+
   protected isCustom(section: SectionDef, field: FieldDef): boolean {
     return (this.values[section.key]?.[field.key] ?? '') !== '';
   }

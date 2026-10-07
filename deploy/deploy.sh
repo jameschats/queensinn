@@ -19,7 +19,7 @@ cp -r "$ROOT/queensin.web/dist/queensin-web" "$OUT/web"
 cat > "$OUT/web/browser/config.js" <<CFG
 window.__APP_CONFIG__ = { apiBaseUrl: '$SCHEME://$DOMAIN/api', siteUrl: '$SCHEME://$DOMAIN' };
 CFG
-mkdir -p "$OUT/mig" "$OUT/seed"; cp "$ROOT"/database/migrations/0*.sql "$OUT/mig/"; cp "$ROOT/deploy/seed/media-manifest.json" "$OUT/seed/"
+mkdir -p "$OUT/mig" "$OUT/seed"; cp "$ROOT"/database/migrations/0*.sql "$OUT/mig/"; cp "$ROOT/deploy/seed/media-manifest.json" "$ROOT/database/seed/link-media.sql" "$OUT/seed/"
 render() { sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__SCHEME__#$SCHEME#g" "$1"; }
 render "$ROOT/deploy/queensin-ssr.service"  > "$OUT/queensin-ssr.service"
 render "$ROOT/deploy/nginx-queensinn.conf"  > "$OUT/nginx-queensinn.conf"
@@ -60,7 +60,15 @@ else
   sed -i "s#^Cors__Origins__0=.*#Cors__Origins__0=$SCHEME://$DOMAIN#; s#^Cors__Origins__1=.*#Cors__Origins__1=$SCHEME://www.$DOMAIN#" /etc/queensinn/api.env
 fi
 
-migrate() { for f in $(ls $S/mig/0*.sql | sort); do mysql queensinn < "$f"; done; }
+# Forward-only: a migration that is already recorded in __schema_migrations is skipped, so a deploy can
+# never re-apply seed data over what staff have since edited in the admin.
+migrate() {
+  for f in $(ls $S/mig/0*.sql | sort); do
+    name=$(basename "$f")
+    done_already=$(mysql -N queensinn -e "SELECT COUNT(*) FROM __schema_migrations WHERE script_name='$name'" 2>/dev/null || echo 0)
+    if [ "${done_already:-0}" = "0" ]; then echo "   applying $name"; mysql queensinn < "$f"; fi
+  done
+}
 echo "   migrations"; migrate
 
 systemctl stop queensin-api queensin-ssr 2>/dev/null || true
@@ -71,11 +79,16 @@ cp $S/queensin-api.service $S/queensin-ssr.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable --now queensin-api queensin-ssr
 
-# Bring the seed photos into the media library (skips any already imported), then link them to
-# hero slides / rooms / gallery / slots. systemd-run applies the env file the same way the service does.
+# Bring the seed photos into the media library (skips any already imported). Only when a photo was newly
+# imported are they linked to hero slides / rooms / galleries / photo positions (database/seed/link-media.sql,
+# which only fills gaps). systemd-run applies the env file the same way the service does.
 echo "   importing photos"
-systemd-run --quiet --wait --pipe -p User=www-data -p EnvironmentFile=/etc/queensinn/api.env   -p WorkingDirectory=$R/api /usr/bin/dotnet $R/api/queensin.api.dll import-media $S/seed/media-manifest.json ${REPLACE_KEYS:+--replace=$REPLACE_KEYS} | tail -3
-migrate
+IMPORT_LOG=$(systemd-run --quiet --wait --pipe -p User=www-data -p EnvironmentFile=/etc/queensinn/api.env \
+  -p WorkingDirectory=$R/api /usr/bin/dotnet $R/api/queensin.api.dll import-media $S/seed/media-manifest.json ${REPLACE_KEYS:+--replace=$REPLACE_KEYS} 2>&1)
+echo "$IMPORT_LOG" | grep -E "^(imported|replaced|FAILED)" || echo "   (no new photos)"
+if echo "$IMPORT_LOG" | grep -q "^imported"; then
+  echo "   linking new photos"; mysql queensinn < $S/seed/link-media.sql
+fi
 systemctl restart queensin-api
 
 if [ ! -f /etc/nginx/sites-available/queensinn ]; then

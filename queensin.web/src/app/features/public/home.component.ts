@@ -11,6 +11,7 @@ import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
 import { ParsedLink, parseLink } from '../../shared/link';
 import { PageHeroComponent } from '../../shared/page-hero.component';
+import { ShowcaseStripComponent } from '../../shared/showcase-strip.component';
 
 /** Photo shapes for the masonry gallery, cycled so the columns stay lively. */
 const GALLERY_SHAPES = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-[2/3]', 'aspect-[4/3]', 'aspect-square', 'aspect-[3/4]'];
@@ -23,7 +24,7 @@ const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fo
  */
 @Component({
   selector: 'qi-home',
-  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
 })
@@ -48,6 +49,9 @@ export class HomeComponent {
   protected readonly attractions = computed(() =>
     [0, 1, 3].map((i) => ({ a: this.content().attractions[i], art: ATTRACTION_ART[i] })).filter((x) => !!x.a));
   protected readonly quotes = computed(() => this.content().testimonials);
+  protected readonly strip = computed(() => this.content().strip);
+  /** Sliding-strip speed in pixels per second, from the admin's Slow / Medium / Fast choice. */
+  protected readonly stripSpeed = computed(() => ({ slow: 30, medium: 50, fast: 80 } as Record<string, number>)[this.t('strip', 'speed')] ?? 50);
 
   protected readonly stats = computed(() => [1, 2, 3, 4].map((i) => ({ n: this.t('stats', 'n' + i), t: this.t('stats', 't' + i) })));
   protected readonly amenities = computed(() =>

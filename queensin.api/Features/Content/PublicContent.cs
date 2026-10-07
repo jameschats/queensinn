@@ -15,6 +15,9 @@ public sealed record AttractionDto(long Id, string Name, decimal DistanceKm, str
 
 public sealed record TestimonialDto(string Quote, string GuestName, string? Origin);
 
+/// <summary>A card in the sliding strip on the home page.</summary>
+public sealed record StripItemDto(long Id, string? Title, string? Caption, string? LinkUrl, MediaDto Image);
+
 /// <summary>
 /// One page's editable content. <see cref="Sections"/> maps section key to field values; a field that is
 /// absent means "use the built-in default" (the web app holds the defaults). <see cref="HeroVideo"/> is
@@ -29,6 +32,7 @@ public sealed record PageContentDto(
 public sealed record PublicContentDto(
     IReadOnlyList<RoomDto> Rooms,
     IReadOnlyList<MediaDto> Gallery,
+    IReadOnlyList<StripItemDto> Strip,
     IReadOnlyList<AttractionDto> Attractions,
     IReadOnlyList<TestimonialDto> Testimonials,
     IReadOnlyDictionary<string, MediaDto> Slots,
@@ -57,7 +61,8 @@ public sealed class PublicContentService : IPublicContentService
                                   where roomIds.Contains(ra.RoomId)
                                   orderby a.DisplayOrder
                                   select new { ra.RoomId, a.Name }).ToListAsync(ct);
-        var gallery = await _db.GalleryItems.AsNoTracking().Where(g => g.ShowOnHome).OrderBy(g => g.DisplayOrder).ToListAsync(ct);
+        var gallery = await _db.GalleryItems.AsNoTracking().Where(g => g.ShowOnHome && g.Placement == "collage").OrderBy(g => g.DisplayOrder).ToListAsync(ct);
+        var strip = await _db.GalleryItems.AsNoTracking().Where(g => g.ShowOnHome && g.Placement == "strip").OrderBy(g => g.DisplayOrder).ToListAsync(ct);
         var attractions = await _db.Attractions.AsNoTracking().Where(a => a.IsVisible).OrderBy(a => a.DisplayOrder).ToListAsync(ct);
         var slotRows = await _db.ImageSlots.AsNoTracking().Where(x => x.MediaId != null).ToListAsync(ct);
         var quotes = await _db.Testimonials.AsNoTracking().Where(t => t.IsVisible).OrderBy(t => t.DisplayOrder).ToListAsync(ct);
@@ -71,7 +76,7 @@ public sealed class PublicContentService : IPublicContentService
 
         var ids = heroRows.Select(h => h.MediaId).Concat(pageRows.Select(p => p.OgMediaId)).Concat(pageRows.Select(p => VideoId(p.PageId)))
             .Concat(rooms.Select(r => r.FeaturedMediaId)).Concat(roomImages.Select(i => (long?)i.MediaId))
-            .Concat(gallery.Select(g => (long?)g.MediaId)).Concat(attractions.Select(a => a.MediaId)).Concat(slotRows.Select(x => x.MediaId))
+            .Concat(gallery.Select(g => (long?)g.MediaId)).Concat(strip.Select(g => (long?)g.MediaId)).Concat(attractions.Select(a => a.MediaId)).Concat(slotRows.Select(x => x.MediaId))
             .Where(i => i.HasValue).Select(i => i!.Value).Distinct().ToList();
         var media = (await _db.MediaAssets.AsNoTracking().Where(m => ids.Contains(m.MediaId)).ToListAsync(ct))
             .ToDictionary(m => m.MediaId, MediaService.ToDto);
@@ -91,6 +96,7 @@ public sealed class PublicContentService : IPublicContentService
                 roomImages.Where(i => i.RoomId == r.RoomId).Select(i => Img(i.MediaId)).OfType<MediaDto>().ToList(),
                 amenityLinks.Where(a => a.RoomId == r.RoomId).Select(a => a.Name).ToList())).ToList(),
             gallery.Select(g => Img(g.MediaId)).OfType<MediaDto>().ToList(),
+            strip.Where(g => Img(g.MediaId) != null).Select(g => new StripItemDto(g.GalleryItemId, g.Title, g.Caption, g.LinkUrl, Img(g.MediaId)!)).ToList(),
             attractions.Select(a => new AttractionDto(a.AttractionId, a.Name, a.DistanceKm, a.Description, Img(a.MediaId))).ToList(),
             quotes.Select(t => new TestimonialDto(t.Quote, t.GuestName, t.Origin)).ToList(),
             slotRows.Where(x => Img(x.MediaId) != null).ToDictionary(x => x.SlotKey, x => Img(x.MediaId)!),

@@ -42,7 +42,7 @@ interface AdminNav {
         <div class="mt-auto grid gap-0.5 border-t border-white/10 pt-4 text-sm">
           <span class="px-3 pb-2 text-xs text-on-primary-muted">Signed in as<br /><b class="font-medium text-on-primary">{{ auth.displayName() }}</b></span>
           <a routerLink="/admin/change-password" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-primary-muted hover:bg-white/5 hover:text-on-primary"><qi-icon name="key" [size]="18" />Change password</a>
-          <a href="/" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-primary-muted hover:bg-white/5 hover:text-on-primary"><qi-icon name="ext" [size]="18" />View website</a>
+          <a href="/" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-primary-muted hover:bg-white/5 hover:text-on-primary"><qi-icon name="arrowL" [size]="18" />View website</a>
           <button type="button" (click)="signOut()" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-on-primary-muted hover:bg-white/5 hover:text-on-primary"><qi-icon name="out" [size]="18" />Sign out</button>
         </div>
       </aside>
@@ -66,6 +66,7 @@ export class AdminLayoutComponent {
     { link: '/admin/enquiries', label: 'Enquiries', icon: 'inbox', perm: Perm.EnquiryManage, stage: 6 },
     { link: '/admin/rooms', label: 'Rooms', icon: 'bed', perm: Perm.RoomManage, stage: 4 },
     { link: '/admin/media', label: 'Media library', icon: 'image', perm: Perm.MediaManage },
+    { link: '/admin/gallery', label: 'Galleries', icon: 'grid', perm: Perm.MediaManage },
     { link: '/admin/pages', label: 'Pages & content', icon: 'doc', perm: Perm.CmsManage },
     { link: '/admin/theme', label: 'Theme', icon: 'palette', perm: Perm.ThemeManage },
     { link: '/admin/settings', label: 'Site settings', icon: 'cog', perm: Perm.SettingsManage },

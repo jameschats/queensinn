@@ -82,6 +82,11 @@ public sealed class GalleryItem
     public long GalleryItemId { get; set; }
     public long? CategoryId { get; set; }
     public long MediaId { get; set; }
+    /// <summary>'collage' (the masonry gallery) or 'strip' (the sliding strip); migration 014.</summary>
+    public string Placement { get; set; } = "collage";
+    public string? Title { get; set; }
+    public string? Caption { get; set; }
+    public string? LinkUrl { get; set; }
     public int DisplayOrder { get; set; }
     public bool ShowOnHome { get; set; }
 }

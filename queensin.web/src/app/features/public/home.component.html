@@ -148,6 +148,18 @@
   </div>
 </section>
 
+<!-- Sliding photo strip -->
+@if (strip().length) {
+  <section class="sec overflow-hidden bg-tint" aria-label="Photos of the hotel">
+    <div class="wrap">
+      <div class="mb-[clamp(36px,5vw,64px)]"><span class="kicker">{{ t('strip', 'kicker') }}</span><h2 class="h-display">{{ t('strip', 'title') }}</h2></div>
+    </div>
+    <div class="wrap md:max-w-none! md:px-0!">
+      <qi-showcase-strip [items]="strip()" [speed]="stripSpeed()" [moreText]="t('strip', 'moreText')" />
+    </div>
+  </section>
+}
+
 <!-- Amenities -->
 <section class="sec">
   <div class="wrap">

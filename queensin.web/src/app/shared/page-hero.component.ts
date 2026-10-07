@@ -32,9 +32,8 @@ import { ImageComponent } from './image.component';
                [src]="videoUrl(v)" [muted]="true" loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"
                (canplay)="videoReady.set(true)" (error)="videoFailed()"></video>
       }
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_85%,color-mix(in_srgb,var(--color-accent)_38%,transparent),transparent_60%)] opacity-60"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/10 to-deep/85"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-primary/65 via-primary/25 to-transparent"></div>
+      <!-- No gradients over the photo. This flat, even tint (not a gradient) only keeps white text legible on bright photos; remove it for the untouched photo. -->
+      <div class="absolute inset-0 bg-primary/25"></div>
       <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
         <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"

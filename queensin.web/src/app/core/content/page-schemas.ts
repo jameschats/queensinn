@@ -4,7 +4,7 @@
  * the public pages fall back to these defaults, so an empty field always shows sensible text.
  * Adding a field here makes it editable; nothing else needs changing on the server.
  */
-export type FieldType = 'text' | 'textarea' | 'url';
+export type FieldType = 'text' | 'textarea' | 'url' | 'select';
 
 export interface FieldDef {
   key: string;
@@ -13,6 +13,8 @@ export interface FieldDef {
   default: string;
   hint?: string;
   rows?: number;
+  /** For type 'select': the choices; `default` is one of the values. */
+  options?: { value: string; label: string }[];
 }
 
 export interface SectionDef {
@@ -140,6 +142,21 @@ export const PAGES: PageDef[] = [
           t('n2', 'Figure 2', '300+'), t('t2', 'Figure 2 — label', 'seats in the dining pavilion'),
           t('cta1Text', 'First button', 'Discover KVR Mahal'),
           t('cta2Text', 'Second button', 'Plan your event'),
+        ],
+      },
+      {
+        key: 'strip',
+        title: 'Sliding photo strip',
+        hint: 'The scrolling row of photos above the facilities. Choose its photos, titles and links under Galleries.',
+        fields: [
+          t('kicker', 'Small line', 'Around the hotel'),
+          t('title', 'Heading', 'A glimpse of your stay'),
+          {
+            key: 'speed', label: 'Scroll speed', type: 'select', default: 'medium',
+            options: [{ value: 'slow', label: 'Slow' }, { value: 'medium', label: 'Medium' }, { value: 'fast', label: 'Fast' }],
+            hint: 'How quickly the row slides on computers. It pauses while the mouse is over it.',
+          },
+          t('moreText', 'Phone button', 'Show all photos', { hint: 'On phones the photos are listed one under another; this button reveals the rest.' }),
         ],
       },
       {

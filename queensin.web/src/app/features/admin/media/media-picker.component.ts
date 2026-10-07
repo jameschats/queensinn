@@ -15,14 +15,17 @@ import { MediaBrowserComponent } from './media-browser.component';
           <h2 class="text-[18px] font-medium">{{ title() }}</h2>
           <button type="button" class="abtn abtn-sm" (click)="closed.emit()" aria-label="Close"><qi-icon name="x" [size]="14" /></button>
         </div>
-        <qi-media-browser mode="pick" [kind]="kind()" (picked)="picked.emit($event)" />
+        <qi-media-browser mode="pick" [kind]="kind()" [multi]="multi()" (picked)="picked.emit($event)" (pickedMany)="pickedMany.emit($event)" />
       </div>
     </div>`,
 })
 export class MediaPickerComponent {
   readonly kind = input<'image' | 'video' | 'any'>('image');
   readonly title = input('Choose a photo');
+  /** Let several photos be ticked and added together. */
+  readonly multi = input(false);
   readonly picked = output<MediaItem>();
+  readonly pickedMany = output<MediaItem[]>();
   readonly closed = output<void>();
 
   @HostListener('document:keydown.escape')

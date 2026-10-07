@@ -67,9 +67,12 @@ const MAX_VIDEO = 80 * 1024 * 1024;
             @for (m of items(); track m.id) {
               <li>
                 <button type="button" class="block w-full overflow-hidden rounded-lg border border-[#E3E6EB] bg-white p-0 text-left transition-shadow hover:shadow-md"
-                        [class.outline]="selected()?.id === m.id" [class.outline-2]="selected()?.id === m.id" [class.outline-accent]="selected()?.id === m.id"
+                        [class.outline]="isChosen(m)" [class.outline-2]="isChosen(m)" [class.outline-accent]="isChosen(m)"
                         (click)="choose(m)">
                   <span class="relative block aspect-[4/3] bg-[#0F243E]">
+                    @if (multi() && isChosen(m)) {
+                      <span class="absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full bg-[var(--color-accent)] text-[13px] font-bold text-[#0F243E]">✓</span>
+                    }
                     @if (m.kind === 'video') {
                       <video class="h-full w-full object-cover" [src]="url(m) + '#t=0.1'" preload="metadata" muted playsinline></video>
                       <span class="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 text-[10.5px] uppercase tracking-wider text-white">Video</span>
@@ -85,6 +88,15 @@ const MAX_VIDEO = 80 * 1024 * 1024;
               </li>
             }
           </ul>
+          @if (mode() === 'pick' && multi() && chosen().length) {
+            <div class="sticky bottom-0 mt-4 flex items-center justify-between gap-3 rounded-lg border border-[#E3E6EB] bg-white p-3 shadow-lg">
+              <span class="text-[13.5px]">{{ chosen().length }} selected</span>
+              <span class="flex gap-2">
+                <button type="button" class="abtn" (click)="chosen.set([])">Clear</button>
+                <button type="button" class="abtn abtn-pri" (click)="addChosen()">Add {{ chosen().length }} photo{{ chosen().length === 1 ? '' : 's' }}</button>
+              </span>
+            </div>
+          }
           @if (items().length < total()) {
             <div class="mt-4 text-center"><button type="button" class="abtn" [disabled]="loading()" (click)="more()">{{ loading() ? 'Loading…' : 'Load more' }}</button></div>
           }
@@ -135,7 +147,10 @@ export class MediaBrowserComponent {
   readonly mode = input<'manage' | 'pick'>('manage');
   /** Limit what is shown and uploaded; 'any' shows photos and videos. */
   readonly kind = input<'image' | 'video' | 'any'>('any');
+  /** In pick mode, let several items be ticked and added together (used by the galleries). */
+  readonly multi = input(false);
   readonly picked = output<MediaItem>();
+  readonly pickedMany = output<MediaItem[]>();
 
   protected readonly kinds: { v: KindFilter; label: string }[] = [
     { v: 'all', label: 'All' }, { v: 'image', label: 'Photos' }, { v: 'video', label: 'Videos' },
@@ -148,6 +163,7 @@ export class MediaBrowserComponent {
   protected readonly category = signal('');
   protected readonly query = signal('');
   protected readonly selected = signal<MediaItem | null>(null);
+  protected readonly chosen = signal<MediaItem[]>([]);
   protected readonly uploads = signal<UploadJob[]>([]);
   protected readonly dragging = signal(false);
   protected readonly busy = signal(false);
@@ -210,10 +226,23 @@ export class MediaBrowserComponent {
   // --- selection / details ---
 
   protected choose(m: MediaItem): void {
-    if (this.mode() === 'pick') { this.picked.emit(m); return; }
+    if (this.mode() === 'pick') {
+      if (this.multi()) this.chosen.update((l) => (l.some((c) => c.id === m.id) ? l.filter((c) => c.id !== m.id) : [...l, m]));
+      else this.picked.emit(m);
+      return;
+    }
     this.selected.set(m);
     this.edit = { altText: m.altText ?? '', caption: m.caption ?? '', category: m.category ?? '' };
     this.panelMessage.set(null);
+  }
+
+  protected isChosen(m: MediaItem): boolean {
+    return this.selected()?.id === m.id || this.chosen().some((c) => c.id === m.id);
+  }
+
+  protected addChosen(): void {
+    this.pickedMany.emit(this.chosen());
+    this.chosen.set([]);
   }
 
   protected saveDetails(): void {
