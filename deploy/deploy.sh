@@ -8,6 +8,7 @@ set -euo pipefail
 HOST="${HOST:-root@62.72.59.84}"
 DOMAIN="${DOMAIN:-carbrand.in}"
 SCHEME="${SCHEME:-https}"
+REPLACE_KEYS="${REPLACE_KEYS:-}"      # e.g. REPLACE_KEYS=hero-dusk re-processes just that seed photo
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$(mktemp -d)"; trap 'rm -rf "$OUT"' EXIT
 R=/var/www/queensinn
@@ -28,7 +29,7 @@ echo "==> upload"
 tar -C "$OUT" -czf - . | ssh "$HOST" "rm -rf /tmp/qi-release && mkdir /tmp/qi-release && tar -xzf - -C /tmp/qi-release"
 
 echo "==> install"
-ssh "$HOST" DOMAIN="$DOMAIN" SCHEME="$SCHEME" R="$R" bash -s <<'REMOTE'
+ssh "$HOST" DOMAIN="$DOMAIN" SCHEME="$SCHEME" R="$R" REPLACE_KEYS="$REPLACE_KEYS" bash -s <<'REMOTE'
 set -euo pipefail
 S=/tmp/qi-release
 mkdir -p $R/uploads /var/log/queensinn /etc/queensinn
@@ -73,7 +74,7 @@ systemctl enable --now queensin-api queensin-ssr
 # Bring the seed photos into the media library (skips any already imported), then link them to
 # hero slides / rooms / gallery / slots. systemd-run applies the env file the same way the service does.
 echo "   importing photos"
-systemd-run --quiet --wait --pipe -p User=www-data -p EnvironmentFile=/etc/queensinn/api.env   -p WorkingDirectory=$R/api /usr/bin/dotnet $R/api/queensin.api.dll import-media $S/seed/media-manifest.json | tail -3
+systemd-run --quiet --wait --pipe -p User=www-data -p EnvironmentFile=/etc/queensinn/api.env   -p WorkingDirectory=$R/api /usr/bin/dotnet $R/api/queensin.api.dll import-media $S/seed/media-manifest.json ${REPLACE_KEYS:+--replace=$REPLACE_KEYS} | tail -3
 migrate
 systemctl restart queensin-api
 

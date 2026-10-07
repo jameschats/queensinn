@@ -119,7 +119,11 @@ var app = builder.Build();
 
 // Operator commands run instead of the web server: `dotnet queensin.api.dll import-media <manifest.json>`.
 if (args.Length >= 2 && args[0] == queensin.api.Features.Media.MediaImporter.Command)
-    return await queensin.api.Features.Media.MediaImporter.RunAsync(app.Services, args[1]);
+{
+    var replace = args.Skip(2).Where(a => a.StartsWith("--replace=")).SelectMany(a => a["--replace=".Length..].Split(',', StringSplitOptions.RemoveEmptyEntries))
+        .ToHashSet(StringComparer.Ordinal);
+    return await queensin.api.Features.Media.MediaImporter.RunAsync(app.Services, args[1], replace);
+}
 
 // --- Pipeline ------------------------------------------------------------
 app.UseForwardedHeaders();

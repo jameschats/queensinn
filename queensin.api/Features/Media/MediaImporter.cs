@@ -8,7 +8,8 @@ namespace queensin.api.Features.Media;
 /// One-off operator command: <c>dotnet queensin.api.dll import-media manifest.json</c>.
 /// Downloads each image in the manifest over HTTPS and runs it through the normal WebP pipeline.
 /// Idempotent: an image whose key is already in the library (matched on FileName) is skipped,
-/// so a failed run can simply be repeated. Prints "key=id" lines for wiring images to rooms and slides.
+/// so a failed run can simply be repeated. <c>--replace=key1,key2</c> deletes and re-imports just those keys
+/// (use after changing the pipeline, e.g. encoding quality). Prints "key=id" lines for wiring images to rooms and slides.
 /// </summary>
 public static class MediaImporter
 {
@@ -16,7 +17,7 @@ public static class MediaImporter
 
     private sealed record Entry(string Key, string Url, string? Category, string? Alt, string? Caption);
 
-    public static async Task<int> RunAsync(IServiceProvider services, string manifestPath)
+    public static async Task<int> RunAsync(IServiceProvider services, string manifestPath, IReadOnlySet<string>? replaceKeys = null)
     {
         if (!File.Exists(manifestPath)) { Console.Error.WriteLine($"Manifest not found: {manifestPath}"); return 2; }
         var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -34,6 +35,12 @@ public static class MediaImporter
             try
             {
                 var existing = await db.MediaAssets.AsNoTracking().Where(m => m.FileName == e.Key).Select(m => m.MediaId).FirstOrDefaultAsync();
+                if (existing != 0 && replaceKeys?.Contains(e.Key) == true)
+                {
+                    await media.DeleteAsync(null, existing);      // FKs null out slides/rooms/slots; migration 010/011 relink them
+                    Console.Error.WriteLine($"replaced {e.Key} (was {existing})");
+                    existing = 0;
+                }
                 if (existing != 0) { Console.WriteLine($"{e.Key}={existing}"); continue; }
 
                 if (!Uri.TryCreate(e.Url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps)

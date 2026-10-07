@@ -29,7 +29,7 @@ import { ImageComponent } from './image.component';
       <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
         <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
-            [class]="full() ? 'max-w-[13ch] text-[clamp(44px,6.6vw,104px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>
+            [class]="full() ? 'max-w-[17ch] text-[clamp(36px,4.8vw,76px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>
         @if (lede()) {
           <p class="mt-7 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] text-on-primary/90 animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
         }

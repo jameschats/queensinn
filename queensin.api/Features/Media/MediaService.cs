@@ -17,7 +17,7 @@ public interface IMediaService
     Task<MediaDto> SaveImageAsync(Stream source, string originalName, string? category, string? altText, string? caption, long? actorId, CancellationToken ct = default);
     Task<PagedResult<MediaDto>> ListAsync(string? category, string? search, int page, int pageSize, CancellationToken ct = default);
     Task<MediaDto> UpdateAsync(long actorId, long id, UpdateMediaRequest req, CancellationToken ct = default);
-    Task DeleteAsync(long actorId, long id, CancellationToken ct = default);
+    Task DeleteAsync(long? actorId, long id, CancellationToken ct = default);
 }
 
 /// <summary>
@@ -30,7 +30,7 @@ public sealed class MediaService : IMediaService
     public static readonly string[] Categories = ["Rooms", "Dining", "Mahal", "Campus", "Events", "Attractions", "General"];
 
     private static readonly int[] TargetWidths = [480, 960, 1600, 2400];
-    private const int WebpQuality = 82;
+    private readonly int _webpQuality;
     private const long MaxPixels = 100_000_000;       // blocks decompression bombs
 
     private readonly QueensInnDbContext _db;
@@ -47,6 +47,7 @@ public sealed class MediaService : IMediaService
         _root = Path.GetFullPath(Path.IsPathRooted(upload) ? upload : Path.Combine(env.ContentRootPath, upload));
         _requestPath = (config["Media:RequestPath"] ?? "/uploads").TrimEnd('/');
         _maxBytes = config.GetValue<long?>("Media:MaxImageBytes") ?? 26_214_400;
+        _webpQuality = Math.Clamp(config.GetValue<int?>("Media:WebpQuality") ?? 78, 40, 95);
     }
 
     public async Task<MediaDto> SaveImageAsync(Stream source, string originalName, string? category, string? altText,
@@ -94,7 +95,7 @@ public sealed class MediaService : IMediaService
                 using var copy = image.Clone(x => { if (w != image.Width) x.Resize(w, 0); });
                 var file = $"{stem}-{w}.webp";
                 var full = Path.Combine(_root, folder, file);
-                await copy.SaveAsync(full, new WebpEncoder { Quality = WebpQuality }, ct);
+                await copy.SaveAsync(full, new WebpEncoder { Quality = _webpQuality, FileFormat = WebpFileFormatType.Lossy }, ct);
                 written.Add(full);
                 total += new FileInfo(full).Length;
                 variants[w] = $"{_requestPath}/{now:yyyy}/{now:MM}/{file}";
@@ -158,12 +159,12 @@ public sealed class MediaService : IMediaService
         return ToDto(m);
     }
 
-    public async Task DeleteAsync(long actorId, long id, CancellationToken ct = default)
+    public async Task DeleteAsync(long? actorId, long id, CancellationToken ct = default)
     {
         var m = await _db.MediaAssets.FirstOrDefaultAsync(x => x.MediaId == id, ct) ?? throw new AppException("Image not found.", 404);
         var urls = ParseVariants(m.VariantsJson).Values.Append(m.OriginalUrl).Distinct().ToList();
         _db.MediaAssets.Remove(m);     // FKs on rooms / hero slides / pages set the reference to NULL
-        _audit.Record(actorId, "Delete", "Media", id.ToString(), m.FileName);
+        if (actorId is { } a) _audit.Record(a, "Delete", "Media", id.ToString(), m.FileName);
         await _db.SaveChangesAsync(ct);
         foreach (var url in urls) TryDelete(ToDiskPath(url));
     }
