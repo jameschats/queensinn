@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
 import { ApiResponse } from '../models/api.model';
+import { MediaItem } from '../models/content.model';
 import { Theme } from '../models/site.model';
 
 export interface StaffUser {
@@ -49,6 +50,36 @@ export class AdminApiService {
 
   resetFavicon(): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/settings/favicon`).pipe(map(() => void 0));
+  }
+
+  // --- media library ---
+
+  mediaList(p: { kind?: string; category?: string; q?: string; page?: number; pageSize?: number }): Observable<{ items: MediaItem[]; totalCount: number; page: number; pageSize: number }> {
+    const params: Record<string, string> = {};
+    for (const [k, v] of Object.entries(p)) if (v !== undefined && v !== '') params[k] = String(v);
+    return this.http.get<ApiResponse<{ items: MediaItem[]; totalCount: number; page: number; pageSize: number }>>(`${this.base}/media`, { params }).pipe(map((r) => r.data!));
+  }
+
+  mediaCategories(): Observable<string[]> {
+    return this.http.get<ApiResponse<string[]>>(`${this.base}/media/categories`).pipe(map((r) => r.data ?? []));
+  }
+
+  /** Photos go through the WebP pipeline; MP4/WebM videos are stored as uploaded. */
+  uploadMedia(file: File, opts: { category?: string; altText?: string } = {}): Observable<MediaItem> {
+    const body = new FormData();
+    body.append('file', file);
+    if (opts.category) body.append('category', opts.category);
+    if (opts.altText) body.append('altText', opts.altText);
+    const path = file.type.startsWith('video/') ? 'media/video' : 'media';
+    return this.http.post<ApiResponse<MediaItem>>(`${this.base}/${path}`, body).pipe(map((r) => r.data!));
+  }
+
+  updateMedia(id: number, body: { altText: string; caption: string; category: string }): Observable<MediaItem> {
+    return this.http.put<ApiResponse<MediaItem>>(`${this.base}/media/${id}`, body).pipe(map((r) => r.data!));
+  }
+
+  deleteMedia(id: number): Observable<void> {
+    return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
   }
 
   saveTheme(theme: Theme): Observable<Theme> {

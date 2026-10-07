@@ -65,7 +65,7 @@ export class AdminLayoutComponent {
     { link: '/admin', label: 'Dashboard', icon: 'dash' },
     { link: '/admin/enquiries', label: 'Enquiries', icon: 'inbox', perm: Perm.EnquiryManage, stage: 6 },
     { link: '/admin/rooms', label: 'Rooms', icon: 'bed', perm: Perm.RoomManage, stage: 4 },
-    { link: '/admin/media', label: 'Media & gallery', icon: 'image', perm: Perm.MediaManage, stage: 3 },
+    { link: '/admin/media', label: 'Media library', icon: 'image', perm: Perm.MediaManage },
     { link: '/admin/pages', label: 'Pages & content', icon: 'doc', perm: Perm.CmsManage, stage: 4 },
     { link: '/admin/theme', label: 'Theme', icon: 'palette', perm: Perm.ThemeManage },
     { link: '/admin/settings', label: 'Site settings', icon: 'cog', perm: Perm.SettingsManage },

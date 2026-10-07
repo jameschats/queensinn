@@ -122,6 +122,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
+        path: 'media',
+        canActivate: [permissionGuard(Perm.MediaManage)],
+        loadComponent: () => import('./features/admin/media/media.component').then((m) => m.MediaComponent),
+      },
+      {
         path: 'users',
         canActivate: [permissionGuard(Perm.UserManage)],
         loadComponent: () => import('./features/admin/users/users.component').then((m) => m.UsersComponent),

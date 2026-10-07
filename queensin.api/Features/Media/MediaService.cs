@@ -15,7 +15,9 @@ public interface IMediaService
 {
     /// <summary>Validates, converts to WebP at several widths, and stores the result.</summary>
     Task<MediaDto> SaveImageAsync(Stream source, string originalName, string? category, string? altText, string? caption, long? actorId, CancellationToken ct = default);
-    Task<PagedResult<MediaDto>> ListAsync(string? category, string? search, int page, int pageSize, CancellationToken ct = default);
+    /// <summary>Stores a short MP4/WebM clip as uploaded (no transcoding) after checking its real file signature.</summary>
+    Task<MediaDto> SaveVideoAsync(Stream source, string originalName, string? category, string? altText, string? caption, long? actorId, CancellationToken ct = default);
+    Task<PagedResult<MediaDto>> ListAsync(string? category, string? kind, string? search, int page, int pageSize, CancellationToken ct = default);
     Task<MediaDto> UpdateAsync(long actorId, long id, UpdateMediaRequest req, CancellationToken ct = default);
     Task DeleteAsync(long? actorId, long id, CancellationToken ct = default);
 }
@@ -38,6 +40,7 @@ public sealed class MediaService : IMediaService
     private readonly string _root;
     private readonly string _requestPath;
     private readonly long _maxBytes;
+    private readonly long _maxVideoBytes;
 
     public MediaService(QueensInnDbContext db, IAuditService audit, IConfiguration config, IWebHostEnvironment env)
     {
@@ -47,6 +50,7 @@ public sealed class MediaService : IMediaService
         _root = Path.GetFullPath(Path.IsPathRooted(upload) ? upload : Path.Combine(env.ContentRootPath, upload));
         _requestPath = (config["Media:RequestPath"] ?? "/uploads").TrimEnd('/');
         _maxBytes = config.GetValue<long?>("Media:MaxImageBytes") ?? 26_214_400;
+        _maxVideoBytes = config.GetValue<long?>("Media:MaxVideoBytes") ?? 83_886_080;
         _webpQuality = Math.Clamp(config.GetValue<int?>("Media:WebpQuality") ?? 78, 40, 95);
     }
 
@@ -131,12 +135,76 @@ public sealed class MediaService : IMediaService
         return ToDto(asset);
     }
 
-    public async Task<PagedResult<MediaDto>> ListAsync(string? category, string? search, int page, int pageSize, CancellationToken ct = default)
+    public async Task<MediaDto> SaveVideoAsync(Stream source, string originalName, string? category, string? altText,
+        string? caption, long? actorId, CancellationToken ct = default)
+    {
+        category = NormaliseCategory(category);
+
+        var now = DateTime.UtcNow;
+        var folder = Path.Combine("videos", now.ToString("yyyy"), now.ToString("MM"));
+        Directory.CreateDirectory(Path.Combine(_root, folder));
+        var stem = Guid.NewGuid().ToString("N")[..12];
+
+        // Stream to a temp name first so a bad or oversized file never lands under its final name.
+        var temp = Path.Combine(_root, folder, stem + ".part");
+        string ext;
+        long size = 0;
+        try
+        {
+            await using (var file = File.Create(temp))
+            {
+                var buf = new byte[81920];
+                int n;
+                while ((n = await source.ReadAsync(buf, ct)) > 0)
+                {
+                    size += n;
+                    if (size > _maxVideoBytes) throw new AppException($"Video is larger than {_maxVideoBytes / 1024 / 1024} MB. Compress it first (1080p, 10-20 seconds, no sound is plenty).", 413);
+                    await file.WriteAsync(buf.AsMemory(0, n), ct);
+                }
+            }
+            if (size == 0) throw new AppException("The file is empty.");
+
+            // Trust the bytes, not the file name: MP4/MOV carry "ftyp" at offset 4, WebM starts with the EBML magic.
+            var head = new byte[12];
+            await using (var f = File.OpenRead(temp)) _ = await f.ReadAsync(head, ct);
+            if (head[4] == 'f' && head[5] == 't' && head[6] == 'y' && head[7] == 'p') ext = ".mp4";
+            else if (head[0] == 0x1A && head[1] == 0x45 && head[2] == 0xDF && head[3] == 0xA3) ext = ".webm";
+            else throw new AppException("That file is not an MP4 or WebM video.");
+
+            File.Move(temp, Path.Combine(_root, folder, stem + ext));
+        }
+        catch
+        {
+            TryDelete(temp);
+            throw;
+        }
+
+        var url = $"{_requestPath}/{folder.Replace(Path.DirectorySeparatorChar, '/')}/{stem}{ext}";
+        var asset = new MediaAsset
+        {
+            Kind = "video",
+            FileName = Path.GetFileName(originalName).Truncate(255),
+            OriginalUrl = url,
+            SizeBytes = size,
+            AltText = Clean(altText, 300),
+            Caption = Clean(caption, 300),
+            Category = category,
+            UploadedBy = actorId,
+            CreatedAt = now,
+        };
+        _db.MediaAssets.Add(asset);
+        if (actorId is { } a) _audit.Record(a, "Upload", "Media", null, $"{asset.FileName} (video, {size / 1024} KB)");
+        await _db.SaveChangesAsync(ct);
+        return ToDto(asset);
+    }
+
+    public async Task<PagedResult<MediaDto>> ListAsync(string? category, string? kind, string? search, int page, int pageSize, CancellationToken ct = default)
     {
         page = Math.Max(page, 1);
         pageSize = Math.Clamp(pageSize, 1, 100);
         var q = _db.MediaAssets.AsNoTracking().AsQueryable();
         if (!string.IsNullOrWhiteSpace(category)) q = q.Where(m => m.Category == category);
+        if (kind is "image" or "video") q = q.Where(m => m.Kind == kind);
         if (!string.IsNullOrWhiteSpace(search))
         {
             var s = search.Trim();

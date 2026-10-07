@@ -25,9 +25,9 @@ public sealed class MediaController : ControllerBase
     public IActionResult Categories() => Ok(ApiResponse<string[]>.Ok(MediaService.Categories));
 
     [HttpGet]
-    public async Task<IActionResult> List([FromQuery] string? category, [FromQuery] string? q,
+    public async Task<IActionResult> List([FromQuery] string? category, [FromQuery] string? kind, [FromQuery] string? q,
         [FromQuery] int page = 1, [FromQuery] int pageSize = 24, CancellationToken ct = default)
-        => Ok(ApiResponse<PagedResult<MediaDto>>.Ok(await _media.ListAsync(category, q, page, pageSize, ct)));
+        => Ok(ApiResponse<PagedResult<MediaDto>>.Ok(await _media.ListAsync(category, kind, q, page, pageSize, ct)));
 
     /// <summary>Upload one image. Several files are sent as several requests so each gets its own result.</summary>
     [HttpPost]
@@ -39,6 +39,19 @@ public sealed class MediaController : ControllerBase
         var dto = await _media.SaveImageAsync(stream, file.FileName, category, altText, caption, User.UserId(), ct);
         await _cache.EvictByTagAsync(SiteController.CacheTag, ct);
         return Ok(ApiResponse<MediaDto>.Ok(dto, "Image uploaded."));
+    }
+
+    /// <summary>Upload a short MP4/WebM clip (hero backgrounds). Stored as is; compress before uploading.</summary>
+    [HttpPost("video")]
+    [RequestSizeLimit(90_000_000)]
+    [RequestFormLimits(MultipartBodyLengthLimit = 90_000_000)]
+    public async Task<IActionResult> UploadVideo(IFormFile file, [FromForm] string? category, [FromForm] string? altText,
+        [FromForm] string? caption, CancellationToken ct)
+    {
+        await using var stream = file.OpenReadStream();
+        var dto = await _media.SaveVideoAsync(stream, file.FileName, category, altText, caption, User.UserId(), ct);
+        await _cache.EvictByTagAsync(SiteController.CacheTag, ct);
+        return Ok(ApiResponse<MediaDto>.Ok(dto, "Video uploaded."));
     }
 
     [HttpPut("{id:long}")]
