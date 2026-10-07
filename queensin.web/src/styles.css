@@ -39,6 +39,7 @@
     --sec: clamp(80px, 11vw, 160px);
   }
   /* --font-scale (admin text size / 17) scales every rem-based size; px sizes follow --base-size on body. */
+  html.no-smooth { scroll-behavior: auto; }
   html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; font-size: calc(16px * var(--font-scale, 1)); }
   body {
     margin: 0;
@@ -133,4 +134,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- page transitions (Router withViewTransitions) ----------
+   Pages cross-fade; the fixed header is its own named layer so it stays put instead of fading with the page. */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .38s; animation-timing-function: var(--ease-lux); }
+::view-transition-group(site-header) { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }

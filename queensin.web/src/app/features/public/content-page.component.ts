@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { PageHeroComponent } from '../../shared/page-hero.component';
 
@@ -17,6 +18,8 @@ export interface ContentPageData {
   plain?: boolean;
   /** Artwork shown behind the hero until the page has a photo (see qi-image for kinds). */
   art?: string;
+  /** Image slot (see ImageSlots) holding this page's hero photo; the artwork shows until one is set. */
+  heroSlot?: string;
 }
 
 /**
@@ -38,12 +41,17 @@ export interface ContentPageData {
         </div>
       </section>
     } @else {
-      <qi-page-hero [kicker]="page.kicker ?? ''" [title]="page.title" [lede]="page.lede ?? ''" [art]="page.art ?? 'dusk'" />
+      <qi-page-hero [kicker]="page.kicker ?? ''" [title]="page.title" [lede]="page.lede ?? ''" [art]="page.art ?? 'dusk'" [slides]="slides()" />
     }
     @for (a of page.anchors ?? []; track a) { <section [id]="a"></section> }`,
 })
 export class ContentPageComponent {
   protected readonly page = inject(ActivatedRoute).snapshot.data['page'] as ContentPageData;
+  private readonly content = inject(ContentService).content;
+  protected readonly slides = computed(() => {
+    const photo = this.page.heroSlot ? this.content().slots[this.page.heroSlot] : null;
+    return photo ? [photo] : [];
+  });
 
   constructor() {
     inject(SeoService).set({ title: this.page.metaTitle, description: this.page.metaDescription, path: this.page.path });

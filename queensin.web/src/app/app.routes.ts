@@ -1,8 +1,13 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { Perm } from './core/models/auth.model';
 import { adminGuard, guestGuard, permissionGuard, signedInGuard } from './core/guards/admin.guards';
+import { ContentService } from './core/services/content.service';
 import { ContentPageData } from './features/public/content-page.component';
 import { PublicLayoutComponent } from './layout/public-layout.component';
+
+/** Wait for photos/rooms before showing a page, so anchor scrolls land correctly and nothing jumps in later. */
+const withContent = { content: () => inject(ContentService).whenLoaded() };
 
 const page = (data: ContentPageData) => ({ page: data, solidHeader: data.plain === true });
 
@@ -15,12 +20,13 @@ export const routes: Routes = [
     path: '',
     component: PublicLayoutComponent,
     children: [
-      { path: '', pathMatch: 'full', loadComponent: () => import('./features/public/home.component').then((m) => m.HomeComponent) },
+      { path: '', pathMatch: 'full', resolve: withContent, loadComponent: () => import('./features/public/home.component').then((m) => m.HomeComponent) },
       {
         path: 'bookroom',
+        resolve: withContent,
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/bookroom', art: 'room', kicker: 'Stay with us', title: 'Rooms & suites',
+          path: '/bookroom', art: 'room', heroSlot: 'hero-bookroom', kicker: 'Stay with us', title: 'Rooms & suites',
           lede: 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.',
           metaTitle: "Rooms & Tariffs | Hotel Queen's Inn, Velankanni",
           metaDescription: "Deluxe, Executive Triple, Family and Queen's Suite rooms near the Velankanni Basilica. Send a reservation enquiry or WhatsApp the front desk.",
@@ -29,6 +35,7 @@ export const routes: Routes = [
       },
       {
         path: 'kvr-mahal',
+        resolve: withContent,
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
           path: '/kvr-mahal', art: 'mandap', kicker: 'KVR Mahal', title: 'Where sacred vows meet timeless hospitality',
@@ -40,9 +47,10 @@ export const routes: Routes = [
       },
       {
         path: 'about-us',
+        resolve: withContent,
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/about-us', art: 'arch', kicker: 'Our story', title: 'A quiet house near a sacred shore',
+          path: '/about-us', art: 'arch', heroSlot: 'hero-about', kicker: 'Our story', title: 'A quiet house near a sacred shore',
           lede: 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.',
           metaTitle: "About Us | Hotel Queen's Inn, Velankanni",
           metaDescription: 'Welcoming pilgrims, families and celebrations to Velankanni since 2017, on ECR Main Road near the Shrine Basilica.',
@@ -50,6 +58,7 @@ export const routes: Routes = [
       },
       {
         path: 'activities',
+        resolve: withContent,
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
           path: '/activities', art: 'sea', kicker: 'Experiences', title: 'Pilgrim trails and coastal days',

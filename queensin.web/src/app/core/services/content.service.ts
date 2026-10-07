@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, map, of, shareReplay } from 'rxjs';
+import { catchError, map, of, shareReplay, take } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
 import { ApiResponse } from '../models/api.model';
 import { EMPTY_CONTENT, PublicContent } from '../models/content.model';
@@ -20,6 +20,11 @@ export class ContentService {
     catchError(() => of(EMPTY_CONTENT)),
     shareReplay(1),
   );
+
+  /** Emits once the content has loaded. Route resolvers use it so a page renders complete (no late layout shifts). */
+  whenLoaded() {
+    return this.request$.pipe(take(1));
+  }
 
   /** Signal holding the content; empty until the response arrives. */
   readonly content = toSignal(this.request$, { initialValue: EMPTY_CONTENT });

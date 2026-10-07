@@ -1,6 +1,8 @@
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet, Scroll,
+} from '@angular/router';
 import { filter } from 'rxjs';
 import { SiteService } from '../core/services/site.service';
 import { BrandComponent } from '../shared/brand.component';
@@ -50,7 +52,23 @@ export class PublicLayoutComponent {
       this.menuOpen.set(false);
       this.onScroll();
     });
-    inject(DestroyRef).onDestroy(() => sub.unsubscribe());
+    // Jumping to an anchor on another page (e.g. Dining from /kvr-mahal) should land instantly, not
+    // glide down a whole page after the cross-fade; scrolling within a page stays smooth.
+    const root = inject(DOCUMENT).documentElement;
+    let lastPath = this.router.url.split(/[?#]/)[0];
+    const instantUntilScrolled = this.router.events.subscribe((e) => {
+      if (e instanceof NavigationStart) {
+        if (e.url.split(/[?#]/)[0] !== lastPath) root.classList.add('no-smooth');
+      } else if (e instanceof NavigationEnd) {
+        lastPath = e.urlAfterRedirects.split(/[?#]/)[0];
+        setTimeout(() => root.classList.remove('no-smooth'), 600);   // safety net
+      } else if (e instanceof Scroll) {
+        setTimeout(() => root.classList.remove('no-smooth'), 80);
+      } else if (e instanceof NavigationCancel || e instanceof NavigationError) {
+        root.classList.remove('no-smooth');
+      }
+    });
+    inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); });
   }
 
   protected onScroll(): void {
