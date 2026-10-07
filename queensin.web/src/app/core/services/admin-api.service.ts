@@ -40,6 +40,17 @@ export class AdminApiService {
     return this.http.put<ApiResponse<Record<string, string | null>>>(`${this.base}/settings`, { settings }).pipe(map((r) => r.data!));
   }
 
+  /** Upload a favicon image; the server crops it square and makes every size. Returns the stored base path. */
+  uploadFavicon(file: File): Observable<string> {
+    const body = new FormData();
+    body.append('file', file);
+    return this.http.post<ApiResponse<{ url: string }>>(`${this.base}/settings/favicon`, body).pipe(map((r) => r.data!.url));
+  }
+
+  resetFavicon(): Observable<void> {
+    return this.http.delete<ApiResponse<unknown>>(`${this.base}/settings/favicon`).pipe(map(() => void 0));
+  }
+
   saveTheme(theme: Theme): Observable<Theme> {
     return this.http.put<ApiResponse<Theme>>(`${this.base}/theme`, theme).pipe(map((r) => r.data!));
   }

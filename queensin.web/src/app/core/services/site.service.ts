@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
-import { API_BASE_URL } from '../api.config';
+import { API_BASE_URL, absUrl } from '../api.config';
 import { ApiResponse } from '../models/api.model';
 import { fontStack, googleFontsUrl } from '../models/fonts';
 import { DEFAULT_SETTINGS, DEFAULT_THEME, SiteData, Theme } from '../models/site.model';
@@ -30,6 +30,7 @@ export class SiteService {
         const merged: Record<string, string> = { ...DEFAULT_SETTINGS };
         for (const [k, v] of Object.entries(r.data.settings)) if (v) merged[k] = v;
         this.settings.set(merged);
+        this.applyFavicon(merged['FaviconUrl']);
         this.applyTheme(r.data.theme);
       }),
       map(() => void 0),
@@ -77,6 +78,36 @@ export class SiteService {
     ]));
   }
 
+  /**
+   * Uses the admin's uploaded favicon (a base path; the API writes -32/-48/-180/-192/-512 PNGs), or
+   * the built-in icon set when none is set. Runs on the server too, so the HTML ships the right icon.
+   */
+  applyFavicon(base: string | null | undefined): void {
+    const icons: { rel: string; kind: string; href: string; type?: string; sizes?: string }[] = base
+      ? [
+          { rel: 'icon', kind: 'png', href: `${absUrl(base)}-32.png`, type: 'image/png', sizes: '32x32' },
+          { rel: 'icon', kind: 'png192', href: `${absUrl(base)}-192.png`, type: 'image/png', sizes: '192x192' },
+          { rel: 'apple-touch-icon', kind: 'apple', href: `${absUrl(base)}-180.png` },
+        ]
+      : [
+          { rel: 'icon', kind: 'svg', href: '/favicon.svg', type: 'image/svg+xml' },
+          { rel: 'icon', kind: 'png', href: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
+          { rel: 'icon', kind: 'ico', href: '/favicon.ico', type: 'image/x-icon', sizes: '48x48' },
+          { rel: 'apple-touch-icon', kind: 'apple', href: '/apple-touch-icon.png' },
+        ];
+    const head = this.doc.head;
+    head.querySelectorAll('link[data-qi-icon]').forEach((l) => l.remove());
+    for (const i of icons) {
+      const link = this.doc.createElement('link');
+      link.rel = i.rel;
+      link.href = i.href;
+      if (i.type) link.type = i.type;
+      if (i.sizes) link.setAttribute('sizes', i.sizes);
+      link.setAttribute('data-qi-icon', i.kind);
+      head.appendChild(link);
+    }
+  }
+
   /** Loads extra families so the admin can show them in previews before they are chosen. */
   preloadFonts(names: string[]): void {
     if (names.length) this.setFontLink('qi-fonts-preview', googleFontsUrl(names.map((name) => ({ name, role: 'heading' as const }))));
@@ -102,5 +133,6 @@ export class SiteService {
       else delete merged[k];
     }
     this.settings.set({ ...DEFAULT_SETTINGS, ...merged });
+    this.applyFavicon(merged['FaviconUrl']);
   }
 }

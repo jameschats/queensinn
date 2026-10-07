@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { API_ORIGIN } from '../core/api.config';
+import { absUrl } from '../core/api.config';
 import { MediaItem } from '../core/models/content.model';
 import { artSvg } from './art';
-
-/** Upload URLs come back site-relative (/uploads/...). Behind Nginx that is the same origin; in development the API is elsewhere. */
-const abs = (u: string) => (u.startsWith('/') ? API_ORIGIN + u : u);
 
 /**
  * A photograph that fills its container (give the host a size or aspect ratio).
@@ -54,7 +51,7 @@ export class ImageComponent {
   protected readonly srcset = computed(() => {
     const v = this.media()?.variants ?? {};
     const entries = Object.entries(v).sort((a, b) => +a[0] - +b[0]);
-    return entries.length > 1 ? entries.map(([w, u]) => `${abs(u)} ${w}w`).join(', ') : null;
+    return entries.length > 1 ? entries.map(([w, u]) => `${absUrl(u)} ${w}w`).join(', ') : null;
   });
 
   /** A mid-size file as the fallback `src`, for browsers that ignore srcset. */
@@ -63,7 +60,7 @@ export class ImageComponent {
     if (!m) return '';
     const widths = Object.keys(m.variants).map(Number).sort((a, b) => a - b);
     const pick = widths.find((w) => w >= 960) ?? widths[widths.length - 1];
-    return abs(pick ? m.variants[pick] : m.url);
+    return absUrl(pick ? m.variants[pick] : m.url);
   });
 
   // The markup comes from our own artSvg() with fixed inputs, never from user content.

@@ -12,11 +12,13 @@ public sealed class SiteController : ControllerBase
     public const string CacheTag = "public";
 
     private readonly ISiteService _site;
+    private readonly IFaviconService _favicon;
     private readonly IOutputCacheStore _cache;
 
-    public SiteController(ISiteService site, IOutputCacheStore cache)
+    public SiteController(ISiteService site, IFaviconService favicon, IOutputCacheStore cache)
     {
         _site = site;
+        _favicon = favicon;
         _cache = cache;
     }
 
@@ -47,5 +49,26 @@ public sealed class SiteController : ControllerBase
         var result = await _site.UpdateThemeAsync(User.UserId(), theme, ct);
         await _cache.EvictByTagAsync(CacheTag, ct);
         return Ok(ApiResponse<ThemeDto>.Ok(result, "Theme saved. The website now uses these colours and fonts."));
+    }
+
+    /// <summary>Upload a favicon (any square-ish PNG/JPG/WebP, at least 192 px). The server makes every size.</summary>
+    [HttpPost("api/admin/settings/favicon")]
+    [Authorize(Policy = Perm.SettingsManage)]
+    [RequestSizeLimit(12_000_000)]
+    public async Task<IActionResult> UploadFavicon(IFormFile file, CancellationToken ct)
+    {
+        await using var stream = file.OpenReadStream();
+        var url = await _favicon.SetAsync(User.UserId(), stream, ct);
+        await _cache.EvictByTagAsync(CacheTag, ct);
+        return Ok(ApiResponse<object>.Ok(new { url }, "Favicon updated."));
+    }
+
+    [HttpDelete("api/admin/settings/favicon")]
+    [Authorize(Policy = Perm.SettingsManage)]
+    public async Task<IActionResult> ResetFavicon(CancellationToken ct)
+    {
+        await _favicon.ClearAsync(User.UserId(), ct);
+        await _cache.EvictByTagAsync(CacheTag, ct);
+        return Ok(ApiResponse<object>.Ok(new { reset = true }, "Favicon reset to the default."));
     }
 }

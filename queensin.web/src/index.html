@@ -8,7 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Default icon set. If the admin uploads a favicon, SiteService swaps these (data-qi-icon) for the uploaded one. -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" data-qi-icon="svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" data-qi-icon="png">
+  <link rel="icon" type="image/x-icon" sizes="48x48" href="favicon.ico" data-qi-icon="ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" data-qi-icon="apple">
+  <link rel="manifest" href="site.webmanifest">
   <!-- Per-environment runtime config (API URL, site URL). Written by deploy; see deploy/README.md. -->
   <script src="/config.js"></script>
 </head>

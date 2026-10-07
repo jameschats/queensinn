@@ -78,6 +78,7 @@ builder.Services.AddAuthorization(o =>
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IStaffUserService, StaffUserService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
+builder.Services.AddScoped<IFaviconService, FaviconService>();
 builder.Services.AddScoped<queensin.api.Features.Media.IMediaService, queensin.api.Features.Media.MediaService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IPublicContentService, queensin.api.Features.Content.PublicContentService>();
 
