@@ -275,16 +275,66 @@ export const PAGES: PageDef[] = [
     sections: [
       heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
       {
+        key: 'stats',
+        title: 'Key figures',
+        hint: 'The four numbers in the dark band under the hero. Leave a pair empty to hide it.',
+        fields: [
+          t('n1', 'Figure 1', '1,000'), t('t1', 'Figure 1 — label', 'guests in the ceremonial hall, from 500'),
+          t('n2', 'Figure 2', '300+'), t('t2', 'Figure 2 — label', 'seats in the dining pavilion'),
+          t('n3', 'Figure 3', '100%'), t('t3', 'Figure 3 — label', 'central air conditioning with silent backup'),
+          t('n4', 'Figure 4', '100+'), t('t4', 'Figure 4 — label', 'cars and tour buses parked inside the gates'),
+        ],
+      },
+      {
+        key: 'hall',
+        title: 'The ceremonial hall',
+        fields: [
+          t('kicker', 'Small line', 'The Grand Ceremonial Hall'),
+          t('title', 'Heading', 'A stage worthy of the vow'),
+          area('lede', 'Lead paragraph', 'High ceilings, crystal chandeliers and wide, pillarless sightlines, so every guest sees the muhurtham.', 3),
+          area('items', 'Highlights', 'Elevated main stage with a customisable backdrop\nAcoustically tuned hall with balanced PA distribution\nHigh-capacity central AC with silent generator backup', 4,
+            { hint: 'One per line. The icons are fixed by position.' }),
+        ],
+      },
+      {
+        key: 'dining',
+        title: 'The dining pavilion',
+        fields: [
+          t('kicker', 'Small line', 'Bhojana Saalai'),
+          t('title', 'Heading', 'A feast for three hundred at once'),
+          area('lede', 'Lead paragraph', 'Organised banquet rows for traditional banana-leaf service, served from our own commercial kitchen.', 3),
+          area('items', 'Highlights', 'Dedicated kitchen with high-pressure burners\nSeparate service flow, so the hall never crowds\nBuilt-in RO water plant and multi-basin wash bays', 4,
+            { hint: 'One per line. The icons are fixed by position.' }),
+        ],
+      },
+      {
+        key: 'compare',
+        title: 'Why one campus',
+        fields: [
+          t('kicker', 'Small line', 'Stay & celebrate'),
+          t('title', 'Heading', 'Why one campus changes everything'),
+          area('intro', 'Introduction', 'Outstation weddings usually scatter families across lodges. At KVR Mahal they stay together.', 3),
+          t('colOther', 'Left column title', 'A typical standalone mandapam'),
+          t('colUs', 'Right column title', "KVR Mahal with Queen's Inn"),
+          area('rows', 'Rows',
+            'Guest stays | Guests spread across outside lodges | 51 air-conditioned rooms on the same 3-acre campus\nBridal comfort | Small, basic dressing rooms | Two private AC green rooms with attached vanity suites\nParking | Street congestion and narrow access roads | Enclosed parking for 100+ cars and tour buses\nDrivers | No facilities for tour drivers | Rest quarters, washrooms and meals for drivers',
+            7, { hint: 'One per line, written as: Topic | Typical mandapam | KVR Mahal.' }),
+        ],
+      },
+      {
         key: 'enquiry',
         title: 'Event enquiry form',
         fields: [
           t('kicker', 'Small line', 'Plan your event'),
           t('title', 'Heading', 'Check a date for your celebration'),
-          area('intro', 'Introduction', 'Share your date and our events team will confirm availability and send a quotation, usually within a day.', 3),
+          area('intro', 'Introduction', 'Tell us about the occasion. Our events team will share availability, a quotation and room blocks for your guests.', 3),
         ],
       },
     ],
-    slots: [],
+    slots: [
+      { key: 'mahal-hall', label: 'Ceremonial hall photo', hint: 'Shown in an arched frame; a tall photo works best. Themed artwork shows until you add one.' },
+      { key: 'mahal-dining', label: 'Dining pavilion photo', hint: 'A wide photo works best.' },
+    ],
   },
   {
     slug: 'about-us',
@@ -295,8 +345,42 @@ export const PAGES: PageDef[] = [
       title: "About Us | Hotel Queen's Inn, Velankanni",
       description: 'Welcoming pilgrims, families and celebrations to Velankanni since 2017, on ECR Main Road near the Shrine Basilica.',
     },
-    sections: [heroSection('Our story', 'A quiet house near a sacred shore', 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.', false)],
-    slots: [],
+    sections: [
+      heroSection('Our story', 'A quiet house near a sacred shore', 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.', false),
+      {
+        key: 'story',
+        title: 'The story',
+        fields: [
+          t('title', 'Heading', 'Built for the people who come to pray, and the families who come with them'),
+          area('lede', 'Lead paragraph', "Queen's Inn opened in October 2017 on East Coast Road, half a kilometre from the Shrine Basilica.", 3),
+          area('body', 'The rest of the story',
+            "We set out to give Velankanni a hotel that matched the importance of the journey: rooms that are calm and spotless, food that is honest, and a campus large enough that it never feels crowded, even during the Feast.\n\nToday the three-acre campus holds 51 rooms, the Q Multi-Cuisine Restaurant, garden lawns and KVR Mahal, our ceremonial hall for weddings and community celebrations.",
+            8, { hint: 'Leave a blank line between paragraphs.' }),
+        ],
+      },
+      {
+        key: 'standards',
+        title: 'Our standards',
+        fields: [
+          t('kicker', 'Small line', 'Our standards'),
+          t('title', 'Heading', 'What you can count on'),
+          area('items', 'Three points',
+            'Safety first | Gated campus, CCTV, trained night security and verified guest registration.\nSilent comfort | Central cooling and silent generators, so rest is never interrupted.\nHygiene | Daily housekeeping, RO drinking water and separate veg and non-veg kitchens.',
+            5, { hint: 'One per line, written as: Heading | Text. The icons are fixed by position.' }),
+        ],
+      },
+      {
+        key: 'location',
+        title: 'Location',
+        fields: [
+          t('kicker', 'Small line', 'Location'),
+          t('title', 'Heading', 'On ECR, minutes from everything'),
+          area('body', 'Text', "The hotel stands on East Coast Road at Arch West Street, ten minutes' walk from the Basilica and the holy tank, and within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar.", 4),
+          t('buttonText', 'Button', 'Explore the region'),
+        ],
+      },
+    ],
+    slots: [{ key: 'lawn', label: 'Garden photo', hint: 'Shown beside the story. A tall photo works best.' }],
   },
   {
     slug: 'activities',

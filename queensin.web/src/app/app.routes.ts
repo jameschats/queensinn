@@ -43,8 +43,16 @@ export const routes: Routes = [
         resolve: withContent,
         loadComponent: () => import('./features/public/stay.component').then((m) => m.StayComponent),
       },
-      contentRoute('kvr-mahal', { slug: 'kvr-mahal', path: '/kvr-mahal', art: 'mandap', anchors: ['mahal-enquiry'] }),
-      contentRoute('about-us', { slug: 'about-us', path: '/about-us', art: 'arch' }),
+      {
+        path: 'kvr-mahal',
+        resolve: withContent,
+        loadComponent: () => import('./features/public/kvr-mahal.component').then((m) => m.KvrMahalComponent),
+      },
+      {
+        path: 'about-us',
+        resolve: withContent,
+        loadComponent: () => import('./features/public/about.component').then((m) => m.AboutComponent),
+      },
       contentRoute('activities', { slug: 'activities', path: '/activities', art: 'sea' }),
       {
         path: 'contact',

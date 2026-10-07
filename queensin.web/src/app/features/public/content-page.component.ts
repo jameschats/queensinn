@@ -5,7 +5,6 @@ import { heroShadePercent, pageDef } from '../../core/content/page-schemas';
 import { ContentService } from '../../core/services/content.service';
 import { Policy } from '../../core/services/policy.service';
 import { SeoService } from '../../core/services/seo.service';
-import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
 
 /** Route data for the pages that are still shells until Stage 5 builds their real content. */
@@ -32,7 +31,7 @@ export interface ContentPageData {
  */
 @Component({
   selector: 'qi-content-page',
-  imports: [PageHeroComponent, EnquiryFormComponent],
+  imports: [PageHeroComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (page.plain) {
@@ -53,18 +52,6 @@ export interface ContentPageData {
                     [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
     }
     @switch (page.slug) {
-      @case ('kvr-mahal') {
-        <section class="sec bg-tint" id="mahal-enquiry">
-          <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">
-            <div>
-              <span class="kicker">{{ t2('enquiry', 'kicker') }}</span>
-              <h2 class="h-display">{{ t2('enquiry', 'title') }}</h2>
-              <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t2('enquiry', 'intro') }}</p>
-            </div>
-            <qi-enquiry-form type="Mahal" />
-          </div>
-        </section>
-      }
       @default {
         @for (a of page.anchors ?? []; track a) { <section [id]="a"></section> }
       }

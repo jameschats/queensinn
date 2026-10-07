@@ -25,7 +25,7 @@ import { ImageComponent } from './image.component';
           <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
         </div>
       } @empty {
-        <qi-image class="absolute inset-0 h-full w-full" [art]="art()" />
+        <qi-image class="absolute inset-0 h-full w-full opacity-40" [art]="art()" />
       }
       @if (playingVideo() && video(); as v) {
         <video #vid class="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms]" [class.opacity-0]="!videoReady()"

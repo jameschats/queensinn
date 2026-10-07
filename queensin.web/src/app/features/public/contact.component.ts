@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { absUrl } from '../../core/api.config';
 import { heroShadePercent } from '../../core/content/page-schemas';
 import { ContentService } from '../../core/services/content.service';
@@ -7,11 +6,8 @@ import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
 import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { IconComponent } from '../../shared/icon.component';
+import { MapEmbedComponent } from '../../shared/map-embed.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
-
-/** Used only if the hotel's coordinates are missing or malformed in Site settings. */
-const FALLBACK_QUERY = 'Hotel Queens Inn Velankanni';
-const COORD = /^-?\d{1,3}(\.\d{1,8})?$/;
 
 /**
  * Contact page: every way to reach the front desk, the address with a map, and the hours. Phone numbers, emails,
@@ -20,7 +16,7 @@ const COORD = /^-?\d{1,3}(\.\d{1,8})?$/;
  */
 @Component({
   selector: 'qi-contact',
-  imports: [IconComponent, PageHeroComponent, EnquiryFormComponent],
+  imports: [IconComponent, PageHeroComponent, EnquiryFormComponent, MapEmbedComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="portico"
@@ -89,15 +85,12 @@ const COORD = /^-?\d{1,3}(\.\d{1,8})?$/;
       <div class="wrap mt-[clamp(64px,8vw,110px)]">
         <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('visit', 'title') }}</h2>
         <p class="mt-4 max-w-[62ch] whitespace-pre-line text-muted">{{ t('visit', 'body') }}</p>
-        <div class="mt-8 aspect-[16/9] w-full overflow-hidden border border-line bg-tint md:aspect-[21/9]">
-          <iframe class="h-full w-full border-0" [src]="mapSrc()" title="Map showing Hotel Queen's Inn, Velankanni" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        </div>
+        <qi-map-embed class="mt-8 aspect-[16/9] w-full md:aspect-[21/9]" />
       </div>
     </section>`,
 })
 export class ContactComponent {
   private readonly cs = inject(ContentService);
-  private readonly sanitizer = inject(DomSanitizer);
   protected readonly site = inject(SiteService);
 
   private readonly stored = computed(() => this.cs.content().pages['contact']);
@@ -107,14 +100,6 @@ export class ContactComponent {
   protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
 
   protected readonly hours = computed(() => this.cs.rows('contact', 'hours', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']));
-
-  /** A Google Maps embed at the hotel's coordinates. Only plain numbers are allowed into the address. */
-  protected readonly mapSrc = computed(() => {
-    const lat = this.site.get('Latitude') || '10.6806';
-    const lng = this.site.get('Longitude') || '79.8474';
-    const q = COORD.test(lat) && COORD.test(lng) ? `${lat},${lng}` : encodeURIComponent(FALLBACK_QUERY);
-    return this.sanitizer.bypassSecurityTrustResourceUrl(`https://maps.google.com/maps?q=${q}&z=15&output=embed`);
-  });
 
   constructor() {
     const seo = this.cs.seo('contact');
