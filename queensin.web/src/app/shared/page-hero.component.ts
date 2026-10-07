@@ -14,7 +14,7 @@ import { ImageComponent } from './image.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="on-dark relative flex overflow-hidden bg-primary text-on-primary"
-             [class]="full() ? 'h-svh min-h-[640px]' : 'h-[70vh] min-h-[520px]'">
+             [class]="full() ? 'h-svh min-h-[640px]' : 'min-h-[70vh] pt-[150px]'">
       @for (s of slides(); track s.id; let i = $index) {
         <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
              [class.kb]="i === active()" [attr.aria-hidden]="i !== active()">
@@ -28,7 +28,8 @@ import { ImageComponent } from './image.component';
       <div class="absolute inset-0 bg-gradient-to-r from-primary/65 via-primary/25 to-transparent"></div>
       <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
-        <h1 class="max-w-[13ch] text-[clamp(44px,6.6vw,104px)] leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]">{{ title() }}</h1>
+        <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
+            [class]="full() ? 'max-w-[13ch] text-[clamp(44px,6.6vw,104px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>
         @if (lede()) {
           <p class="mt-7 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] text-on-primary/90 animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
         }

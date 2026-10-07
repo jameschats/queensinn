@@ -20,7 +20,9 @@ const abs = (u: string) => (u.startsWith('/') ? API_ORIGIN + u : u);
 @Component({
   selector: 'qi-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'block relative overflow-hidden bg-primary' },
+  host: { class: 'block overflow-hidden bg-primary' },
+  // In the base layer so a consumer's `absolute` / `fixed` utility overrides it (same-layer `relative` used to win).
+  styles: `@layer base { :host { position: relative; } }`,
   template: `
     @if (media(); as m) {
       @if (m.placeholder) {

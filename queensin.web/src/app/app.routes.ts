@@ -20,7 +20,7 @@ export const routes: Routes = [
         path: 'bookroom',
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/bookroom', kicker: 'Stay with us', title: 'Rooms & suites',
+          path: '/bookroom', art: 'room', kicker: 'Stay with us', title: 'Rooms & suites',
           lede: 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.',
           metaTitle: "Rooms & Tariffs | Hotel Queen's Inn, Velankanni",
           metaDescription: "Deluxe, Executive Triple, Family and Queen's Suite rooms near the Velankanni Basilica. Send a reservation enquiry or WhatsApp the front desk.",
@@ -31,7 +31,7 @@ export const routes: Routes = [
         path: 'kvr-mahal',
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/kvr-mahal', kicker: 'KVR Mahal', title: 'Where sacred vows meet timeless hospitality',
+          path: '/kvr-mahal', art: 'mandap', kicker: 'KVR Mahal', title: 'Where sacred vows meet timeless hospitality',
           lede: "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.",
           metaTitle: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
           metaDescription: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
@@ -42,7 +42,7 @@ export const routes: Routes = [
         path: 'about-us',
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/about-us', kicker: 'Our story', title: 'A quiet house near a sacred shore',
+          path: '/about-us', art: 'arch', kicker: 'Our story', title: 'A quiet house near a sacred shore',
           lede: 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.',
           metaTitle: "About Us | Hotel Queen's Inn, Velankanni",
           metaDescription: 'Welcoming pilgrims, families and celebrations to Velankanni since 2017, on ECR Main Road near the Shrine Basilica.',
@@ -52,7 +52,7 @@ export const routes: Routes = [
         path: 'activities',
         loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
         data: page({
-          path: '/activities', kicker: 'Experiences', title: 'Pilgrim trails and coastal days',
+          path: '/activities', art: 'sea', kicker: 'Experiences', title: 'Pilgrim trails and coastal days',
           lede: 'A gentle base for the sacred sites and wild coast of the Cauvery delta.',
           metaTitle: "Things to Do Near Velankanni | Hotel Queen's Inn",
           metaDescription: 'Velankanni Basilica, Nagore Dargah, Thirunallar, Point Calimere, Muthupet mangroves and Tranquebar, with distances from the hotel.',

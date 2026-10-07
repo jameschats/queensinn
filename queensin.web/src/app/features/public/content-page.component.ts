@@ -15,6 +15,8 @@ export interface ContentPageData {
   anchors?: string[];
   /** Pages without a hero (policies) use a plain heading instead. */
   plain?: boolean;
+  /** Artwork shown behind the hero until the page has a photo (see qi-image for kinds). */
+  art?: string;
 }
 
 /**
@@ -36,7 +38,7 @@ export interface ContentPageData {
         </div>
       </section>
     } @else {
-      <qi-page-hero [kicker]="page.kicker ?? ''" [title]="page.title" [lede]="page.lede ?? ''" />
+      <qi-page-hero [kicker]="page.kicker ?? ''" [title]="page.title" [lede]="page.lede ?? ''" [art]="page.art ?? 'dusk'" />
     }
     @for (a of page.anchors ?? []; track a) { <section [id]="a"></section> }`,
 })

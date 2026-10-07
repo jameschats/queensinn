@@ -10,7 +10,7 @@
     <nav class="hidden gap-[clamp(18px,2.2vw,36px)] text-[13px] tracking-[.08em] min-[1081px]:flex" aria-label="Main">
       @for (item of nav; track item.label) {
         <a [routerLink]="item.link" [fragment]="item.fragment"
-           routerLinkActive="!border-accent" [routerLinkActiveOptions]="{ exact: !item.fragment }"
+           [routerLinkActive]="item.fragment ? '' : '!border-accent'" [routerLinkActiveOptions]="{ exact: false }"
            class="border-b border-transparent py-1.5 transition-colors duration-500 hover:border-accent">{{ item.label }}</a>
       }
     </nav>
