@@ -49,6 +49,47 @@ export interface SavePage {
   slots?: Record<string, number | null>;
 }
 
+export interface AmenityAdmin {
+  id: number;
+  name: string;
+  icon: string | null;
+}
+
+export interface RoomAdmin {
+  id: number;
+  slug: string;
+  name: string;
+  tagline: string | null;
+  description: string | null;
+  sizeSqFt: number | null;
+  bedType: string | null;
+  viewType: string | null;
+  maxGuests: number;
+  startingTariff: number | null;
+  taxNote: string | null;
+  isActive: boolean;
+  displayOrder: number;
+  featured: MediaItem | null;
+  images: MediaItem[];
+  amenityIds: number[];
+}
+
+export interface SaveRoom {
+  name: string;
+  tagline: string;
+  description: string;
+  sizeSqFt: number | null;
+  bedType: string;
+  viewType: string;
+  maxGuests: number;
+  startingTariff: number | null;
+  taxNote: string;
+  isActive: boolean;
+  featuredMediaId: number | null;
+  imageIds: number[];
+  amenityIds: number[];
+}
+
 export interface EnquirySummary {
   id: number;
   reference: string;
@@ -170,6 +211,40 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- rooms ---
+
+  rooms(): Observable<RoomAdmin[]> {
+    return this.http.get<ApiResponse<RoomAdmin[]>>(`${this.base}/rooms`).pipe(map((r) => r.data ?? []));
+  }
+
+  room(id: number): Observable<RoomAdmin> {
+    return this.http.get<ApiResponse<RoomAdmin>>(`${this.base}/rooms/${id}`).pipe(map((r) => r.data!));
+  }
+
+  createRoom(body: SaveRoom): Observable<RoomAdmin> {
+    return this.http.post<ApiResponse<RoomAdmin>>(`${this.base}/rooms`, body).pipe(map((r) => r.data!));
+  }
+
+  saveRoom(id: number, body: SaveRoom): Observable<RoomAdmin> {
+    return this.http.put<ApiResponse<RoomAdmin>>(`${this.base}/rooms/${id}`, body).pipe(map((r) => r.data!));
+  }
+
+  reorderRooms(ids: number[]): Observable<void> {
+    return this.http.put<ApiResponse<unknown>>(`${this.base}/rooms/order`, ids).pipe(map(() => void 0));
+  }
+
+  deleteRoom(id: number): Observable<void> {
+    return this.http.delete<ApiResponse<unknown>>(`${this.base}/rooms/${id}`).pipe(map(() => void 0));
+  }
+
+  amenities(): Observable<AmenityAdmin[]> {
+    return this.http.get<ApiResponse<AmenityAdmin[]>>(`${this.base}/amenities`).pipe(map((r) => r.data ?? []));
+  }
+
+  createAmenity(name: string): Observable<AmenityAdmin> {
+    return this.http.post<ApiResponse<AmenityAdmin>>(`${this.base}/amenities`, { name }).pipe(map((r) => r.data!));
   }
 
   // --- enquiries ---

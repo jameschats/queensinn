@@ -240,11 +240,24 @@ export const PAGES: PageDef[] = [
       heroSection('Stay with us', 'Rooms & suites', 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.', false),
       {
         key: 'enquiry',
-        title: 'Room enquiry form',
+        title: 'Reservation form',
         fields: [
           t('kicker', 'Small line', 'Reserve your stay'),
           t('title', 'Heading', 'Request a reservation'),
-          area('intro', 'Introduction', 'Tell us your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.', 3),
+          area('intro', 'Introduction', "We don't take bookings or payments online. Send your dates and the desk will confirm by phone or WhatsApp.", 3),
+        ],
+      },
+      {
+        key: 'know',
+        title: 'Good to know',
+        hint: 'Check-in and check-out times come from Site settings: write {checkin} and {checkout} where the times belong.',
+        fields: [
+          t('kicker', 'Small line', 'Before you arrive'),
+          t('title', 'Heading', 'Good to know'),
+          t('linkText', 'Link to the policies', 'Full policies'),
+          area('items', 'Points',
+            'Check-in from {checkin} | Early check-in on request, subject to availability.\nCheck-out by {checkout} | Late check-out can be arranged at the desk.\nPhoto ID | Government-issued ID required for every adult guest.\nFree cancellation | Up to 48 hours before arrival. Feast-period rules differ.',
+            6, { hint: 'One per line, written as: Heading | Text.' }),
         ],
       },
     ],

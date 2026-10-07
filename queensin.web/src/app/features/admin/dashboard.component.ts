@@ -44,6 +44,9 @@ import { EnquiryCountsService } from '../../core/services/enquiry-counts.service
     }
 
     <div class="grid gap-4 md:grid-cols-3">
+      @if (auth.can(perm.RoomManage)) {
+        <a routerLink="/admin/rooms" class="card hover:border-accent"><b class="font-medium">Rooms</b><p class="mt-1 text-[13px] text-[#6B7485]">Names, prices, descriptions, photos and amenities.</p></a>
+      }
       @if (auth.can(perm.CmsManage)) {
         <a routerLink="/admin/pages" class="card hover:border-accent"><b class="font-medium">Pages &amp; content</b><p class="mt-1 text-[13px] text-[#6B7485]">Headings, photos, video and search text for each page.</p></a>
       }

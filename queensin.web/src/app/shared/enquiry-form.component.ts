@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { API_BASE_URL } from '../core/api.config';
 import { ApiResponse } from '../core/models/api.model';
@@ -118,6 +118,13 @@ export class EnquiryFormComponent {
   protected readonly receipt = signal<string | null>(null);
 
   protected model = this.blank();
+
+  constructor() {
+    effect(() => {
+      const id = this.roomId();
+      if (id !== null) untracked(() => (this.model.roomId = id));
+    });
+  }
 
   protected readonly typeLabel = computed(() => ({ Room: 'room enquiry', Mahal: 'event enquiry', Contact: 'message' })[this.type()]);
   protected readonly buttonText = computed(() => ({ Room: 'Send enquiry', Mahal: 'Check availability', Contact: 'Send message' })[this.type()]);

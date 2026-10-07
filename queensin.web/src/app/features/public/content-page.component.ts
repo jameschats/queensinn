@@ -53,18 +53,6 @@ export interface ContentPageData {
                     [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
     }
     @switch (page.slug) {
-      @case ('bookroom') {
-        <section class="sec" id="reserve">
-          <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">
-            <div>
-              <span class="kicker">{{ t2('enquiry', 'kicker') }}</span>
-              <h2 class="h-display">{{ t2('enquiry', 'title') }}</h2>
-              <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t2('enquiry', 'intro') }}</p>
-            </div>
-            <qi-enquiry-form type="Room" />
-          </div>
-        </section>
-      }
       @case ('kvr-mahal') {
         <section class="sec bg-tint" id="mahal-enquiry">
           <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">

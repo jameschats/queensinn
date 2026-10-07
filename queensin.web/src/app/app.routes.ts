@@ -38,7 +38,11 @@ export const routes: Routes = [
     component: PublicLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', resolve: withContent, loadComponent: () => import('./features/public/home.component').then((m) => m.HomeComponent) },
-      contentRoute('bookroom', { slug: 'bookroom', path: '/bookroom', art: 'room', anchors: ['reserve'] }),
+      {
+        path: 'bookroom',
+        resolve: withContent,
+        loadComponent: () => import('./features/public/stay.component').then((m) => m.StayComponent),
+      },
       contentRoute('kvr-mahal', { slug: 'kvr-mahal', path: '/kvr-mahal', art: 'mandap', anchors: ['mahal-enquiry'] }),
       contentRoute('about-us', { slug: 'about-us', path: '/about-us', art: 'arch' }),
       contentRoute('activities', { slug: 'activities', path: '/activities', art: 'sea' }),
@@ -96,6 +100,17 @@ export const routes: Routes = [
         canActivate: [permissionGuard(Perm.CmsManage)],
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
+      },
+      {
+        path: 'rooms',
+        canActivate: [permissionGuard(Perm.RoomManage)],
+        loadComponent: () => import('./features/admin/rooms/rooms.component').then((m) => m.RoomsAdminComponent),
+      },
+      {
+        path: 'rooms/:id',
+        canActivate: [permissionGuard(Perm.RoomManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/rooms/room-editor.component').then((m) => m.RoomEditorComponent),
       },
       {
         path: 'enquiries',
