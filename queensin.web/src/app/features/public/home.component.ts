@@ -1,22 +1,26 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, afterNextRender, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { absUrl } from '../../core/api.config';
+import { HOME_AMENITY_ICONS } from '../../core/content/page-schemas';
 import { MediaItem } from '../../core/models/content.model';
 import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
 import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
+import { ParsedLink, parseLink } from '../../shared/link';
 import { PageHeroComponent } from '../../shared/page-hero.component';
-
-const DEFAULT_HEADLINE = 'Tranquility meets luxury in the sacred heart of Velankanni';
-const DEFAULT_SUB =
-  'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.';
 
 /** Photo shapes for the masonry gallery, cycled so the columns stay lively. */
 const GALLERY_SHAPES = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-[2/3]', 'aspect-[4/3]', 'aspect-square', 'aspect-[3/4]'];
 const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fort'];
 
+/**
+ * The front page. Every piece of wording comes from `t(section, field)`, which returns what the admin set in
+ * Pages & content, or the built-in default from page-schemas.ts; photos come from the page's hero list and
+ * named photo positions. Rooms, gallery, experiences and guest quotes come from their own admin screens.
+ */
 @Component({
   selector: 'qi-home',
   imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent],
@@ -24,15 +28,15 @@ const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fo
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  private readonly content = inject(ContentService).content;
+  private readonly cs = inject(ContentService);
+  private readonly content = this.cs.content;
   private readonly doc = inject(DOCUMENT);
   protected readonly site = inject(SiteService);
 
   // --- hero ---
-  protected readonly heroSlides = computed(() => this.content().hero.map((s) => s.image).filter((i): i is MediaItem => !!i));
-  private readonly heroText = computed(() => this.content().hero.find((s) => s.headline));
-  protected readonly headline = computed(() => this.heroText()?.headline || DEFAULT_HEADLINE);
-  protected readonly sub = computed(() => this.heroText()?.subHeadline || DEFAULT_SUB);
+  private readonly page = computed(() => this.content().pages['home']);
+  protected readonly heroPhotos = computed(() => this.page()?.heroPhotos ?? []);
+  protected readonly heroVideo = computed(() => this.page()?.heroVideo ?? null);
 
   // --- rooms ---
   protected readonly rooms = computed(() => this.content().rooms);
@@ -45,30 +49,10 @@ export class HomeComponent {
     [0, 1, 3].map((i) => ({ a: this.content().attractions[i], art: ATTRACTION_ART[i] })).filter((x) => !!x.a));
   protected readonly quotes = computed(() => this.content().testimonials);
 
-  protected readonly stats = [
-    { n: '3', t: 'acres of gated gardens and lawns' },
-    { n: '51', t: 'air-conditioned rooms in four categories' },
-    { n: '500 m', t: 'walk to the Shrine Basilica' },
-    { n: '24 h', t: 'reception and in-room dining' },
-  ];
-  protected readonly amenities = [
-    { i: 'bell', t: '24-hour reception', d: 'Concierge help with darshan timings and travel' },
-    { i: 'snow', t: 'Silent central cooling', d: 'Quiet air conditioning across the campus' },
-    { i: 'bolt', t: 'Full power backup', d: 'Silent generators for rooms and halls' },
-    { i: 'wifi', t: 'Wi-Fi throughout', d: 'Rooms, lobby and restaurant' },
-    { i: 'car', t: 'Secure parking', d: '100+ cars and tour buses inside the gates' },
-    { i: 'tray', t: 'In-room dining', d: 'Served around the clock' },
-    { i: 'people', t: 'Meeting hall', d: 'For family gatherings and business groups' },
-    { i: 'leaf', t: 'Garden lawns', d: 'With a children’s play area' },
-    { i: 'bed', t: 'Driver quarters', d: 'Rest rooms, washrooms and meals for drivers' },
-    { i: 'shield', t: 'Gated & guarded', d: 'CCTV and round-the-clock security' },
-  ];
-  protected readonly dining = [
-    ['Breakfast buffet', '7:00 – 10:30'],
-    ['Lunch', '12:30 – 15:30'],
-    ['Dinner', '19:30 – 22:30'],
-    ['In-room dining', '24 hours'],
-  ];
+  protected readonly stats = computed(() => [1, 2, 3, 4].map((i) => ({ n: this.t('stats', 'n' + i), t: this.t('stats', 't' + i) })));
+  protected readonly amenities = computed(() =>
+    this.cs.rows('home', 'amenities', 'items').map((r, i) => ({ i: HOME_AMENITY_ICONS[i] ?? 'shield', t: r[0] ?? '', d: r[1] ?? '' })));
+  protected readonly dining = computed(() => this.cs.rows('home', 'dining', 'hours').map((r) => [r[0] ?? '', r[1] ?? '']));
 
   // --- guest quotes (rotate in the browser only) ---
   protected readonly quoteIndex = signal(0);
@@ -81,21 +65,28 @@ export class HomeComponent {
   });
 
   constructor() {
-    inject(SeoService).set({
-      title: "Hotel Queen's Inn, Velankanni | Luxury Hotel & KVR Mahal",
-      description: 'A three-acre luxury hotel on ECR Main Road, 500 m from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
-      path: '/',
-    });
+    const seo = this.cs.seo('home');
+    inject(SeoService).set({ title: seo.title, description: seo.description, path: '/', image: seo.image ? absUrl(seo.image) : undefined });
 
     const destroyRef = inject(DestroyRef);
     afterNextRender(() => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const t = setInterval(() => {
+      const timer = setInterval(() => {
         const n = this.quotes().length;
         if (n > 1) this.quoteIndex.update((i) => (i + 1) % n);
       }, 7000);
-      destroyRef.onDestroy(() => clearInterval(t));
+      destroyRef.onDestroy(() => clearInterval(timer));
     });
+  }
+
+  /** The admin's wording for a field on this page, or the built-in default. */
+  protected t(section: string, field: string): string {
+    return this.cs.text('home', section, field);
+  }
+
+  /** A button's destination, from an address field such as hero.cta1Url. */
+  protected link(section: string, field: string): ParsedLink {
+    return parseLink(this.t(section, field));
   }
 
   /** The photo in a named slot, or null (which shows themed artwork instead). */

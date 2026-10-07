@@ -1,0 +1,204 @@
+@if (!def) {
+  <div class="card">This page can't be edited here. <a routerLink="/admin/pages" class="underline">Back to all pages</a></div>
+} @else {
+  <header class="mb-5 flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <a routerLink="/admin/pages" class="text-[13px] text-[#6B7485] hover:underline">← All pages</a>
+      <h1 class="mt-1 text-[22px] font-medium">{{ def.label }}</h1>
+      <p class="mt-0.5 text-[13.5px] text-[#6B7485]">Website address: <b class="font-medium text-[#1D2430]">{{ def.path }}</b></p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      @if (dirty()) { <span class="pill pill-warn">Unsaved changes</span> }
+      <a [href]="def.path" target="_blank" rel="noopener" class="abtn"><qi-icon name="ext" [size]="15" />View page</a>
+      <button type="button" class="abtn abtn-pri" [disabled]="saving() || loading() || !dirty()" (click)="save()">{{ saving() ? 'Saving…' : 'Save changes' }}</button>
+    </div>
+  </header>
+
+  @if (message(); as m) { <p class="alert mb-4" [class.alert-ok]="m.ok" role="status">{{ m.text }}</p> }
+
+  @if (loading()) {
+    <div class="card text-[#6B7485]">Loading…</div>
+  } @else {
+    <nav class="mb-5 flex flex-wrap gap-1 border-b border-[#E3E6EB]" role="tablist" aria-label="Page sections">
+      @for (t of tabs(); track t.id) {
+        <button type="button" role="tab" [attr.aria-selected]="tab() === t.id"
+                class="-mb-px border-0 border-b-2 bg-transparent px-4 py-2.5 text-[14px]"
+                [class]="tab() === t.id ? 'border-b-[var(--color-accent)] font-medium text-[#1D2430]' : 'border-b-transparent text-[#6B7485] hover:text-[#1D2430]'"
+                (click)="tab.set(t.id)">{{ t.label }}</button>
+      }
+    </nav>
+
+    <!-- ===== Hero ===== -->
+    @if (tab() === 'hero') {
+      <div class="grid gap-5">
+        @if (def.hero === 'media') {
+          <section class="card">
+            <b class="mb-1 block font-medium">Background photos</b>
+            <p class="ahint mb-4">With several photos the hero fades between them every few seconds. The first photo is also what appears while a video loads, and what phone visitors see.</p>
+            @if (heroPhotos().length) {
+              <ul class="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3">
+                @for (m of heroPhotos(); track m.id; let i = $index) {
+                  <li class="overflow-hidden rounded-lg border border-[#E3E6EB] bg-white">
+                    <img class="aspect-[16/9] w-full object-cover" [src]="thumb(m)" [alt]="m.altText || m.fileName" />
+                    <div class="flex items-center justify-between gap-2 px-2.5 py-2">
+                      <span class="text-[12.5px] text-[#6B7485]">Photo {{ i + 1 }}</span>
+                      <span class="flex gap-1">
+                        <button type="button" class="abtn abtn-sm" [disabled]="i === 0" (click)="moveHeroPhoto(i, -1)" aria-label="Move earlier"><qi-icon name="arrowL" [size]="13" /></button>
+                        <button type="button" class="abtn abtn-sm" [disabled]="i === heroPhotos().length - 1" (click)="moveHeroPhoto(i, 1)" aria-label="Move later"><qi-icon name="arrowR" [size]="13" /></button>
+                        <button type="button" class="abtn abtn-sm abtn-danger" (click)="removeHeroPhoto(i)" aria-label="Remove photo"><qi-icon name="x" [size]="13" /></button>
+                      </span>
+                    </div>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="text-[13.5px] text-[#6B7485]">No photos yet, so a themed illustration is shown. Add a photo to replace it.</p>
+            }
+            <button type="button" class="abtn mt-4" (click)="addHeroPhoto()"><qi-icon name="plus" [size]="15" />Add a photo</button>
+          </section>
+
+          <section class="card">
+            <b class="mb-1 block font-medium">Background video <span class="pill ml-1">Optional</span></b>
+            <p class="ahint mb-4">Plays silently on a loop behind the heading on computers and tablets. Visitors on phones, with reduced motion or a data-saver setting see the photos instead. Keep it short (10–20 seconds), 1080p or less, and under 10 MB so the page stays fast.</p>
+            @if (heroVideo(); as v) {
+              <div class="grid gap-4 sm:grid-cols-[260px_1fr] sm:items-center">
+                <video class="aspect-[16/9] w-full rounded-lg bg-[#0F243E] object-cover" [src]="file(v)" controls muted loop playsinline preload="metadata"></video>
+                <div>
+                  <p class="m-0 text-[13.5px]"><b class="font-medium">{{ v.fileName }}</b></p>
+                  <p class="mt-0.5 text-[12.5px] text-[#6B7485]">{{ (v.sizeBytes / 1048576).toFixed(1) }} MB</p>
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    <button type="button" class="abtn" (click)="chooseVideo()">Replace video</button>
+                    <button type="button" class="abtn abtn-danger" (click)="removeVideo()">Remove video</button>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="rounded-lg border border-dashed border-[#B8BFCC] bg-[#FBFBF9] px-4 py-6 text-center">
+                <p class="m-0 text-[13.5px] text-[#6B7485]">No video. The photos above are used.</p>
+                <button type="button" class="abtn mt-3" (click)="chooseVideo()"><qi-icon name="plus" [size]="15" />Choose or upload a video</button>
+              </div>
+            }
+          </section>
+        }
+
+        @if (heroSection(); as s) {
+          <section class="card">
+            <b class="mb-1 block font-medium">{{ s.title }}</b>
+            @if (s.hint) { <p class="ahint mb-4">{{ s.hint }}</p> }
+            <div class="grid gap-4 md:grid-cols-2">
+              @for (f of s.fields; track f.key) {
+                <label class="alabel" [class.md:col-span-2]="f.type === 'textarea'">
+                  <span class="flex items-center justify-between gap-2">{{ f.label }}
+                    @if (isCustom(s, f)) { <button type="button" class="border-0 bg-transparent p-0 text-[12px] font-normal text-[#6B7485] underline" (click)="reset(s, f)">Use built-in wording</button> }
+                  </span>
+                  @if (f.type === 'textarea') {
+                    <textarea class="ainput" [rows]="f.rows ?? 3" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key"></textarea>
+                  } @else {
+                    <input class="ainput" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key" />
+                  }
+                  @if (f.hint) { <span class="ahint">{{ f.hint }}</span> }
+                </label>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    }
+
+    <!-- ===== Page text ===== -->
+    @if (tab() === 'content') {
+      <p class="ahint mb-4">Leave a box empty to use the built-in wording (shown in grey). Line breaks are kept.</p>
+      <div class="grid gap-5">
+        @for (s of contentSections(); track s.key) {
+          <section class="card">
+            <b class="mb-1 block font-medium">{{ s.title }}</b>
+            @if (s.hint) { <p class="ahint mb-4">{{ s.hint }}</p> }
+            <div class="grid gap-4 md:grid-cols-2">
+              @for (f of s.fields; track f.key) {
+                <label class="alabel" [class.md:col-span-2]="f.type === 'textarea'">
+                  <span class="flex items-center justify-between gap-2">{{ f.label }}
+                    @if (isCustom(s, f)) { <button type="button" class="border-0 bg-transparent p-0 text-[12px] font-normal text-[#6B7485] underline" (click)="reset(s, f)">Use built-in wording</button> }
+                  </span>
+                  @if (f.type === 'textarea') {
+                    <textarea class="ainput" [rows]="f.rows ?? 4" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key"></textarea>
+                  } @else {
+                    <input class="ainput" [placeholder]="f.default" [(ngModel)]="values[s.key][f.key]" (ngModelChange)="touch()" [name]="s.key + f.key" />
+                  }
+                  @if (f.hint) { <span class="ahint">{{ f.hint }}</span> }
+                </label>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    }
+
+    <!-- ===== Photos ===== -->
+    @if (tab() === 'photos') {
+      <p class="ahint mb-4">The pictures that sit inside this page's sections. A position with no photo shows a themed illustration.</p>
+      <ul class="m-0 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+        @for (sl of def.slots; track sl.key) {
+          <li class="card !p-3">
+            @if (slotImage(sl.key); as m) {
+              <img class="mb-3 aspect-[4/3] w-full rounded-md object-cover" [src]="thumb(m)" [alt]="m.altText || m.fileName" />
+            } @else {
+              <div class="mb-3 grid aspect-[4/3] w-full place-items-center rounded-md border border-dashed border-[#B8BFCC] bg-[#FBFBF9] text-[12.5px] text-[#6B7485]">No photo yet</div>
+            }
+            <b class="block text-[13.5px] font-medium">{{ sl.label }}</b>
+            @if (sl.hint) { <span class="ahint block">{{ sl.hint }}</span> }
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" class="abtn abtn-sm" (click)="chooseSlot(sl.key, sl.label)">{{ slotImage(sl.key) ? 'Change photo' : 'Choose photo' }}</button>
+              @if (slotImage(sl.key)) { <button type="button" class="abtn abtn-sm abtn-danger" (click)="clearSlot(sl.key)">Remove</button> }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    <!-- ===== SEO ===== -->
+    @if (tab() === 'seo') {
+      <section class="card">
+        <b class="mb-1 block font-medium">How this page appears in Google and when shared</b>
+        <p class="ahint mb-4">Leave a box empty to use the built-in text (shown in grey).</p>
+        <div class="grid gap-4">
+          <label class="alabel">
+            <span class="flex justify-between">Page title <span class="ahint" [class.!text-[#B42318]]="metaTitle.length > 60">{{ metaTitle.length }} / 60</span></span>
+            <input class="ainput" maxlength="160" [placeholder]="def.seoDefaults.title" [(ngModel)]="metaTitle" (ngModelChange)="touch()" name="metaTitle" />
+          </label>
+          <label class="alabel">
+            <span class="flex justify-between">Description <span class="ahint" [class.!text-[#B42318]]="metaDescription.length > 160">{{ metaDescription.length }} / 160</span></span>
+            <textarea class="ainput" rows="3" maxlength="320" [placeholder]="def.seoDefaults.description" [(ngModel)]="metaDescription" (ngModelChange)="touch()" name="metaDescription"></textarea>
+            <span class="ahint">Around 150 characters is best; longer text is cut off in search results.</span>
+          </label>
+        </div>
+
+        <div class="mt-5 rounded-lg border border-[#E3E6EB] bg-[#FBFBF9] p-4">
+          <span class="ahint">Preview</span>
+          <p class="m-0 mt-1 text-[18px] leading-snug text-[#1a0dab]">{{ metaTitle || def.seoDefaults.title }}</p>
+          <p class="m-0 text-[13px] text-[#006621]">{{ def.path === '/' ? '' : def.path }}</p>
+          <p class="m-0 mt-0.5 text-[13.5px] text-[#4D5156]">{{ metaDescription || def.seoDefaults.description }}</p>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center gap-4">
+          @if (ogImage(); as m) { <img class="h-[72px] w-[128px] rounded-md object-cover" [src]="thumb(m)" [alt]="m.altText || m.fileName" /> }
+          <div>
+            <b class="block text-[13.5px] font-medium">Sharing picture</b>
+            <span class="ahint block">The picture shown when the page is shared on WhatsApp or Facebook. Landscape works best.</span>
+            <div class="mt-2 flex gap-2">
+              <button type="button" class="abtn abtn-sm" (click)="chooseShare()">{{ ogImage() ? 'Change picture' : 'Choose picture' }}</button>
+              @if (ogImage()) { <button type="button" class="abtn abtn-sm abtn-danger" (click)="clearShare()">Remove</button> }
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+    <div class="mt-6 flex justify-end">
+      <button type="button" class="abtn abtn-pri" [disabled]="saving() || !dirty()" (click)="save()">{{ saving() ? 'Saving…' : 'Save changes' }}</button>
+    </div>
+  }
+}
+
+@if (picker(); as p) {
+  <qi-media-picker [kind]="p.kind" [title]="p.title" (picked)="pick($event)" (closed)="picker.set(null)" />
+}

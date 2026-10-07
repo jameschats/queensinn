@@ -33,6 +33,8 @@ public sealed class QueensInnDbContext : DbContext
     public DbSet<GalleryItem> GalleryItems => Set<GalleryItem>();
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();
     public DbSet<ImageSlot> ImageSlots => Set<ImageSlot>();
+    public DbSet<PageSection> PageSections => Set<PageSection>();
+    public DbSet<PolicyPage> PolicyPages => Set<PolicyPage>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -53,6 +55,8 @@ public sealed class QueensInnDbContext : DbContext
         b.Entity<GalleryItem>(e => { e.ToTable("GalleryItems"); e.HasKey(x => x.GalleryItemId); });
         b.Entity<Testimonial>(e => { e.ToTable("Testimonials"); e.HasKey(x => x.TestimonialId); });
         b.Entity<ImageSlot>(e => { e.ToTable("ImageSlots"); e.HasKey(x => x.SlotKey); });
+        b.Entity<PageSection>(e => { e.ToTable("PageSections"); e.HasKey(x => x.SectionId); e.Property(x => x.ContentJson).HasColumnType("json"); });
+        b.Entity<PolicyPage>(e => { e.ToTable("PolicyPages"); e.HasKey(x => x.Slug); });
 
         b.Entity<User>(e =>
         {

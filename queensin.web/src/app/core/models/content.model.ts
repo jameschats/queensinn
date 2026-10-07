@@ -15,16 +15,6 @@ export interface MediaItem {
   createdAt: string;
 }
 
-export interface HeroSlide {
-  id: number;
-  kicker: string | null;
-  headline: string | null;
-  subHeadline: string | null;
-  ctaText: string | null;
-  ctaUrl: string | null;
-  image: MediaItem | null;
-}
-
 export interface Room {
   id: number;
   slug: string;
@@ -56,14 +46,26 @@ export interface Testimonial {
   origin: string | null;
 }
 
+/** One page's editable content. A field missing from `sections` means "use the built-in wording". */
+export interface PageContent {
+  title: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  ogImage: MediaItem | null;
+  sections: Record<string, Record<string, string>>;
+  heroPhotos: MediaItem[];
+  heroVideo: MediaItem | null;
+}
+
 export interface PublicContent {
-  hero: HeroSlide[];
   rooms: Room[];
   gallery: MediaItem[];
   attractions: Attraction[];
   testimonials: Testimonial[];
   /** Named photo positions (e.g. 'restaurant'); a missing key means no photo yet. */
   slots: Record<string, MediaItem>;
+  /** Keyed by page slug; the front page is 'home'. */
+  pages: Record<string, PageContent>;
 }
 
-export const EMPTY_CONTENT: PublicContent = { hero: [], rooms: [], gallery: [], attractions: [], testimonials: [], slots: {} };
+export const EMPTY_CONTENT: PublicContent = { rooms: [], gallery: [], attractions: [], testimonials: [], slots: {}, pages: {} };

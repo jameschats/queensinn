@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 /*
@@ -44,3 +44,11 @@ export const guestGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   return auth.isAuthenticated() ? inject(Router).createUrlTree(['/admin']) : true;
 };
+
+/** Screens with edits in progress implement this so leaving does not silently throw the edits away. */
+export interface HasUnsavedChanges {
+  hasUnsavedChanges(): boolean;
+}
+
+export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = (component) =>
+  !component.hasUnsavedChanges() || confirm('You have unsaved changes. Leave this page and lose them?');

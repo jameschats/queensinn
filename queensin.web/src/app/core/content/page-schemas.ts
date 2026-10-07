@@ -1,0 +1,277 @@
+/**
+ * Everything an admin can edit on each page: text fields (with the current wording as the default),
+ * photo positions, and whether the page has a hero. The page editor builds its forms from this, and
+ * the public pages fall back to these defaults, so an empty field always shows sensible text.
+ * Adding a field here makes it editable; nothing else needs changing on the server.
+ */
+export type FieldType = 'text' | 'textarea' | 'url';
+
+export interface FieldDef {
+  key: string;
+  label: string;
+  type?: FieldType;
+  default: string;
+  hint?: string;
+  rows?: number;
+}
+
+export interface SectionDef {
+  key: string;
+  title: string;
+  hint?: string;
+  fields: FieldDef[];
+}
+
+export interface SlotDef {
+  key: string;
+  label: string;
+  hint?: string;
+}
+
+export interface PageDef {
+  /** API slug ("home" is the front page). */
+  slug: string;
+  label: string;
+  path: string;
+  /** Pages with a photo / video hero show the Hero tab's media controls. */
+  hero: 'media' | 'text' | 'none';
+  sections: SectionDef[];
+  slots: SlotDef[];
+  seoDefaults: { title: string; description: string };
+}
+
+const t = (key: string, label: string, def: string, extra: Partial<FieldDef> = {}): FieldDef => ({ key, label, default: def, ...extra });
+const area = (key: string, label: string, def: string, rows = 4, extra: Partial<FieldDef> = {}): FieldDef =>
+  ({ key, label, default: def, type: 'textarea', rows, ...extra });
+
+/** The hero's wording, shared by every page. */
+const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string]): SectionDef => ({
+  key: 'hero',
+  title: 'Hero text',
+  hint: 'The large heading at the top of the page.',
+  fields: [
+    t('kicker', 'Small line above the heading', kicker),
+    t('headline', 'Heading', headline),
+    area('lede', 'Description under the heading', lede, 3),
+    ...(withButtons && buttons
+      ? [
+          t('cta1Text', 'First button — text', buttons[0]),
+          t('cta1Url', 'First button — goes to', buttons[1], { type: 'url', hint: 'A page like /bookroom, a page section like /bookroom#reserve, or a full web address.' }),
+          t('cta2Text', 'Second button — text', buttons[2]),
+          t('cta2Url', 'Second button — goes to', buttons[3], { type: 'url' }),
+        ]
+      : []),
+  ],
+});
+
+export const HOME_AMENITY_ICONS = ['bell', 'snow', 'bolt', 'wifi', 'car', 'tray', 'people', 'leaf', 'bed', 'shield'];
+
+export const PAGES: PageDef[] = [
+  {
+    slug: 'home',
+    label: 'Home',
+    path: '/',
+    hero: 'media',
+    seoDefaults: {
+      title: "Hotel Queen's Inn, Velankanni | Luxury Hotel & KVR Mahal",
+      description: 'A three-acre luxury hotel on ECR Main Road, 500 m from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
+    },
+    sections: [
+      heroSection(
+        '',
+        'Tranquility meets luxury in the sacred heart of Velankanni',
+        'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.',
+        true,
+        ['Request tariff', '/bookroom#reserve', 'Discover KVR Mahal', '/kvr-mahal'],
+      ),
+      {
+        key: 'welcome',
+        title: 'Welcome',
+        hint: 'The first section below the hero.',
+        fields: [
+          t('kicker', 'Small line', "Welcome to Queen's Inn"),
+          t('title', 'Heading', 'Half a kilometre from the Basilica. A world away from the crowd.'),
+          area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.', 3),
+          area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
+          t('linkText', 'Link text', 'Read our story'),
+        ],
+      },
+      {
+        key: 'stats',
+        title: 'Key figures',
+        hint: 'Four numbers shown under the welcome text.',
+        fields: [
+          t('n1', 'Figure 1', '3'), t('t1', 'Figure 1 — label', 'acres of gated gardens and lawns'),
+          t('n2', 'Figure 2', '51'), t('t2', 'Figure 2 — label', 'air-conditioned rooms in four categories'),
+          t('n3', 'Figure 3', '500 m'), t('t3', 'Figure 3 — label', 'walk to the Shrine Basilica'),
+          t('n4', 'Figure 4', '24 h'), t('t4', 'Figure 4 — label', 'reception and in-room dining'),
+        ],
+      },
+      {
+        key: 'rooms',
+        title: 'Rooms introduction',
+        hint: 'The room names, prices and descriptions themselves are managed under Rooms.',
+        fields: [
+          t('kicker', 'Small line', 'Rooms & suites'),
+          t('title', 'Heading', 'Rest, well considered'),
+          area('intro', 'Introduction', 'Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.', 3),
+        ],
+      },
+      {
+        key: 'dining',
+        title: 'Restaurant',
+        fields: [
+          t('kicker', 'Small line', 'Q Multi-Cuisine Restaurant'),
+          t('title', 'Heading', 'From temple-town breakfasts to coastal suppers'),
+          area('body', 'Description', 'South Indian and Chettinad classics, North Indian and Continental plates, and seafood from the Nagapattinam coast. Vegetarian and non-vegetarian dishes are prepared in separate kitchens.'),
+          area('hours', 'Serving times', 'Breakfast buffet | 7:00 – 10:30\nLunch | 12:30 – 15:30\nDinner | 19:30 – 22:30\nIn-room dining | 24 hours', 5,
+            { hint: 'One per line, written as: Meal | Time. Put a | between the two parts.' }),
+        ],
+      },
+      {
+        key: 'mahal',
+        title: 'KVR Mahal feature',
+        fields: [
+          t('kicker', 'Small line', 'On the same campus'),
+          t('name', 'Large name', 'KVR Mahal'),
+          t('tagline', 'Tagline', 'Where sacred vows meet timeless hospitality.'),
+          area('body', 'Description', "Velankanni's grandest fully air-conditioned mandapam, with a 300-seat dining pavilion and every guest room a short garden walk away. Your families arrive, celebrate and rest without leaving the gates."),
+          t('n1', 'Figure 1', '1,000'), t('t1', 'Figure 1 — label', 'guests in the ceremonial hall'),
+          t('n2', 'Figure 2', '300+'), t('t2', 'Figure 2 — label', 'seats in the dining pavilion'),
+          t('cta1Text', 'First button', 'Discover KVR Mahal'),
+          t('cta2Text', 'Second button', 'Plan your event'),
+        ],
+      },
+      {
+        key: 'amenities',
+        title: 'Facilities',
+        fields: [
+          t('kicker', 'Small line', 'Within the gates'),
+          t('title', 'Heading', 'Everything close at hand'),
+          area('items', 'Facilities list',
+            [
+              '24-hour reception | Concierge help with darshan timings and travel',
+              'Silent central cooling | Quiet air conditioning across the campus',
+              'Full power backup | Silent generators for rooms and halls',
+              'Wi-Fi throughout | Rooms, lobby and restaurant',
+              'Secure parking | 100+ cars and tour buses inside the gates',
+              'In-room dining | Served around the clock',
+              'Meeting hall | For family gatherings and business groups',
+              'Garden lawns | With a children’s play area',
+              'Driver quarters | Rest rooms, washrooms and meals for drivers',
+              'Gated & guarded | CCTV and round-the-clock security',
+            ].join('\n'),
+            10, { hint: 'One per line, written as: Title | Short description. The icons are fixed by position.' }),
+        ],
+      },
+      {
+        key: 'experiences',
+        title: 'Experiences',
+        hint: 'The three places shown come from the Experiences page.',
+        fields: [
+          t('kicker', 'Small line', 'Around Velankanni'),
+          t('title', 'Heading', 'Pilgrim trails and coastal days'),
+          t('linkText', 'Link text', 'All experiences'),
+        ],
+      },
+      {
+        key: 'gallery',
+        title: 'Gallery',
+        fields: [t('kicker', 'Small line', 'Gallery'), t('title', 'Heading', 'A look inside')],
+      },
+      {
+        key: 'enquiry',
+        title: 'Enquiry',
+        fields: [
+          t('kicker', 'Small line', 'Room enquiry'),
+          t('title', 'Heading', "Tell us when you're coming"),
+          area('intro', 'Introduction', 'Share your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.', 3),
+          area('lede', 'Message beside the contact details', 'The fastest way to reach us is WhatsApp or a call. The online enquiry form is coming soon.', 3),
+          t('whatsappText', 'WhatsApp button', 'WhatsApp us'),
+        ],
+      },
+    ],
+    slots: [
+      { key: 'intro-main', label: 'Welcome — large photo', hint: 'Shown in an arched frame. A tall photo works best.' },
+      { key: 'intro-accent', label: 'Welcome — small photo' },
+      { key: 'restaurant', label: 'Restaurant — wide photo', hint: 'Full-width image above the restaurant text.' },
+      { key: 'dish-1', label: 'Restaurant — photo 1' },
+      { key: 'dish-2', label: 'Restaurant — photo 2' },
+      { key: 'dish-3', label: 'Restaurant — photo 3' },
+      { key: 'mahal-feature', label: 'KVR Mahal — arched photo', hint: 'Shows themed artwork until you add a photo.' },
+    ],
+  },
+  {
+    slug: 'bookroom',
+    label: 'Stay (Rooms & suites)',
+    path: '/bookroom',
+    hero: 'media',
+    seoDefaults: {
+      title: "Rooms & Tariffs | Hotel Queen's Inn, Velankanni",
+      description: "Deluxe, Executive Triple, Family and Queen's Suite rooms near the Velankanni Basilica. Send a reservation enquiry or WhatsApp the front desk.",
+    },
+    sections: [heroSection('Stay with us', 'Rooms & suites', 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.', false)],
+    slots: [],
+  },
+  {
+    slug: 'kvr-mahal',
+    label: 'KVR Mahal',
+    path: '/kvr-mahal',
+    hero: 'media',
+    seoDefaults: {
+      title: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
+      description: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
+    },
+    sections: [heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false)],
+    slots: [],
+  },
+  {
+    slug: 'about-us',
+    label: 'Our story',
+    path: '/about-us',
+    hero: 'media',
+    seoDefaults: {
+      title: "About Us | Hotel Queen's Inn, Velankanni",
+      description: 'Welcoming pilgrims, families and celebrations to Velankanni since 2017, on ECR Main Road near the Shrine Basilica.',
+    },
+    sections: [heroSection('Our story', 'A quiet house near a sacred shore', 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.', false)],
+    slots: [],
+  },
+  {
+    slug: 'activities',
+    label: 'Experiences',
+    path: '/activities',
+    hero: 'media',
+    seoDefaults: {
+      title: "Things to Do Near Velankanni | Hotel Queen's Inn",
+      description: 'Velankanni Basilica, Nagore Dargah, Thirunallar, Point Calimere, Muthupet mangroves and Tranquebar, with distances from the hotel.',
+    },
+    sections: [heroSection('Experiences', 'Pilgrim trails and coastal days', 'A gentle base for the sacred sites and wild coast of the Cauvery delta.', false)],
+    slots: [],
+  },
+  {
+    slug: 'contact',
+    label: 'Contact',
+    path: '/contact',
+    hero: 'text',
+    seoDefaults: {
+      title: "Contact | Hotel Queen's Inn, Velankanni",
+      description: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
+    },
+    sections: [heroSection('Contact', "We're a call away", '', false)],
+    slots: [],
+  },
+];
+
+export const POLICY_SLUGS = ['terms-conditions', 'cancellation-policy', 'privacy-policy'];
+
+const byPage = new Map(PAGES.map((p) => [p.slug, p]));
+
+export function pageDef(slug: string): PageDef | undefined {
+  return byPage.get(slug);
+}
+
+/** The built-in wording for a field; '' if the page, section or field is unknown. */
+export function defaultText(page: string, section: string, field: string): string {
+  return byPage.get(page)?.sections.find((s) => s.key === section)?.fields.find((f) => f.key === field)?.default ?? '';
+}

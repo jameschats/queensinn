@@ -7,8 +7,6 @@ using queensin.api.Features.Media;
 
 namespace queensin.api.Features.Content;
 
-public sealed record HeroSlideDto(long Id, string? Kicker, string? Headline, string? SubHeadline, string? CtaText, string? CtaUrl, MediaDto? Image);
-
 public sealed record RoomDto(
     long Id, string Slug, string Name, string? Tagline, string? Description, int? SizeSqFt, string? BedType, string? ViewType,
     int MaxGuests, decimal? StartingTariff, string? TaxNote, MediaDto? Image, IReadOnlyList<MediaDto> Images, IReadOnlyList<string> Amenities);
@@ -17,14 +15,24 @@ public sealed record AttractionDto(long Id, string Name, decimal DistanceKm, str
 
 public sealed record TestimonialDto(string Quote, string GuestName, string? Origin);
 
+/// <summary>
+/// One page's editable content. <see cref="Sections"/> maps section key to field values; a field that is
+/// absent means "use the built-in default" (the web app holds the defaults). <see cref="HeroVideo"/> is
+/// played muted on capable devices; <see cref="HeroPhotos"/> is the slideshow and the fallback.
+/// </summary>
+public sealed record PageContentDto(
+    string Title, string? MetaTitle, string? MetaDescription, MediaDto? OgImage,
+    IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> Sections,
+    IReadOnlyList<MediaDto> HeroPhotos, MediaDto? HeroVideo);
+
 /// <summary>Everything the public pages draw from, in one cached call (a few KB of JSON).</summary>
 public sealed record PublicContentDto(
-    IReadOnlyList<HeroSlideDto> Hero,
     IReadOnlyList<RoomDto> Rooms,
     IReadOnlyList<MediaDto> Gallery,
     IReadOnlyList<AttractionDto> Attractions,
     IReadOnlyList<TestimonialDto> Testimonials,
-    IReadOnlyDictionary<string, MediaDto> Slots);
+    IReadOnlyDictionary<string, MediaDto> Slots,
+    IReadOnlyDictionary<string, PageContentDto> Pages);
 
 public interface IPublicContentService
 {
@@ -38,8 +46,9 @@ public sealed class PublicContentService : IPublicContentService
 
     public async Task<PublicContentDto> GetAsync(CancellationToken ct = default)
     {
-        var homeId = await _db.Pages.AsNoTracking().Where(p => p.Slug == "").Select(p => (long?)p.PageId).FirstOrDefaultAsync(ct);
-        var slides = homeId is null ? [] : await _db.HeroSlides.AsNoTracking().Where(s => s.PageId == homeId).OrderBy(s => s.DisplayOrder).ToListAsync(ct);
+        var pageRows = await _db.Pages.AsNoTracking().ToListAsync(ct);
+        var heroRows = await _db.HeroSlides.AsNoTracking().Where(h => h.MediaId != null).OrderBy(h => h.DisplayOrder).ToListAsync(ct);
+        var sectionRows = await _db.PageSections.AsNoTracking().Where(x => x.IsVisible).ToListAsync(ct);
         var rooms = await _db.Rooms.AsNoTracking().Where(r => r.IsActive).OrderBy(r => r.DisplayOrder).ToListAsync(ct);
         var roomIds = rooms.Select(r => r.RoomId).ToList();
         var roomImages = await _db.RoomImages.AsNoTracking().Where(i => roomIds.Contains(i.RoomId)).OrderBy(i => i.DisplayOrder).ToListAsync(ct);
@@ -54,15 +63,29 @@ public sealed class PublicContentService : IPublicContentService
         var quotes = await _db.Testimonials.AsNoTracking().Where(t => t.IsVisible).OrderBy(t => t.DisplayOrder).ToListAsync(ct);
 
         // One query for every image referenced above.
-        var ids = slides.Select(s => s.MediaId).Concat(rooms.Select(r => r.FeaturedMediaId)).Concat(roomImages.Select(i => (long?)i.MediaId))
+        var sections = sectionRows.GroupBy(x => x.PageId).ToDictionary(
+            g => g.Key,
+            g => (IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>>)g.ToDictionary(x => x.SectionKey, x => PageContentJson.Parse(x.ContentJson)));
+        long? VideoId(long pageId) => sections.TryGetValue(pageId, out var sx) && sx.TryGetValue("hero", out var hero)
+            && hero.TryGetValue("videoMediaId", out var v) && long.TryParse(v, out var id) ? id : null;
+
+        var ids = heroRows.Select(h => h.MediaId).Concat(pageRows.Select(p => p.OgMediaId)).Concat(pageRows.Select(p => VideoId(p.PageId)))
+            .Concat(rooms.Select(r => r.FeaturedMediaId)).Concat(roomImages.Select(i => (long?)i.MediaId))
             .Concat(gallery.Select(g => (long?)g.MediaId)).Concat(attractions.Select(a => a.MediaId)).Concat(slotRows.Select(x => x.MediaId))
             .Where(i => i.HasValue).Select(i => i!.Value).Distinct().ToList();
         var media = (await _db.MediaAssets.AsNoTracking().Where(m => ids.Contains(m.MediaId)).ToListAsync(ct))
             .ToDictionary(m => m.MediaId, MediaService.ToDto);
         MediaDto? Img(long? id) => id is { } v && media.TryGetValue(v, out var m) ? m : null;
 
+        var empty = new Dictionary<string, IReadOnlyDictionary<string, string>>();
+        var pages = pageRows.ToDictionary(
+            p => PageContentJson.ApiSlug(p.Slug),
+            p => new PageContentDto(p.Title, p.MetaTitle, p.MetaDescription, Img(p.OgMediaId),
+                sections.TryGetValue(p.PageId, out var sx) ? sx : empty,
+                heroRows.Where(h => h.PageId == p.PageId).Select(h => Img(h.MediaId)).OfType<MediaDto>().ToList(),
+                Img(VideoId(p.PageId))));
+
         return new PublicContentDto(
-            slides.Select(s => new HeroSlideDto(s.SlideId, s.Kicker, s.Headline, s.SubHeadline, s.CtaText, s.CtaUrl, Img(s.MediaId))).ToList(),
             rooms.Select(r => new RoomDto(r.RoomId, r.Slug, r.Name, r.Tagline, r.Description, r.SizeSqFt, r.BedType, r.ViewType, r.MaxGuests,
                 r.StartingTariff, r.TaxNote, Img(r.FeaturedMediaId),
                 roomImages.Where(i => i.RoomId == r.RoomId).Select(i => Img(i.MediaId)).OfType<MediaDto>().ToList(),
@@ -70,7 +93,8 @@ public sealed class PublicContentService : IPublicContentService
             gallery.Select(g => Img(g.MediaId)).OfType<MediaDto>().ToList(),
             attractions.Select(a => new AttractionDto(a.AttractionId, a.Name, a.DistanceKm, a.Description, Img(a.MediaId))).ToList(),
             quotes.Select(t => new TestimonialDto(t.Quote, t.GuestName, t.Origin)).ToList(),
-            slotRows.Where(x => Img(x.MediaId) != null).ToDictionary(x => x.SlotKey, x => Img(x.MediaId)!));
+            slotRows.Where(x => Img(x.MediaId) != null).ToDictionary(x => x.SlotKey, x => Img(x.MediaId)!),
+            pages);
     }
 }
 

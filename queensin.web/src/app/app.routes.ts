@@ -1,15 +1,32 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import { Perm } from './core/models/auth.model';
-import { adminGuard, guestGuard, permissionGuard, signedInGuard } from './core/guards/admin.guards';
+import { adminGuard, guestGuard, permissionGuard, signedInGuard, unsavedChangesGuard } from './core/guards/admin.guards';
 import { ContentService } from './core/services/content.service';
+import { PolicyService } from './core/services/policy.service';
 import { ContentPageData } from './features/public/content-page.component';
 import { PublicLayoutComponent } from './layout/public-layout.component';
 
 /** Wait for photos/rooms before showing a page, so anchor scrolls land correctly and nothing jumps in later. */
 const withContent = { content: () => inject(ContentService).whenLoaded() };
 
-const page = (data: ContentPageData) => ({ page: data, solidHeader: data.plain === true });
+const lazyPage = () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent);
+
+/** A page whose wording, hero and SEO come from Pages & content (defaults live in core/content/page-schemas.ts). */
+const contentRoute = (path: string, data: ContentPageData): Route => ({
+  path,
+  resolve: withContent,
+  loadComponent: lazyPage,
+  data: { page: data, solidHeader: data.plain === true },
+});
+
+/** Terms, cancellation and privacy: the text is loaded with the route so it is in the server-rendered HTML. */
+const policyRoute = (slug: string, title: string): Route => ({
+  path: slug,
+  resolve: { ...withContent, policy: () => inject(PolicyService).get(slug) },
+  loadComponent: lazyPage,
+  data: { page: { slug, path: '/' + slug, plain: true, policy: slug, title } satisfies ContentPageData, solidHeader: true },
+});
 
 /**
  * Every URL from the Wix site is preserved exactly (design doc §3); /kvr-mahal is new.
@@ -21,76 +38,14 @@ export const routes: Routes = [
     component: PublicLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', resolve: withContent, loadComponent: () => import('./features/public/home.component').then((m) => m.HomeComponent) },
-      {
-        path: 'bookroom',
-        resolve: withContent,
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({
-          path: '/bookroom', art: 'room', heroSlot: 'hero-bookroom', kicker: 'Stay with us', title: 'Rooms & suites',
-          lede: 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.',
-          metaTitle: "Rooms & Tariffs | Hotel Queen's Inn, Velankanni",
-          metaDescription: "Deluxe, Executive Triple, Family and Queen's Suite rooms near the Velankanni Basilica. Send a reservation enquiry or WhatsApp the front desk.",
-          anchors: ['reserve'],
-        }),
-      },
-      {
-        path: 'kvr-mahal',
-        resolve: withContent,
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({
-          path: '/kvr-mahal', art: 'mandap', kicker: 'KVR Mahal', title: 'Where sacred vows meet timeless hospitality',
-          lede: "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.",
-          metaTitle: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
-          metaDescription: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
-          anchors: ['mahal-enquiry'],
-        }),
-      },
-      {
-        path: 'about-us',
-        resolve: withContent,
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({
-          path: '/about-us', art: 'arch', heroSlot: 'hero-about', kicker: 'Our story', title: 'A quiet house near a sacred shore',
-          lede: 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.',
-          metaTitle: "About Us | Hotel Queen's Inn, Velankanni",
-          metaDescription: 'Welcoming pilgrims, families and celebrations to Velankanni since 2017, on ECR Main Road near the Shrine Basilica.',
-        }),
-      },
-      {
-        path: 'activities',
-        resolve: withContent,
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({
-          path: '/activities', art: 'sea', kicker: 'Experiences', title: 'Pilgrim trails and coastal days',
-          lede: 'A gentle base for the sacred sites and wild coast of the Cauvery delta.',
-          metaTitle: "Things to Do Near Velankanni | Hotel Queen's Inn",
-          metaDescription: 'Velankanni Basilica, Nagore Dargah, Thirunallar, Point Calimere, Muthupet mangroves and Tranquebar, with distances from the hotel.',
-        }),
-      },
-      {
-        path: 'contact',
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({
-          path: '/contact', kicker: 'Contact', title: "We're a call away", plain: true,
-          metaTitle: "Contact | Hotel Queen's Inn, Velankanni",
-          metaDescription: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
-        }),
-      },
-      {
-        path: 'terms-conditions',
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({ path: '/terms-conditions', title: 'Terms & conditions', plain: true, metaTitle: "Terms & Conditions | Hotel Queen's Inn" }),
-      },
-      {
-        path: 'cancellation-policy',
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({ path: '/cancellation-policy', title: 'Cancellation & refund', plain: true, metaTitle: "Cancellation & Refund Policy | Hotel Queen's Inn" }),
-      },
-      {
-        path: 'privacy-policy',
-        loadComponent: () => import('./features/public/content-page.component').then((m) => m.ContentPageComponent),
-        data: page({ path: '/privacy-policy', title: 'Privacy policy', plain: true, metaTitle: "Privacy Policy | Hotel Queen's Inn" }),
-      },
+      contentRoute('bookroom', { slug: 'bookroom', path: '/bookroom', art: 'room', anchors: ['reserve'] }),
+      contentRoute('kvr-mahal', { slug: 'kvr-mahal', path: '/kvr-mahal', art: 'mandap', anchors: ['mahal-enquiry'] }),
+      contentRoute('about-us', { slug: 'about-us', path: '/about-us', art: 'arch' }),
+      contentRoute('activities', { slug: 'activities', path: '/activities', art: 'sea' }),
+      contentRoute('contact', { slug: 'contact', path: '/contact', plain: true }),
+      policyRoute('terms-conditions', 'Terms & conditions'),
+      policyRoute('cancellation-policy', 'Cancellation & refund'),
+      policyRoute('privacy-policy', 'Privacy policy'),
     ],
   },
 
@@ -120,6 +75,23 @@ export const routes: Routes = [
         path: 'settings',
         canActivate: [permissionGuard(Perm.SettingsManage)],
         loadComponent: () => import('./features/admin/settings/settings.component').then((m) => m.SettingsComponent),
+      },
+      {
+        path: 'pages',
+        canActivate: [permissionGuard(Perm.CmsManage)],
+        loadComponent: () => import('./features/admin/pages/pages.component').then((m) => m.PagesComponent),
+      },
+      {
+        path: 'pages/:slug',
+        canActivate: [permissionGuard(Perm.CmsManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/pages/page-editor.component').then((m) => m.PageEditorComponent),
+      },
+      {
+        path: 'policies/:slug',
+        canActivate: [permissionGuard(Perm.CmsManage)],
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
       },
       {
         path: 'media',

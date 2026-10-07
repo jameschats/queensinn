@@ -1,7 +1,12 @@
-<qi-page-hero [full]="true" [title]="headline()" [lede]="sub()" [slides]="heroSlides()" art="dusk">
+<qi-page-hero [full]="true" [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')"
+              [slides]="heroPhotos()" [video]="heroVideo()" art="dusk">
   <div class="mt-10 flex flex-wrap gap-3.5">
-    <a routerLink="/bookroom" fragment="reserve" class="btn btn-gold">Request tariff</a>
-    <a routerLink="/kvr-mahal" class="btn btn-ghost">Discover KVR Mahal</a>
+    @let c1 = link('hero', 'cta1Url');
+    @if (c1.external) { <a [href]="c1.path" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
+    @else { <a [routerLink]="c1.path" [fragment]="c1.fragment" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
+    @let c2 = link('hero', 'cta2Url');
+    @if (c2.external) { <a [href]="c2.path" class="btn btn-ghost">{{ t('hero', 'cta2Text') }}</a> }
+    @else { <a [routerLink]="c2.path" [fragment]="c2.fragment" class="btn btn-ghost">{{ t('hero', 'cta2Text') }}</a> }
   </div>
 </qi-page-hero>
 
@@ -10,12 +15,12 @@
   <div class="wrap">
     <div class="grid items-center gap-[clamp(40px,8vw,140px)] md:grid-cols-[1.05fr_1fr]">
       <div>
-        <span class="kicker">Welcome to Queen's Inn</span>
-        <h2 class="h-display max-w-[18ch]">Half a kilometre from the Basilica. A world away from the crowd.</h2>
+        <span class="kicker">{{ t('welcome', 'kicker') }}</span>
+        <h2 class="h-display max-w-[18ch]">{{ t('welcome', 'title') }}</h2>
         <hr class="rule" />
-        <p class="lede">Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.</p>
-        <p class="mt-5 max-w-[52ch] text-muted">Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017.</p>
-        <a routerLink="/about-us" class="link mt-8 inline-block">Read our story</a>
+        <p class="lede">{{ t('welcome', 'lede') }}</p>
+        <p class="mt-5 max-w-[52ch] whitespace-pre-line text-muted">{{ t('welcome', 'body') }}</p>
+        <a routerLink="/about-us" class="link mt-8 inline-block">{{ t('welcome', 'linkText') }}</a>
       </div>
       <div class="relative pb-[18%]">
         <div class="relative ml-auto w-[78%]">
@@ -27,7 +32,7 @@
     </div>
 
     <div class="mt-[clamp(64px,8vw,110px)] grid grid-cols-2 border-t border-line md:grid-cols-4">
-      @for (s of stats; track s.n) {
+      @for (s of stats(); track $index) {
         <div class="border-line pr-6 pt-7 pb-7 md:mr-6 md:border-r md:pb-0 md:last:mr-0 md:last:border-r-0">
           <b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none">{{ s.n }}</b>
           <span class="mt-3 block max-w-[20ch] text-sm leading-normal text-muted">{{ s.t }}</span>
@@ -41,8 +46,8 @@
 <section class="sec bg-tint" id="rooms">
   <div class="wrap">
     <div class="mb-[clamp(44px,6vw,80px)] flex flex-wrap items-end justify-between gap-8">
-      <div><span class="kicker">Rooms &amp; suites</span><h2 class="h-display">Rest, well considered</h2></div>
-      <p class="m-0 max-w-[44ch] text-muted">Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.</p>
+      <div><span class="kicker">{{ t('rooms', 'kicker') }}</span><h2 class="h-display">{{ t('rooms', 'title') }}</h2></div>
+      <p class="m-0 max-w-[44ch] text-muted">{{ t('rooms', 'intro') }}</p>
     </div>
 
     @if (room(); as r) {
@@ -100,11 +105,11 @@
   <qi-image class="h-[min(86vh,820px)]" [media]="slot('restaurant')" art="dine" sizes="100vw" />
   <div class="wrap">
     <div class="relative z-[5] ml-auto -mt-20 w-[min(560px,92%)] bg-surface p-[clamp(36px,4.5vw,64px)] md:-mt-[200px]">
-      <span class="kicker">Q Multi-Cuisine Restaurant</span>
-      <h2 class="text-[clamp(34px,3.6vw,50px)]">From temple-town breakfasts to coastal suppers</h2>
-      <p class="mt-[22px] text-muted">South Indian and Chettinad classics, North Indian and Continental plates, and seafood from the Nagapattinam coast. Vegetarian and non-vegetarian dishes are prepared in separate kitchens.</p>
+      <span class="kicker">{{ t('dining', 'kicker') }}</span>
+      <h2 class="text-[clamp(34px,3.6vw,50px)]">{{ t('dining', 'title') }}</h2>
+      <p class="mt-[22px] whitespace-pre-line text-muted">{{ t('dining', 'body') }}</p>
       <dl class="mt-2 grid gap-2.5 border-t border-line pt-[22px] text-[14.5px]">
-        @for (d of dining; track d[0]) {
+        @for (d of dining(); track $index) {
           <div class="flex justify-between gap-4"><dt>{{ d[0] }}</dt><dd class="m-0">{{ d[1] }}</dd></div>
         }
       </dl>
@@ -127,17 +132,17 @@
       <qi-image class="relative aspect-[2/3] rounded-t-full" [media]="slot('mahal-feature')" art="mandap" alt="The ceremonial stage at KVR Mahal" sizes="(min-width: 768px) 40vw, 80vw" />
     </div>
     <div>
-      <span class="kicker">On the same campus</span>
-      <div class="font-serif text-[clamp(64px,8vw,124px)] font-light leading-[.9] tracking-[-.015em] text-on-primary">KVR Mahal</div>
-      <p class="lede mt-7">Where sacred vows meet timeless hospitality.</p>
-      <p class="mt-5 max-w-[52ch] text-on-primary-muted">Velankanni's grandest fully air-conditioned mandapam, with a 300-seat dining pavilion and every guest room a short garden walk away. Your families arrive, celebrate and rest without leaving the gates.</p>
+      <span class="kicker">{{ t('mahal', 'kicker') }}</span>
+      <div class="font-serif text-[clamp(64px,8vw,124px)] font-light leading-[.9] tracking-[-.015em] text-on-primary">{{ t('mahal', 'name') }}</div>
+      <p class="lede mt-7">{{ t('mahal', 'tagline') }}</p>
+      <p class="mt-5 max-w-[52ch] whitespace-pre-line text-on-primary-muted">{{ t('mahal', 'body') }}</p>
       <div class="mt-11 grid grid-cols-2 border-t border-accent/35">
-        <div class="mr-6 border-r border-accent/35 pr-6 pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">1,000</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">guests in the ceremonial hall</span></div>
-        <div class="pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">300+</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">seats in the dining pavilion</span></div>
+        <div class="mr-6 border-r border-accent/35 pr-6 pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">{{ t('mahal', 'n1') }}</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">{{ t('mahal', 't1') }}</span></div>
+        <div class="pt-7"><b class="block font-serif text-[clamp(44px,4.4vw,64px)] font-light leading-none text-accent">{{ t('mahal', 'n2') }}</b><span class="mt-3 block max-w-[20ch] text-sm text-on-primary-muted">{{ t('mahal', 't2') }}</span></div>
       </div>
       <div class="mt-10 flex flex-wrap gap-3.5">
-        <a routerLink="/kvr-mahal" class="btn btn-gold">Discover KVR Mahal</a>
-        <a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="btn btn-ghost">Plan your event</a>
+        <a routerLink="/kvr-mahal" class="btn btn-gold">{{ t('mahal', 'cta1Text') }}</a>
+        <a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="btn btn-ghost">{{ t('mahal', 'cta2Text') }}</a>
       </div>
     </div>
   </div>
@@ -146,9 +151,9 @@
 <!-- Amenities -->
 <section class="sec">
   <div class="wrap">
-    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">Within the gates</span><h2 class="h-display">Everything close at hand</h2></div>
+    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">{{ t('amenities', 'kicker') }}</span><h2 class="h-display">{{ t('amenities', 'title') }}</h2></div>
     <div class="grid grid-cols-2 border-l border-t border-line lg:grid-cols-5">
-      @for (a of amenities; track a.t) {
+      @for (a of amenities(); track $index) {
         <div class="border-b border-r border-line px-[26px] pb-[30px] pt-[34px] text-[14.5px] leading-normal">
           <qi-icon [name]="a.i" [size]="28" class="mb-[22px] text-gold-ink" />
           <b class="mb-1 block font-serif text-xl font-medium">{{ a.t }}</b>
@@ -163,8 +168,8 @@
 <section class="sec bg-tint">
   <div class="wrap">
     <div class="mb-[clamp(44px,6vw,80px)] flex flex-wrap items-end justify-between gap-8">
-      <div><span class="kicker">Around Velankanni</span><h2 class="h-display">Pilgrim trails and coastal days</h2></div>
-      <a routerLink="/activities" class="link">All experiences</a>
+      <div><span class="kicker">{{ t('experiences', 'kicker') }}</span><h2 class="h-display">{{ t('experiences', 'title') }}</h2></div>
+      <a routerLink="/activities" class="link">{{ t('experiences', 'linkText') }}</a>
     </div>
     <div class="grid gap-[clamp(20px,3vw,44px)] md:grid-cols-3">
       @for (x of attractions(); track x.a.id) {
@@ -181,7 +186,7 @@
 <!-- Gallery -->
 <section class="sec" id="gallery">
   <div class="wrap">
-    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">Gallery</span><h2 class="h-display">A look inside</h2></div>
+    <div class="mb-[clamp(44px,6vw,80px)]"><span class="kicker">{{ t('gallery', 'kicker') }}</span><h2 class="h-display">{{ t('gallery', 'title') }}</h2></div>
     @if (gallery().length) {
       <div class="columns-1 gap-4 sm:columns-2 lg:columns-4">
         @for (g of gallery(); track g.id; let i = $index) {
@@ -213,9 +218,9 @@
 <section class="sec" id="enquiry">
   <div class="wrap grid gap-[clamp(48px,8vw,140px)] md:grid-cols-[.9fr_1.1fr]">
     <div>
-      <span class="kicker">Room enquiry</span>
-      <h2 class="h-display">Tell us when you're coming</h2>
-      <p class="mt-6 max-w-[46ch] text-muted">Share your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.</p>
+      <span class="kicker">{{ t('enquiry', 'kicker') }}</span>
+      <h2 class="h-display">{{ t('enquiry', 'title') }}</h2>
+      <p class="mt-6 max-w-[46ch] whitespace-pre-line text-muted">{{ t('enquiry', 'intro') }}</p>
       <div class="mt-10 grid gap-[26px] text-[15px]">
         <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Call</b><a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a> · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a></span></div>
         <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="wa" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">WhatsApp</b><a [href]="site.whatsapp()" target="_blank" rel="noopener">Message the front desk</a></span></div>
@@ -223,9 +228,9 @@
       </div>
     </div>
     <div class="self-center">
-      <p class="lede">The fastest way to reach us is WhatsApp or a call. The online enquiry form is coming soon.</p>
+      <p class="lede whitespace-pre-line">{{ t('enquiry', 'lede') }}</p>
       <div class="mt-8 flex flex-wrap gap-3.5">
-        <a [href]="site.whatsapp()" target="_blank" rel="noopener" class="btn btn-gold">WhatsApp us</a>
+        <a [href]="site.whatsapp()" target="_blank" rel="noopener" class="btn btn-gold">{{ t('enquiry', 'whatsappText') }}</a>
         <a [href]="site.tel('Phone1')" class="btn btn-ghost">Call {{ site.get('Phone1') }}</a>
       </div>
     </div>

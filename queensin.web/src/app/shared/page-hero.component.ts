@@ -1,12 +1,16 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, effect, inject, input, signal, viewChild } from '@angular/core';
+import { absUrl } from '../core/api.config';
 import { MediaItem } from '../core/models/content.model';
 import { ImageComponent } from './image.component';
 
 /**
- * Page-top hero: a stack of photos that crossfade (slow Ken Burns zoom on the active one)
- * behind the headline block. With no photos it falls back to themed artwork of `art`, so a
- * page without media still looks finished. Rotation runs only in the browser and is skipped
- * for visitors who prefer reduced motion.
+ * Page-top hero: a stack of photos that crossfade (slow Ken Burns zoom on the active one) behind the
+ * headline block. With no photos it falls back to themed artwork of `art`.
+ *
+ * An optional muted looping `video` plays over the first photo, but only where that is kind to the
+ * visitor: a desktop-sized screen, no reduced-motion preference, no data-saver setting. Everyone else
+ * (and server-rendered HTML, and while the video loads) gets the photos, which is why a hero with a
+ * video should still have at least one photo.
  */
 @Component({
   selector: 'qi-page-hero',
@@ -17,11 +21,16 @@ import { ImageComponent } from './image.component';
              [class]="full() ? 'h-svh min-h-[640px]' : 'min-h-[70vh] pt-[150px]'">
       @for (s of slides(); track s.id; let i = $index) {
         <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
-             [class.kb]="i === active()" [attr.aria-hidden]="i !== active()">
+             [class.kb]="i === active() && !playingVideo()" [attr.aria-hidden]="i !== active()">
           <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
         </div>
       } @empty {
         <qi-image class="absolute inset-0 h-full w-full" [art]="art()" />
+      }
+      @if (playingVideo() && video(); as v) {
+        <video #vid class="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms]" [class.opacity-0]="!videoReady()"
+               [src]="videoUrl(v)" [muted]="true" loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"
+               (canplay)="videoReady.set(true)" (error)="videoFailed()"></video>
       }
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_85%,color-mix(in_srgb,var(--color-accent)_38%,transparent),transparent_60%)] opacity-60"></div>
       <div class="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/10 to-deep/85"></div>
@@ -34,7 +43,7 @@ import { ImageComponent } from './image.component';
           <p class="mt-7 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] text-on-primary/90 animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
         }
         <ng-content />
-        @if (slides().length > 1) {
+        @if (slides().length > 1 && !playingVideo()) {
           <div class="mt-10 flex gap-2" role="tablist" aria-label="Hero photos">
             @for (s of slides(); track s.id; let i = $index) {
               <button type="button" role="tab" [attr.aria-selected]="i === active()" [attr.aria-label]="'Show photo ' + (i + 1)"
@@ -57,19 +66,46 @@ export class PageHeroComponent {
   readonly lede = input('');
   readonly full = input(false);
   readonly slides = input<MediaItem[]>([]);
+  /** Optional looping background video (see class comment for when it plays). */
+  readonly video = input<MediaItem | null>(null);
   /** Artwork shown when there are no photos. */
   readonly art = input('dusk');
 
   protected readonly active = signal(0);
+  protected readonly playingVideo = signal(false);
+  protected readonly videoReady = signal(false);
+  private readonly videoEl = viewChild<ElementRef<HTMLVideoElement>>('vid');
   private timer?: ReturnType<typeof setInterval>;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     afterNextRender(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      this.start();
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+      const wide = window.matchMedia('(min-width: 768px)').matches;
+      if (this.video() && wide && !reduced && !saveData) this.playingVideo.set(true);
+      else if (!reduced) this.start();
       this.destroyRef.onDestroy(() => clearInterval(this.timer));
     });
+    // The muted *property* (not the attribute) is what lets browsers autoplay, so set it and start playback explicitly.
+    effect(() => {
+      const el = this.videoEl()?.nativeElement;
+      if (!el) return;
+      el.muted = true;
+      el.play().catch(() => this.videoFailed());
+    });
+  }
+
+  protected videoUrl(v: MediaItem): string {
+    return absUrl(v.url);
+  }
+
+  /** A video that cannot play (bad file, blocked autoplay) quietly hands over to the photos. */
+  protected videoFailed(): void {
+    if (!this.playingVideo()) return;
+    this.playingVideo.set(false);
+    this.videoReady.set(false);
+    this.start();
   }
 
   protected go(i: number): void {
@@ -79,6 +115,7 @@ export class PageHeroComponent {
   }
 
   private start(): void {
+    clearInterval(this.timer);
     this.timer = setInterval(() => {
       const n = this.slides().length;
       if (n > 1) this.active.update((i) => (i + 1) % n);

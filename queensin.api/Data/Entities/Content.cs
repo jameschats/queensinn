@@ -48,6 +48,8 @@ public sealed class Page
     public string Title { get; set; } = string.Empty;
     public string? MetaTitle { get; set; }
     public string? MetaDescription { get; set; }
+    public long? OgMediaId { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
 
 public sealed class HeroSlide
@@ -99,4 +101,25 @@ public sealed class ImageSlot
 {
     public string SlotKey { get; set; } = string.Empty;
     public long? MediaId { get; set; }
+}
+
+/// <summary>One block of editable text on a page (migration 007). ContentJson is a flat object of strings.</summary>
+public sealed class PageSection
+{
+    public long SectionId { get; set; }
+    public long PageId { get; set; }
+    public string SectionKey { get; set; } = string.Empty;
+    public string SectionType { get; set; } = "text";
+    public string ContentJson { get; set; } = "{}";
+    public int DisplayOrder { get; set; }
+    public bool IsVisible { get; set; } = true;
+}
+
+/// <summary>Terms / cancellation / privacy body (migration 007). BodyHtml is sanitised on save.</summary>
+public sealed class PolicyPage
+{
+    public string Slug { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string BodyHtml { get; set; } = string.Empty;
+    public DateTime UpdatedAt { get; set; }
 }

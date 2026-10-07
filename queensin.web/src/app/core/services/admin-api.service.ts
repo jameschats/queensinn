@@ -27,6 +27,35 @@ export interface Role {
   permissions: string[];
 }
 
+export interface PageEdit {
+  slug: string;
+  title: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  ogImage: MediaItem | null;
+  sections: Record<string, Record<string, string>>;
+  heroPhotos: MediaItem[];
+  heroVideo: MediaItem | null;
+  /** Every named photo position on the site; the page's own are picked out by the page definition. */
+  slots: Record<string, MediaItem | null>;
+}
+
+export interface SavePage {
+  metaTitle: string;
+  metaDescription: string;
+  ogMediaId: number | null;
+  sections: Record<string, Record<string, string>>;
+  heroMediaIds?: number[];
+  slots?: Record<string, number | null>;
+}
+
+export interface PolicyEdit {
+  slug: string;
+  title: string;
+  bodyHtml: string;
+  updatedAt: string;
+}
+
 /** Admin endpoints for Stage 2: settings, theme, staff users. */
 @Injectable({ providedIn: 'root' })
 export class AdminApiService {
@@ -80,6 +109,28 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- pages & content ---
+
+  pages(): Observable<{ slug: string; title: string; metaTitle: string | null }[]> {
+    return this.http.get<ApiResponse<{ slug: string; title: string; metaTitle: string | null }[]>>(`${this.base}/pages`).pipe(map((r) => r.data ?? []));
+  }
+
+  page(slug: string): Observable<PageEdit> {
+    return this.http.get<ApiResponse<PageEdit>>(`${this.base}/pages/${slug}`).pipe(map((r) => r.data!));
+  }
+
+  savePage(slug: string, body: SavePage): Observable<PageEdit> {
+    return this.http.put<ApiResponse<PageEdit>>(`${this.base}/pages/${slug}`, body).pipe(map((r) => r.data!));
+  }
+
+  policies(): Observable<PolicyEdit[]> {
+    return this.http.get<ApiResponse<PolicyEdit[]>>(`${this.base}/policies`).pipe(map((r) => r.data ?? []));
+  }
+
+  savePolicy(slug: string, body: { title: string; bodyHtml: string }): Observable<PolicyEdit> {
+    return this.http.put<ApiResponse<PolicyEdit>>(`${this.base}/policies/${slug}`, body).pipe(map((r) => r.data!));
   }
 
   saveTheme(theme: Theme): Observable<Theme> {
