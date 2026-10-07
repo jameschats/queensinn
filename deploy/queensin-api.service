@@ -1,0 +1,14 @@
+[Unit]
+Description=Queen's Inn .NET API
+After=network.target mysql.service
+
+[Service]
+WorkingDirectory=/var/www/queensinn/api
+ExecStart=/usr/bin/dotnet /var/www/queensinn/api/queensin.api.dll
+EnvironmentFile=/etc/queensinn/api.env
+Restart=always
+RestartSec=10
+User=www-data
+
+[Install]
+WantedBy=multi-user.target

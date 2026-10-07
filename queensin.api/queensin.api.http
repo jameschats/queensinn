@@ -1,0 +1,29 @@
+@api = http://localhost:5090/api
+
+### Health
+GET {{api}}/health
+
+### Public site settings + theme (used by the Angular app at start-up)
+GET {{api}}/site
+
+### Sign in (seeded Super Admin; change the password on first login)
+# @name login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@queensinn.co.in", "password": "<Admin:DefaultPassword>" }
+
+### Who am I
+GET {{api}}/auth/me
+Authorization: Bearer {{login.response.body.data.accessToken}}
+
+### Staff users
+GET {{api}}/admin/users
+Authorization: Bearer {{login.response.body.data.accessToken}}
+
+### Change theme
+PUT {{api}}/admin/theme
+Authorization: Bearer {{login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{ "primary": "#12352B", "accent": "#C2A46B", "surface": "#FAF9F5" }

@@ -1,0 +1,114 @@
+<header
+  class="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-[background,box-shadow,color] duration-500 ease-lux"
+  [class]="scrolled() || solidRoute()
+    ? 'bg-surface/95 text-ink shadow-[0_1px_0_var(--color-line)] backdrop-blur-md'
+    : 'text-on-primary'">
+  <div class="wrap flex items-center justify-between gap-6 transition-[height] duration-500"
+       [class]="scrolled() || solidRoute() ? 'h-[72px]' : 'h-[88px]'">
+    <qi-brand />
+
+    <nav class="hidden gap-[clamp(18px,2.2vw,36px)] text-[13px] tracking-[.08em] min-[1081px]:flex" aria-label="Main">
+      @for (item of nav; track item.label) {
+        <a [routerLink]="item.link" [fragment]="item.fragment"
+           routerLinkActive="!border-accent" [routerLinkActiveOptions]="{ exact: !item.fragment }"
+           class="border-b border-transparent py-1.5 transition-colors duration-500 hover:border-accent">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="flex items-center gap-5">
+      <a [href]="site.tel()" class="hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex">
+        <qi-icon name="phone" [size]="16" />{{ site.get('Phone1') }}
+      </a>
+      <a routerLink="/bookroom" fragment="reserve"
+         class="hidden h-11 items-center border border-accent/80 px-[22px] text-[11.5px] uppercase tracking-[.2em] transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-primary sm:inline-flex">
+        Reserve
+      </a>
+      <button type="button" class="p-2.5 min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
+        <qi-icon name="menu" [size]="26" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="fixed inset-0 z-[60] flex flex-col bg-primary px-[var(--pad)] pb-[calc(env(safe-area-inset-bottom)+24px)] pt-[calc(env(safe-area-inset-top)+24px)] text-on-primary transition-opacity duration-500"
+     [class]="menuOpen() ? 'opacity-100' : 'pointer-events-none opacity-0'"
+     role="dialog" aria-modal="true" aria-label="Menu" [attr.aria-hidden]="!menuOpen()">
+  <div class="flex items-center justify-between">
+    <qi-brand />
+    <button type="button" class="p-2" aria-label="Close menu" (click)="menuOpen.set(false)"><qi-icon name="x" [size]="28" /></button>
+  </div>
+  <nav class="my-auto flex flex-col gap-1.5">
+    <a routerLink="/" class="font-serif text-[40px] font-light leading-[1.3]">Home</a>
+    @for (item of nav; track item.label) {
+      <a [routerLink]="item.link" [fragment]="item.fragment" class="font-serif text-[40px] font-light leading-[1.3]">{{ item.label }}</a>
+    }
+  </nav>
+  <p class="text-on-primary-muted">{{ site.get('Phone1') }}<br />{{ site.get('ReservationsEmail') }}</p>
+</div>
+
+<main id="main">
+  <router-outlet />
+</main>
+
+<footer class="on-dark bg-deep pb-[calc(env(safe-area-inset-bottom)+40px)] pt-[clamp(72px,9vw,120px)] text-[14.5px] text-on-primary-muted">
+  <div class="wrap">
+    <div class="grid grid-cols-2 gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div class="col-span-2 md:col-span-1">
+        <div class="text-on-primary"><qi-brand /></div>
+        <p class="mt-7 max-w-[34ch]">{{ site.get('Address') }}</p>
+        <a class="btn btn-gold mt-5" [href]="site.whatsappUrl()" target="_blank" rel="noopener">
+          <qi-icon name="wa" [size]="18" />WhatsApp us
+        </a>
+      </div>
+      <div>
+        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Stay</h4>
+        <ul class="grid gap-2.5">
+          <li><a routerLink="/bookroom" class="hover:text-on-primary">Rooms &amp; tariffs</a></li>
+          <li><a routerLink="/" fragment="restaurant" class="hover:text-on-primary">Dining</a></li>
+          <li><a routerLink="/activities" class="hover:text-on-primary">Experiences</a></li>
+          <li><a routerLink="/" fragment="gallery" class="hover:text-on-primary">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Celebrate</h4>
+        <ul class="grid gap-2.5">
+          <li><a routerLink="/kvr-mahal" class="hover:text-on-primary">KVR Mahal</a></li>
+          <li><a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="hover:text-on-primary">Plan an event</a></li>
+          <li><a routerLink="/about-us" class="hover:text-on-primary">Our story</a></li>
+          <li><a routerLink="/contact" class="hover:text-on-primary">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Reach us</h4>
+        <ul class="grid gap-2.5">
+          <li><a [href]="site.tel('Phone1')" class="hover:text-on-primary">{{ site.get('Phone1') }}</a></li>
+          <li><a [href]="site.tel('Phone2')" class="hover:text-on-primary">{{ site.get('Phone2') }}</a></li>
+          <li><a [href]="'mailto:' + site.get('ReservationsEmail')" class="hover:text-on-primary">{{ site.get('ReservationsEmail') }}</a></li>
+          <li><a [href]="'mailto:' + site.get('SalesEmail')" class="hover:text-on-primary">{{ site.get('SalesEmail') }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-[72px] flex flex-wrap justify-between gap-4 border-t border-accent/20 pt-7 text-[12.5px] tracking-[.04em]">
+      <span>© {{ year }} Hotel {{ site.hotelName() }}, {{ site.get('LocationLine') }}</span>
+      <span class="flex flex-wrap gap-[22px]">
+        <a routerLink="/terms-conditions" class="hover:text-on-primary">Terms &amp; conditions</a>
+        <a routerLink="/cancellation-policy" class="hover:text-on-primary">Cancellation &amp; refund</a>
+        <a routerLink="/privacy-policy" class="hover:text-on-primary">Privacy policy</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- mobile action bar (thumb reach) -->
+<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[1fr_1fr_1.3fr] border-t border-accent/30 bg-primary pb-[env(safe-area-inset-bottom)] text-on-primary md:hidden">
+  <a [href]="site.tel()" class="flex h-[58px] items-center justify-center gap-2 text-[11.5px] uppercase tracking-[.16em]">
+    <qi-icon name="phone" [size]="18" />Call
+  </a>
+  <a [href]="site.whatsappUrl()" target="_blank" rel="noopener"
+     class="flex h-[58px] items-center justify-center gap-2 border-l border-accent/20 text-[11.5px] uppercase tracking-[.16em]">
+    <qi-icon name="wa" [size]="18" />WhatsApp
+  </a>
+  <a routerLink="/bookroom" fragment="reserve" class="flex h-[58px] items-center justify-center bg-accent text-[11.5px] uppercase tracking-[.16em] text-primary">Enquire</a>
+</div>
+<div class="h-[58px] md:hidden" aria-hidden="true"></div>

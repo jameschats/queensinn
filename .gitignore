@@ -1,0 +1,16 @@
+# .NET
+queensin.api/bin/
+queensin.api/obj/
+queensin.api/logs/
+queensin.api/uploads/
+*.user
+.vs/
+# Angular
+queensin.web/node_modules/
+queensin.web/dist/
+queensin.web/.angular/
+# misc
+.DS_Store
+.env
+# secrets / private notes
+documents/
