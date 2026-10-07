@@ -26,9 +26,9 @@
       <a routerLink="/admin" class="navlink hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex" title="Staff sign-in">
         <qi-icon name="key" [size]="16" />Admin login
       </a>
-      <a routerLink="/bookroom" fragment="reserve"
+      <a qiReserve
          class="hidden h-11 items-center border border-accent px-[22px] text-[11.5px] uppercase tracking-[.2em] transition-colors duration-200 hover:bg-accent hover:text-primary active:scale-95 sm:inline-flex">
-        Reserve
+        {{ site.reserveLabel() }}
       </a>
       <button type="button" class="p-2.5 min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
         <qi-icon name="menu" [size]="26" />
@@ -110,14 +110,20 @@
 </footer>
 
 <!-- mobile action bar (thumb reach) -->
-<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[1fr_1fr_1.3fr] border-t border-accent/30 bg-primary pb-[env(safe-area-inset-bottom)] text-on-primary md:hidden">
+<div class="fixed inset-x-0 bottom-0 z-40 grid border-t border-accent/30 bg-primary pb-[env(safe-area-inset-bottom)] text-on-primary md:hidden"
+     [class]="site.reserveAction() === 'whatsapp' ? 'grid-cols-[1fr_1.4fr]' : 'grid-cols-[1fr_1fr_1.3fr]'">
   <a [href]="site.tel()" class="flex h-[58px] items-center justify-center gap-2 text-[11.5px] uppercase tracking-[.16em]">
     <qi-icon name="phone" [size]="18" />Call
   </a>
-  <a [href]="site.whatsappUrl()" target="_blank" rel="noopener"
-     class="flex h-[58px] items-center justify-center gap-2 border-l border-accent/20 text-[11.5px] uppercase tracking-[.16em]">
-    <qi-icon name="wa" [size]="18" />WhatsApp
+  <!-- When Reserve already opens WhatsApp, a second WhatsApp button would just duplicate it. -->
+  @if (site.reserveAction() !== 'whatsapp') {
+    <a [href]="site.whatsappUrl()" target="_blank" rel="noopener"
+       class="flex h-[58px] items-center justify-center gap-2 border-l border-accent/20 text-[11.5px] uppercase tracking-[.16em]">
+      <qi-icon name="wa" [size]="18" />WhatsApp
+    </a>
+  }
+  <a qiReserve class="flex h-[58px] items-center justify-center gap-2 bg-accent text-[11.5px] uppercase tracking-[.16em] text-primary">
+    @if (site.reserveAction() === 'whatsapp') { <qi-icon name="wa" [size]="18" /> }{{ site.reserveLabel() }}
   </a>
-  <a routerLink="/bookroom" fragment="reserve" class="flex h-[58px] items-center justify-center bg-accent text-[11.5px] uppercase tracking-[.16em] text-primary">Enquire</a>
 </div>
 <div class="h-[58px] md:hidden" aria-hidden="true"></div>

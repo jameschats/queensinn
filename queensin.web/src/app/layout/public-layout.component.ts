@@ -7,6 +7,7 @@ import { filter } from 'rxjs';
 import { SiteService } from '../core/services/site.service';
 import { BrandComponent } from '../shared/brand.component';
 import { IconComponent } from '../shared/icon.component';
+import { ReserveLinkDirective } from '../shared/reserve-link.directive';
 
 interface NavItem {
   label: string;
@@ -21,7 +22,7 @@ interface NavItem {
  */
 @Component({
   selector: 'qi-public-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, BrandComponent, IconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, BrandComponent, IconComponent, ReserveLinkDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './public-layout.component.html',
   host: { '(window:scroll)': 'onScroll()' },

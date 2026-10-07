@@ -31,7 +31,7 @@ public sealed partial class SiteService : ISiteService
         "HotelName", "LocationLine", "Phone1", "Phone2", "WhatsAppNumber", "WhatsAppMessage",
         "ReservationsEmail", "SalesEmail", "Address", "MapUrl", "Latitude", "Longitude",
         "CheckInTime", "CheckOutTime", "LogoLightUrl", "LogoDarkUrl", "FaviconUrl",
-        "FacebookUrl", "InstagramUrl", "YouTubeUrl",
+        "FacebookUrl", "InstagramUrl", "YouTubeUrl", "ReserveAction", "ReserveLabel", "ReserveMessage",
     };
 
     private readonly QueensInnDbContext _db;
@@ -61,6 +61,10 @@ public sealed partial class SiteService : ISiteService
 
         if (values.TryGetValue("WhatsAppNumber", out var wa) && !string.IsNullOrEmpty(wa) && !Digits().IsMatch(wa))
             throw new AppException("WhatsApp number must be digits only, with the country code (e.g. 919159399988).");
+
+        if (values.TryGetValue("ReserveAction", out var ra) && !string.IsNullOrEmpty(ra) && ra is not ("whatsapp" or "call" or "enquiry"))
+            throw new AppException("The Reserve button can open WhatsApp, call, or go to the enquiry form.");
+        if (values.TryGetValue("ReserveLabel", out var rl) && rl is { Length: > 30 }) throw new AppException("The Reserve button text is too long (30 characters at most).");
 
         var keys = values.Keys.ToList();
         var existing = await _db.SiteSettings.Where(s => keys.Contains(s.SettingKey)).ToListAsync(ct);

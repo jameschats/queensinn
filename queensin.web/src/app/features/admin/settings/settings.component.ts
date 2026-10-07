@@ -9,7 +9,8 @@ interface Field {
   key: string;
   label: string;
   hint?: string;
-  type?: 'text' | 'email' | 'tel' | 'url' | 'textarea';
+  type?: 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'select';
+  options?: { value: string; label: string }[];
   wide?: boolean;
 }
 
@@ -41,6 +42,10 @@ interface Group {
                 <label class="alabel" [class.md:col-span-2]="f.wide || f.type === 'textarea'">{{ f.label }}
                   @if (f.type === 'textarea') {
                     <textarea class="ainput" [name]="f.key" [(ngModel)]="values[f.key]"></textarea>
+                  } @else if (f.type === 'select') {
+                    <select class="ainput" [name]="f.key" [(ngModel)]="values[f.key]">
+                      @for (o of f.options; track o.value) { <option [value]="o.value">{{ o.label }}</option> }
+                    </select>
                   } @else {
                     <input class="ainput" [type]="f.type ?? 'text'" [name]="f.key" [(ngModel)]="values[f.key]" />
                   }
@@ -108,6 +113,22 @@ export class SettingsComponent {
       ],
     },
     {
+      title: 'Reserve button',
+      fields: [
+        {
+          key: 'ReserveAction', label: 'What the Reserve button does', type: 'select', wide: true,
+          options: [
+            { value: 'whatsapp', label: 'Open WhatsApp with a ready-typed message (works today)' },
+            { value: 'call', label: 'Call the front desk' },
+            { value: 'enquiry', label: 'Go to the room enquiry form (choose this once the form is built)' },
+          ],
+          hint: 'Used by the Reserve button in the menu, the bar at the bottom of phones, and the “Enquire” buttons on rooms.',
+        },
+        { key: 'ReserveLabel', label: 'Button text', hint: 'For example Reserve or Book now.' },
+        { key: 'ReserveMessage', label: 'WhatsApp message', type: 'textarea', hint: 'What the guest’s WhatsApp is typed with when Reserve opens a chat. Room buttons add the room’s name.' },
+      ],
+    },
+    {
       title: 'Stay',
       fields: [
         { key: 'CheckInTime', label: 'Check-in time' },
@@ -127,7 +148,8 @@ export class SettingsComponent {
   constructor() {
     this.api.getSettings().subscribe({
       next: (s) => {
-        this.values = { ...s };
+        this.values = { ReserveAction: 'whatsapp', ...s };
+        if (!this.values['ReserveAction']) this.values['ReserveAction'] = 'whatsapp';
         this.syncFavicon();
         this.loading.set(false);
       },

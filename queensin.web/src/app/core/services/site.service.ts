@@ -22,6 +22,12 @@ export class SiteService {
 
   readonly hotelName = computed(() => this.get('HotelName'));
   readonly whatsappUrl = computed(() => this.whatsapp());
+  /** What the Reserve button does: 'whatsapp' (default), 'call' or 'enquiry' (the room enquiry form). */
+  readonly reserveAction = computed(() => {
+    const a = this.get('ReserveAction');
+    return a === 'call' || a === 'enquiry' ? a : 'whatsapp';
+  });
+  readonly reserveLabel = computed(() => this.get('ReserveLabel') || 'Reserve');
 
   load(): Observable<void> {
     return this.http.get<ApiResponse<SiteData>>(`${API_BASE_URL}/site`).pipe(
@@ -50,6 +56,15 @@ export class SiteService {
   whatsapp(message?: string): string {
     const text = message || this.get('WhatsAppMessage');
     return `https://wa.me/${this.get('WhatsAppNumber')}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+  }
+
+  /** Where a Reserve button should go, per the admin's choice in Site settings. */
+  reserve(message?: string): { href: string; external: boolean; newTab: boolean } {
+    switch (this.reserveAction()) {
+      case 'call': return { href: this.tel(), external: true, newTab: false };
+      case 'enquiry': return { href: '/bookroom#reserve', external: false, newTab: false };
+      default: return { href: this.whatsapp(message || this.get('ReserveMessage')), external: true, newTab: true };
+    }
   }
 
   tel(key: 'Phone1' | 'Phone2' = 'Phone1'): string {

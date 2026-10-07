@@ -58,7 +58,7 @@ const heroSection = (kicker: string, headline: string, lede: string, withButtons
     ...(withButtons && buttons
       ? [
           t('cta1Text', 'First button — text', buttons[0]),
-          t('cta1Url', 'First button — goes to', buttons[1], { type: 'url', hint: 'A page like /bookroom, a page section like /bookroom#reserve, or a full web address.' }),
+          t('cta1Url', 'First button — goes to', buttons[1], { type: 'url', hint: 'A page like /bookroom, a section like /bookroom#reserve, a full web address, or the word reserve to do whatever the Reserve button does (set in Site settings).' }),
           t('cta2Text', 'Second button — text', buttons[2]),
           t('cta2Url', 'Second button — goes to', buttons[3], { type: 'url' }),
         ]
@@ -84,7 +84,7 @@ export const PAGES: PageDef[] = [
         'Tranquility meets luxury in the sacred heart of Velankanni',
         'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.',
         true,
-        ['Request tariff', '/bookroom#reserve', 'Discover KVR Mahal', '/kvr-mahal'],
+        ['Request tariff', 'reserve', 'Discover KVR Mahal', '/kvr-mahal'],
       ),
       {
         key: 'welcome',
@@ -275,7 +275,35 @@ export const PAGES: PageDef[] = [
       title: "Contact | Hotel Queen's Inn, Velankanni",
       description: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
     },
-    sections: [heroSection('Contact', "We're a call away", '', false)],
+    sections: [
+      heroSection('Contact', "We're a call away", '', false),
+      {
+        key: 'reach',
+        title: 'Quick-contact box',
+        hint: 'The box beside the contact details. Phone numbers, emails and the address come from Site settings.',
+        fields: [
+          t('title', 'Heading', 'The quickest way to reach us'),
+          area('body', 'Text', 'Call or WhatsApp the front desk and we will reply straight away. An online message form is coming soon.', 3),
+        ],
+      },
+      {
+        key: 'hours',
+        title: 'Hours',
+        hint: 'Check-in and check-out times are added automatically from Site settings.',
+        fields: [
+          t('title', 'Heading', 'Good to know'),
+          area('rows', 'Lines', 'Reception | Open 24 hours\nIn-room dining | 24 hours', 4, { hint: 'One per line, written as: Label | Value.' }),
+        ],
+      },
+      {
+        key: 'visit',
+        title: 'Visiting us',
+        fields: [
+          t('title', 'Heading', 'Find us on ECR Main Road'),
+          area('body', 'Directions', 'We are a ten-minute walk from the Shrine Basilica of Our Lady of Good Health. Parking for cars and tour buses is inside the gates.', 3),
+        ],
+      },
+    ],
     slots: [],
   },
 ];

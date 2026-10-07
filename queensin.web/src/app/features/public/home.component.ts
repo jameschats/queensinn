@@ -11,6 +11,7 @@ import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
 import { ParsedLink, parseLink } from '../../shared/link';
 import { PageHeroComponent } from '../../shared/page-hero.component';
+import { ReserveLinkDirective } from '../../shared/reserve-link.directive';
 import { ShowcaseStripComponent } from '../../shared/showcase-strip.component';
 
 /** Photo shapes for the masonry gallery, cycled so the columns stay lively. */
@@ -24,7 +25,7 @@ const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fo
  */
 @Component({
   selector: 'qi-home',
-  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent, ReserveLinkDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
 })
@@ -91,6 +92,11 @@ export class HomeComponent {
   /** A button's destination, from an address field such as hero.cta1Url. */
   protected link(section: string, field: string): ParsedLink {
     return parseLink(this.t(section, field));
+  }
+
+  /** True when a button's address field says "reserve": it then does whatever the Reserve button is set to do. */
+  protected isReserve(section: string, field: string): boolean {
+    return this.t(section, field).trim().toLowerCase() === 'reserve';
   }
 
   /** The photo in a named slot, or null (which shows themed artwork instead). */

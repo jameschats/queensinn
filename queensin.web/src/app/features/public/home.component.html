@@ -2,7 +2,8 @@
               [slides]="heroPhotos()" [video]="heroVideo()" art="dusk">
   <div class="mt-10 flex flex-wrap gap-3.5">
     @let c1 = link('hero', 'cta1Url');
-    @if (c1.external) { <a [href]="c1.path" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
+    @if (isReserve('hero', 'cta1Url')) { <a qiReserve class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
+    @else if (c1.external) { <a [href]="c1.path" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
     @else { <a [routerLink]="c1.path" [fragment]="c1.fragment" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
     @let c2 = link('hero', 'cta2Url');
     @if (c2.external) { <a [href]="c2.path" class="btn btn-ghost">{{ t('hero', 'cta2Text') }}</a> }
@@ -89,7 +90,7 @@
                 <p class="mt-[18px] font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">per night {{ r.taxNote || '+ GST' }}</small></p>
               }
               <div class="mt-5 flex flex-wrap items-center gap-5">
-                <a routerLink="/bookroom" fragment="reserve" class="btn">Enquire</a>
+                <a [qiReserve]="'Hello Queen\'s Inn, I\'d like to reserve the ' + r.name + '. Please share availability and tariff.'" class="btn">Enquire</a>
                 <a routerLink="/bookroom" class="link">All rooms</a>
               </div>
             </div>

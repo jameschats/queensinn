@@ -42,7 +42,12 @@ export const routes: Routes = [
       contentRoute('kvr-mahal', { slug: 'kvr-mahal', path: '/kvr-mahal', art: 'mandap', anchors: ['mahal-enquiry'] }),
       contentRoute('about-us', { slug: 'about-us', path: '/about-us', art: 'arch' }),
       contentRoute('activities', { slug: 'activities', path: '/activities', art: 'sea' }),
-      contentRoute('contact', { slug: 'contact', path: '/contact', plain: true }),
+      {
+        path: 'contact',
+        resolve: withContent,
+        loadComponent: () => import('./features/public/contact.component').then((m) => m.ContactComponent),
+        data: { solidHeader: true },
+      },
       policyRoute('terms-conditions', 'Terms & conditions'),
       policyRoute('cancellation-policy', 'Cancellation & refund'),
       policyRoute('privacy-policy', 'Privacy policy'),
