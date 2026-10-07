@@ -1,5 +1,5 @@
 <qi-page-hero [full]="true" [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')"
-              [slides]="heroPhotos()" [video]="heroVideo()" art="dusk">
+              [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" art="dusk">
   <div class="mt-10 flex flex-wrap gap-3.5">
     @let c1 = link('hero', 'cta1Url');
     @if (isReserve('hero', 'cta1Url')) { <a qiReserve class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a> }
@@ -240,12 +240,10 @@
         <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Email</b><a [href]="'mailto:' + site.get('ReservationsEmail')">{{ site.get('ReservationsEmail') }}</a></span></div>
       </div>
     </div>
-    <div class="self-center">
-      <p class="lede whitespace-pre-line">{{ t('enquiry', 'lede') }}</p>
-      <div class="mt-8 flex flex-wrap gap-3.5">
-        <a [href]="site.whatsapp()" target="_blank" rel="noopener" class="btn btn-gold">{{ t('enquiry', 'whatsappText') }}</a>
-        <a [href]="site.tel('Phone1')" class="btn btn-ghost">Call {{ site.get('Phone1') }}</a>
-      </div>
+    <div>
+      <qi-enquiry-form type="Room" />
+      <p class="mt-8 whitespace-pre-line text-[14.5px] text-muted">{{ t('enquiry', 'lede') }}
+        <a [href]="site.whatsapp()" target="_blank" rel="noopener" class="underline">{{ t('enquiry', 'whatsappText') }}</a></p>
     </div>
   </div>
 </section>

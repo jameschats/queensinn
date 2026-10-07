@@ -49,6 +49,48 @@ export interface SavePage {
   slots?: Record<string, number | null>;
 }
 
+export interface EnquirySummary {
+  id: number;
+  reference: string;
+  type: string;
+  status: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  detail: string;
+  createdAt: string;
+}
+
+export interface EnquiryDetail {
+  id: number;
+  reference: string;
+  type: string;
+  status: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  checkIn: string | null;
+  checkOut: string | null;
+  roomName: string | null;
+  guests: string | null;
+  eventType: string | null;
+  eventDate: string | null;
+  altDate: string | null;
+  guestCount: string | null;
+  roomsNeeded: string | null;
+  subject: string | null;
+  message: string | null;
+  sourcePage: string | null;
+  createdAt: string;
+  notes: { id: number; note: string; by: string | null; createdAt: string }[];
+}
+
+export interface EnquiryCounts {
+  new: number;
+  total: number;
+  byStatus: Record<string, number>;
+}
+
 export interface GalleryItemAdmin {
   id: number;
   mediaId: number;
@@ -128,6 +170,34 @@ export class AdminApiService {
 
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<ApiResponse<unknown>>(`${this.base}/media/${id}`).pipe(map(() => void 0));
+  }
+
+  // --- enquiries ---
+
+  enquiries(p: { status?: string; type?: string; q?: string; page?: number; pageSize?: number }): Observable<{ items: EnquirySummary[]; totalCount: number }> {
+    const params: Record<string, string> = {};
+    for (const [k, v] of Object.entries(p)) if (v !== undefined && v !== '') params[k] = String(v);
+    return this.http.get<ApiResponse<{ items: EnquirySummary[]; totalCount: number }>>(`${this.base}/enquiries`, { params }).pipe(map((r) => r.data!));
+  }
+
+  enquiryCounts(): Observable<EnquiryCounts> {
+    return this.http.get<ApiResponse<EnquiryCounts>>(`${this.base}/enquiries/counts`).pipe(map((r) => r.data!));
+  }
+
+  enquiry(id: number): Observable<EnquiryDetail> {
+    return this.http.get<ApiResponse<EnquiryDetail>>(`${this.base}/enquiries/${id}`).pipe(map((r) => r.data!));
+  }
+
+  setEnquiryStatus(id: number, status: string): Observable<EnquiryDetail> {
+    return this.http.put<ApiResponse<EnquiryDetail>>(`${this.base}/enquiries/${id}/status`, { status }).pipe(map((r) => r.data!));
+  }
+
+  addEnquiryNote(id: number, note: string): Observable<EnquiryDetail> {
+    return this.http.post<ApiResponse<EnquiryDetail>>(`${this.base}/enquiries/${id}/notes`, { note }).pipe(map((r) => r.data!));
+  }
+
+  deleteEnquiry(id: number): Observable<void> {
+    return this.http.delete<ApiResponse<unknown>>(`${this.base}/enquiries/${id}`).pipe(map(() => void 0));
   }
 
   // --- galleries ---

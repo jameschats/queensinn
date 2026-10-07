@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { absUrl } from '../../core/api.config';
+import { heroShadePercent } from '../../core/content/page-schemas';
 import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
+import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { IconComponent } from '../../shared/icon.component';
+import { PageHeroComponent } from '../../shared/page-hero.component';
 
 /** Used only if the hotel's coordinates are missing or malformed in Site settings. */
 const FALLBACK_QUERY = 'Hotel Queens Inn Velankanni';
@@ -17,17 +20,17 @@ const COORD = /^-?\d{1,3}(\.\d{1,8})?$/;
  */
 @Component({
   selector: 'qi-contact',
-  imports: [IconComponent],
+  imports: [IconComponent, PageHeroComponent, EnquiryFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="sec pt-[calc(var(--sec)+60px)]">
+    <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="portico"
+                  [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
+    <section class="sec">
       <div class="wrap grid items-start gap-[clamp(48px,8vw,140px)] lg:grid-cols-[1.1fr_.9fr]">
         <div>
-          @if (t('hero', 'kicker')) { <span class="kicker">{{ t('hero', 'kicker') }}</span> }
-          <h1 class="text-[clamp(40px,5vw,72px)]">{{ t('hero', 'headline') }}</h1>
-          @if (t('hero', 'lede')) { <p class="lede mt-6 whitespace-pre-line">{{ t('hero', 'lede') }}</p> }
+          <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('details', 'title') }}</h2>
 
-          <div class="mt-12 grid gap-[26px] text-[15px]">
+          <div class="mt-9 grid gap-[26px] text-[15px]">
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="phone" class="mt-1 text-gold-ink" />
               <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Call</b>
@@ -77,6 +80,12 @@ const COORD = /^-?\d{1,3}(\.\d{1,8})?$/;
         </aside>
       </div>
 
+      <div class="wrap mt-[clamp(64px,8vw,110px)]" id="message">
+        <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('message', 'title') }}</h2>
+        <p class="mt-4 mb-10 max-w-[62ch] whitespace-pre-line text-muted">{{ t('message', 'intro') }}</p>
+        <div class="max-w-[820px]"><qi-enquiry-form type="Contact" /></div>
+      </div>
+
       <div class="wrap mt-[clamp(64px,8vw,110px)]">
         <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('visit', 'title') }}</h2>
         <p class="mt-4 max-w-[62ch] whitespace-pre-line text-muted">{{ t('visit', 'body') }}</p>
@@ -90,6 +99,12 @@ export class ContactComponent {
   private readonly cs = inject(ContentService);
   private readonly sanitizer = inject(DomSanitizer);
   protected readonly site = inject(SiteService);
+
+  private readonly stored = computed(() => this.cs.content().pages['contact']);
+  protected readonly heroPhotos = computed(() => this.stored()?.heroPhotos ?? []);
+  protected readonly heroVideo = computed(() => this.stored()?.heroVideo ?? null);
+
+  protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
 
   protected readonly hours = computed(() => this.cs.rows('contact', 'hours', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']));
 

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { absUrl } from '../../core/api.config';
-import { pageDef } from '../../core/content/page-schemas';
+import { heroShadePercent, pageDef } from '../../core/content/page-schemas';
 import { ContentService } from '../../core/services/content.service';
 import { Policy } from '../../core/services/policy.service';
 import { SeoService } from '../../core/services/seo.service';
+import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
 
 /** Route data for the pages that are still shells until Stage 5 builds their real content. */
@@ -31,7 +32,7 @@ export interface ContentPageData {
  */
 @Component({
   selector: 'qi-content-page',
-  imports: [PageHeroComponent],
+  imports: [PageHeroComponent, EnquiryFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (page.plain) {
@@ -49,9 +50,37 @@ export interface ContentPageData {
       </section>
     } @else {
       <qi-page-hero [kicker]="t('kicker')" [title]="t('headline')" [lede]="t('lede')" [art]="page.art ?? 'dusk'"
-                    [slides]="heroPhotos()" [video]="heroVideo()" />
+                    [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
     }
-    @for (a of page.anchors ?? []; track a) { <section [id]="a"></section> }`,
+    @switch (page.slug) {
+      @case ('bookroom') {
+        <section class="sec" id="reserve">
+          <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">
+            <div>
+              <span class="kicker">{{ t2('enquiry', 'kicker') }}</span>
+              <h2 class="h-display">{{ t2('enquiry', 'title') }}</h2>
+              <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t2('enquiry', 'intro') }}</p>
+            </div>
+            <qi-enquiry-form type="Room" />
+          </div>
+        </section>
+      }
+      @case ('kvr-mahal') {
+        <section class="sec bg-tint" id="mahal-enquiry">
+          <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">
+            <div>
+              <span class="kicker">{{ t2('enquiry', 'kicker') }}</span>
+              <h2 class="h-display">{{ t2('enquiry', 'title') }}</h2>
+              <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t2('enquiry', 'intro') }}</p>
+            </div>
+            <qi-enquiry-form type="Mahal" />
+          </div>
+        </section>
+      }
+      @default {
+        @for (a of page.anchors ?? []; track a) { <section [id]="a"></section> }
+      }
+    }`,
 })
 export class ContentPageComponent {
   private readonly route = inject(ActivatedRoute);
@@ -62,11 +91,16 @@ export class ContentPageComponent {
   private readonly stored = computed(() => this.cs.content().pages[this.page.slug]);
   protected readonly heroPhotos = computed(() => this.stored()?.heroPhotos ?? []);
   protected readonly heroVideo = computed(() => this.stored()?.heroVideo ?? null);
+  protected readonly shade = computed(() => heroShadePercent(this.t('shade')));
 
   constructor() {
     const def = pageDef(this.page.slug);
     const seo = def ? this.cs.seo(this.page.slug) : { title: this.policy?.title ? `${this.policy.title} | Hotel Queen's Inn` : (this.page.title ?? ''), description: '', image: undefined };
     inject(SeoService).set({ title: seo.title, description: seo.description || undefined, path: this.page.path, image: seo.image ? absUrl(seo.image) : undefined });
+  }
+
+  protected t2(section: string, field: string): string {
+    return this.cs.text(this.page.slug, section, field);
   }
 
   protected t(field: string): string {

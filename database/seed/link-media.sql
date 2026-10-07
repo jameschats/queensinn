@@ -17,7 +17,7 @@ UPDATE `Rooms` r JOIN `MediaAssets` m ON m.`FileName` = 'room-suite'     SET r.`
 INSERT INTO `HeroSlides` (`PageId`, `MediaId`, `DisplayOrder`)
 SELECT p.`PageId`, m.`MediaId`, o.`ord`
 FROM (SELECT '' slug, 'hero-dusk' k, 1 ord UNION ALL SELECT '', 'hero-garden', 2 UNION ALL SELECT '', 'hero-lobby', 3
-      UNION ALL SELECT 'bookroom', 'room-suite', 1 UNION ALL SELECT 'about-us', 'hero-dusk', 1) o
+      UNION ALL SELECT 'bookroom', 'room-suite', 1 UNION ALL SELECT 'about-us', 'hero-dusk', 1 UNION ALL SELECT 'contact', 'hero-lobby', 1) o
 JOIN `Pages` p ON p.`Slug` = o.`slug`
 JOIN `MediaAssets` m ON m.`FileName` = o.`k`
 WHERE NOT EXISTS (SELECT 1 FROM `HeroSlides` h WHERE h.`PageId` = p.`PageId` AND h.`MediaId` IS NOT NULL);

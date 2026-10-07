@@ -33,7 +33,7 @@ import { ImageComponent } from './image.component';
                (canplay)="videoReady.set(true)" (error)="videoFailed()"></video>
       }
       <!-- No gradients over the photo. This flat, even tint (not a gradient) only keeps white text legible on bright photos; remove it for the untouched photo. -->
-      <div class="absolute inset-0 bg-primary/25"></div>
+      <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
       <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
         <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
@@ -69,6 +69,8 @@ export class PageHeroComponent {
   readonly video = input<MediaItem | null>(null);
   /** Artwork shown when there are no photos. */
   readonly art = input('dusk');
+  /** Percentage of an even dark tint over the photo (0 to 100). */
+  readonly shade = input(25);
 
   protected readonly active = signal(0);
   protected readonly playingVideo = signal(false);

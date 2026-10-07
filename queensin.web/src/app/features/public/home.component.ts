@@ -2,12 +2,13 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, afterNextRender, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { absUrl } from '../../core/api.config';
-import { HOME_AMENITY_ICONS } from '../../core/content/page-schemas';
+import { HOME_AMENITY_ICONS, heroShadePercent } from '../../core/content/page-schemas';
 import { MediaItem } from '../../core/models/content.model';
 import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
 import { IconComponent } from '../../shared/icon.component';
+import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { ImageComponent } from '../../shared/image.component';
 import { ParsedLink, parseLink } from '../../shared/link';
 import { PageHeroComponent } from '../../shared/page-hero.component';
@@ -25,7 +26,7 @@ const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fo
  */
 @Component({
   selector: 'qi-home',
-  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent, ReserveLinkDirective],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent, ReserveLinkDirective, EnquiryFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
 })
@@ -39,6 +40,7 @@ export class HomeComponent {
   private readonly page = computed(() => this.content().pages['home']);
   protected readonly heroPhotos = computed(() => this.page()?.heroPhotos ?? []);
   protected readonly heroVideo = computed(() => this.page()?.heroVideo ?? null);
+  protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
 
   // --- rooms ---
   protected readonly rooms = computed(() => this.content().rooms);

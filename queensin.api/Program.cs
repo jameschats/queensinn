@@ -83,6 +83,8 @@ builder.Services.AddScoped<queensin.api.Features.Media.IMediaService, queensin.a
 builder.Services.AddScoped<queensin.api.Features.Content.IPublicContentService, queensin.api.Features.Content.PublicContentService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IPageAdminService, queensin.api.Features.Content.PageAdminService>();
 builder.Services.AddScoped<queensin.api.Features.Content.IGalleryAdminService, queensin.api.Features.Content.GalleryAdminService>();
+builder.Services.AddScoped<queensin.api.Features.Enquiries.IEnquiryNotifier, queensin.api.Features.Enquiries.SmtpEnquiryNotifier>();
+builder.Services.AddScoped<queensin.api.Features.Enquiries.IEnquiryService, queensin.api.Features.Enquiries.EnquiryService>();
 
 // --- Platform ------------------------------------------------------------
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
@@ -112,10 +114,10 @@ builder.Services.AddRateLimiter(o =>
     o.AddPolicy("auth", ctx => RateLimitPartition.GetFixedWindowLimiter(
         ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
-    // Public enquiry forms (Stage 6): 5 per hour per IP.
+    // Public enquiry forms: 10 per hour per IP (mobile carriers put many guests behind one address, so not lower).
     o.AddPolicy("enquiry", ctx => RateLimitPartition.GetFixedWindowLimiter(
         ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-        _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
 });
 
 var app = builder.Build();

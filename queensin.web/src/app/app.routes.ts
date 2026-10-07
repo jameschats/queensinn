@@ -46,7 +46,6 @@ export const routes: Routes = [
         path: 'contact',
         resolve: withContent,
         loadComponent: () => import('./features/public/contact.component').then((m) => m.ContactComponent),
-        data: { solidHeader: true },
       },
       policyRoute('terms-conditions', 'Terms & conditions'),
       policyRoute('cancellation-policy', 'Cancellation & refund'),
@@ -97,6 +96,11 @@ export const routes: Routes = [
         canActivate: [permissionGuard(Perm.CmsManage)],
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () => import('./features/admin/pages/policy-editor.component').then((m) => m.PolicyEditorComponent),
+      },
+      {
+        path: 'enquiries',
+        canActivate: [permissionGuard(Perm.EnquiryManage)],
+        loadComponent: () => import('./features/admin/enquiries/enquiries.component').then((m) => m.EnquiriesComponent),
       },
       {
         path: 'gallery',

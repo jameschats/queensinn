@@ -46,8 +46,12 @@ const t = (key: string, label: string, def: string, extra: Partial<FieldDef> = {
 const area = (key: string, label: string, def: string, rows = 4, extra: Partial<FieldDef> = {}): FieldDef =>
   ({ key, label, default: def, type: 'textarea', rows, ...extra });
 
+/** How much the hero photo is darkened so white text stays readable: one even tint, never a gradient. */
+export const HERO_SHADES: Record<string, number> = { none: 0, light: 25, medium: 40, strong: 55 };
+export const heroShadePercent = (value: string): number => HERO_SHADES[value] ?? HERO_SHADES['light'];
+
 /** The hero's wording, shared by every page. */
-const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string]): SectionDef => ({
+const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'light'): SectionDef => ({
   key: 'hero',
   title: 'Hero text',
   hint: 'The large heading at the top of the page.',
@@ -55,6 +59,11 @@ const heroSection = (kicker: string, headline: string, lede: string, withButtons
     t('kicker', 'Small line above the heading', kicker),
     t('headline', 'Heading', headline),
     area('lede', 'Description under the heading', lede, 3),
+    {
+      key: 'shade', label: 'Darken the photo', type: 'select', default: shade,
+      options: [{ value: 'none', label: 'Not at all' }, { value: 'light', label: 'A little' }, { value: 'medium', label: 'Medium' }, { value: 'strong', label: 'A lot' }],
+      hint: 'Makes white text easier to read over a bright photo. An even tint, not a gradient.',
+    },
     ...(withButtons && buttons
       ? [
           t('cta1Text', 'First button — text', buttons[0]),
@@ -203,7 +212,7 @@ export const PAGES: PageDef[] = [
           t('kicker', 'Small line', 'Room enquiry'),
           t('title', 'Heading', "Tell us when you're coming"),
           area('intro', 'Introduction', 'Share your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.', 3),
-          area('lede', 'Message beside the contact details', 'The fastest way to reach us is WhatsApp or a call. The online enquiry form is coming soon.', 3),
+          area('lede', 'Note under the form', 'Prefer to talk? The fastest way to reach us is WhatsApp or a call.', 3),
           t('whatsappText', 'WhatsApp button', 'WhatsApp us'),
         ],
       },
@@ -227,7 +236,18 @@ export const PAGES: PageDef[] = [
       title: "Rooms & Tariffs | Hotel Queen's Inn, Velankanni",
       description: "Deluxe, Executive Triple, Family and Queen's Suite rooms near the Velankanni Basilica. Send a reservation enquiry or WhatsApp the front desk.",
     },
-    sections: [heroSection('Stay with us', 'Rooms & suites', 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.', false)],
+    sections: [
+      heroSection('Stay with us', 'Rooms & suites', 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.', false),
+      {
+        key: 'enquiry',
+        title: 'Room enquiry form',
+        fields: [
+          t('kicker', 'Small line', 'Reserve your stay'),
+          t('title', 'Heading', 'Request a reservation'),
+          area('intro', 'Introduction', 'Tell us your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.', 3),
+        ],
+      },
+    ],
     slots: [],
   },
   {
@@ -239,7 +259,18 @@ export const PAGES: PageDef[] = [
       title: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
       description: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
     },
-    sections: [heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false)],
+    sections: [
+      heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
+      {
+        key: 'enquiry',
+        title: 'Event enquiry form',
+        fields: [
+          t('kicker', 'Small line', 'Plan your event'),
+          t('title', 'Heading', 'Check a date for your celebration'),
+          area('intro', 'Introduction', 'Share your date and our events team will confirm availability and send a quotation, usually within a day.', 3),
+        ],
+      },
+    ],
     slots: [],
   },
   {
@@ -270,20 +301,26 @@ export const PAGES: PageDef[] = [
     slug: 'contact',
     label: 'Contact',
     path: '/contact',
-    hero: 'text',
+    hero: 'media',
     seoDefaults: {
       title: "Contact | Hotel Queen's Inn, Velankanni",
       description: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
     },
     sections: [
-      heroSection('Contact', "We're a call away", '', false),
+      heroSection('Contact', "We're a call away", 'Our front desk is open round the clock. Call, message or write to us.', false, undefined, 'medium'),
+      {
+        key: 'details',
+        title: 'Contact details',
+        hint: 'Phone numbers, emails and the address come from Site settings.',
+        fields: [t('title', 'Heading', 'Speak to the front desk')],
+      },
       {
         key: 'reach',
         title: 'Quick-contact box',
         hint: 'The box beside the contact details. Phone numbers, emails and the address come from Site settings.',
         fields: [
           t('title', 'Heading', 'The quickest way to reach us'),
-          area('body', 'Text', 'Call or WhatsApp the front desk and we will reply straight away. An online message form is coming soon.', 3),
+          area('body', 'Text', 'Call or WhatsApp the front desk and we will reply straight away.', 3),
         ],
       },
       {
@@ -293,6 +330,14 @@ export const PAGES: PageDef[] = [
         fields: [
           t('title', 'Heading', 'Good to know'),
           area('rows', 'Lines', 'Reception | Open 24 hours\nIn-room dining | 24 hours', 4, { hint: 'One per line, written as: Label | Value.' }),
+        ],
+      },
+      {
+        key: 'message',
+        title: 'Message form',
+        fields: [
+          t('title', 'Heading', 'Send us a message'),
+          area('intro', 'Introduction', 'Write to us and our team will reply by phone or email, usually within a day.', 3),
         ],
       },
       {

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { Perm } from '../../core/models/auth.model';
 import { AuthService } from '../../core/services/auth.service';
+import { EnquiryCountsService } from '../../core/services/enquiry-counts.service';
 import { BrandComponent } from '../../shared/brand.component';
 import { IconComponent } from '../../shared/icon.component';
 
@@ -11,6 +12,8 @@ interface AdminNav {
   label: string;
   icon: string;
   perm?: string;
+  /** Show the number of new enquiries beside this item. */
+  badge?: boolean;
   /** Screens that arrive in later stages are listed (so staff see the plan) but disabled. */
   stage?: number;
 }
@@ -35,6 +38,7 @@ interface AdminNav {
               <a [routerLink]="item.link" routerLinkActive="!bg-accent !text-primary" [routerLinkActiveOptions]="{ exact: item.link === '/admin' }"
                  class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-on-primary-muted hover:bg-white/5 hover:text-on-primary">
                 <qi-icon [name]="item.icon" [size]="18" />{{ item.label }}
+                @if (item.badge && enquiries.newCount() > 0) { <span class="ml-auto grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-primary" [attr.aria-label]="enquiries.newCount() + ' new'">{{ enquiries.newCount() }}</span> }
               </a>
             }
           }
@@ -58,12 +62,13 @@ interface AdminNav {
 })
 export class AdminLayoutComponent {
   protected readonly auth = inject(AuthService);
+  protected readonly enquiries = inject(EnquiryCountsService);
   private readonly router = inject(Router);
   protected readonly navOpen = signal(false);
 
   private readonly all: AdminNav[] = [
     { link: '/admin', label: 'Dashboard', icon: 'dash' },
-    { link: '/admin/enquiries', label: 'Enquiries', icon: 'inbox', perm: Perm.EnquiryManage, stage: 6 },
+    { link: '/admin/enquiries', label: 'Enquiries', icon: 'inbox', perm: Perm.EnquiryManage, badge: true },
     { link: '/admin/rooms', label: 'Rooms', icon: 'bed', perm: Perm.RoomManage, stage: 4 },
     { link: '/admin/media', label: 'Media library', icon: 'image', perm: Perm.MediaManage },
     { link: '/admin/gallery', label: 'Galleries', icon: 'grid', perm: Perm.MediaManage },
@@ -79,6 +84,12 @@ export class AdminLayoutComponent {
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => this.navOpen.set(false));
     // Pick up role changes made by another admin since this session started.
     this.auth.me().subscribe({ error: () => {} });
+    if (this.auth.can(Perm.EnquiryManage)) {
+      this.enquiries.refresh();
+      // new enquiries arrive while staff have the admin open: look again every few minutes
+      const timer = setInterval(() => this.enquiries.refresh(), 180_000);
+      inject(DestroyRef).onDestroy(() => clearInterval(timer));
+    }
   }
 
   protected signOut(): void {
