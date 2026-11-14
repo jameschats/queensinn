@@ -23,13 +23,13 @@
 @theme inline {
   --color-deep: color-mix(in srgb, var(--color-primary) 78%, #000);
   --color-ink: var(--color-primary);
-  --color-muted: color-mix(in srgb, var(--color-primary) 64%, var(--color-surface));
+  --color-muted: color-mix(in srgb, var(--color-primary) 76%, var(--color-surface));
   --color-line: color-mix(in srgb, var(--color-primary) 13%, var(--color-surface));
   --color-tint: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
   --color-gold-ink: color-mix(in srgb, var(--color-accent) 58%, #1a1208);
   --color-gold-soft: color-mix(in srgb, var(--color-accent) 13%, var(--color-surface));
   --color-on-primary: color-mix(in srgb, var(--color-surface) 92%, var(--color-accent));
-  --color-on-primary-muted: color-mix(in srgb, var(--color-surface) 62%, var(--color-primary));
+  --color-on-primary-muted: color-mix(in srgb, var(--color-surface) 74%, var(--color-primary));
 }
 
 /* ---------- base ---------- */
@@ -100,9 +100,10 @@
 
   /* underline form fields */
   .fld { display: flex; flex-direction: column; gap: 2px; }
-  .fld > span { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-muted); }
+  .fld > span { font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--color-ink) 88%, var(--color-surface)); }
+  .fld > span i { font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0; text-transform: none; color: color-mix(in srgb, var(--color-ink) 72%, var(--color-surface)); }
   .fld input, .fld select, .fld textarea {
-    border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 25%, var(--color-surface));
+    border: 0; border-bottom: 1.5px solid color-mix(in srgb, var(--color-primary) 48%, var(--color-surface));
     background: transparent; padding: 10px 0 12px; font-family: var(--font-serif); font-size: 21px; outline: none;
     border-radius: 0; appearance: none; color: inherit; transition: border-color .4s;
   }
@@ -170,18 +171,19 @@
   .fm .full { grid-column: 1 / -1; }
   .fm .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .fm .acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; margin-top: 6px; }
-  .fm small { font-size: 13px; color: var(--color-muted); }
+  .fm small { font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--color-ink) 82%, var(--color-surface)); }
   .fld { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .fld > span { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-muted); }
+  .fld > span { font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--color-ink) 88%, var(--color-surface)); }
+  .fld > span i { font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0; text-transform: none; color: color-mix(in srgb, var(--color-ink) 72%, var(--color-surface)); }
   .fld input, .fld select, .fld textarea {
-    border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 25%, var(--color-surface)); background: transparent;
+    border: 0; border-bottom: 1.5px solid color-mix(in srgb, var(--color-primary) 48%, var(--color-surface)); background: transparent;
     padding: 10px 0 12px; font-family: var(--font-serif); font-size: 20px; color: var(--color-ink); outline: none; border-radius: 0;
     -webkit-appearance: none; appearance: none; transition: border-color .4s; width: 100%; min-width: 0;
   }
   .fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--color-accent); }
-  .fld input::placeholder, .fld textarea::placeholder { color: color-mix(in srgb, var(--color-ink) 38%, var(--color-surface)); }
+  .fld input::placeholder, .fld textarea::placeholder { color: color-mix(in srgb, var(--color-ink) 62%, var(--color-surface)); opacity: 1; }
   .fld textarea { resize: vertical; min-height: 96px; line-height: 1.4; }
-  .fld select { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23999'/%3E%3C/svg%3E") right 4px center no-repeat; padding-right: 24px; }
+  .fld select { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23405067'/%3E%3C/svg%3E") right 4px center no-repeat; padding-right: 24px; }
   .fld input:user-invalid, .fld textarea:user-invalid, .fld select:user-invalid { border-color: #B42318; }
   @media (max-width: 640px) { .fm { grid-template-columns: 1fr; gap: 24px; } }
 }

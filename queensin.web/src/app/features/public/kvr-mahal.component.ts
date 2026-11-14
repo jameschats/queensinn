@@ -125,8 +125,8 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
           <h2 class="h-display">{{ t('enquiry', 'title') }}</h2>
           <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t('enquiry', 'intro') }}</p>
           <div class="mt-9 grid gap-5 text-[15px]">
-            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Events desk</b><a [href]="site.tel('Phone2')">{{ site.get('Phone2') || site.get('Phone1') }}</a></span></div>
-            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Email</b><a [href]="'mailto:' + (site.get('SalesEmail') || site.get('ReservationsEmail'))">{{ site.get('SalesEmail') || site.get('ReservationsEmail') }}</a></span></div>
+            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Events desk</b><a [href]="site.tel('Phone2')">{{ site.get('Phone2') || site.get('Phone1') }}</a></span></div>
+            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Email</b><a [href]="'mailto:' + (site.get('SalesEmail') || site.get('ReservationsEmail'))">{{ site.get('SalesEmail') || site.get('ReservationsEmail') }}</a></span></div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="wa" class="mt-1 text-gold-ink" /><a [href]="site.whatsapp('Hello, I would like to enquire about KVR Mahal for an event.')" target="_blank" rel="noopener">WhatsApp the events desk</a></div>
           </div>
         </div>
