@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel Queen's Inn & KVR Mahal · Velankanni — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#0F243E; --a:#C5A880; --s:#FBFBF9;
+  --pd:color-mix(in srgb,var(--p) 78%,#000);
+  --ink:var(--p);
+  --muted:color-mix(in srgb,var(--p) 64%,var(--s));
+  --line:color-mix(in srgb,var(--p) 13%,var(--s));
+  --a-ink:color-mix(in srgb,var(--a) 58%,#1a1208);
+  --a-soft:color-mix(in srgb,var(--a) 13%,var(--s));
+  --s2:color-mix(in srgb,var(--a) 6%,var(--s));
+  --on-p:color-mix(in srgb,var(--s) 92%,var(--a));
+  --on-p-muted:color-mix(in srgb,var(--s) 62%,var(--p));
+  --serif:"Cormorant Garamond","Cormorant",Garamond,"Times New Roman",serif;
+  --sans:"Jost","Futura","Century Gothic","Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --pad:clamp(20px,5vw,72px);
+  --sec:clamp(80px,11vw,160px);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 84px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--s);color:var(--ink);font-family:var(--sans);font-weight:300;font-size:16.5px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:1px solid var(--a);outline-offset:4px}
+::selection{background:var(--a);color:var(--p)}
+.wrap{max-width:1360px;margin:0 auto;padding:0 var(--pad)}
+.sec{padding:var(--sec) 0}
+.serif{font-family:var(--serif)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;margin:0;line-height:1.08;letter-spacing:-.005em}
+h2{font-size:clamp(38px,4.6vw,64px);font-weight:300}
+h3{font-size:clamp(26px,2.4vw,34px);font-weight:400}
+p{margin:0 0 1.1em;max-width:62ch}
+.lede{font-family:var(--serif);font-size:clamp(21px,1.75vw,25px);line-height:1.55;font-weight:400;color:var(--ink);max-width:40ch}
+.muted{color:var(--muted)}
+.kicker{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--a-ink);margin-bottom:18px;display:block}
+.dark .kicker{color:var(--a)}
+.rule{width:56px;height:1px;background:var(--a);border:0;margin:28px 0}
+.dark{background:var(--p);color:var(--on-p)}
+.dark .muted{color:var(--on-p-muted)}
+.dark .lede{color:var(--on-p)}
+.tint{background:var(--s2)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 30px;font-family:var(--sans);font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:400;border:1px solid var(--p);background:var(--p);color:var(--s);cursor:pointer;transition:background .5s var(--ease),color .5s var(--ease),border-color .5s var(--ease)}
+.btn:hover{background:transparent;color:var(--p)}
+.btn.ghost{background:transparent;color:var(--p)}
+.btn.ghost:hover{background:var(--p);color:var(--s)}
+.btn.gold{background:var(--a);border-color:var(--a);color:var(--p)}
+.btn.gold:hover{background:transparent;color:var(--a)}
+.dark .btn.ghost,.on-img .btn.ghost{border-color:color-mix(in srgb,var(--a) 70%,transparent);color:var(--on-p)}
+.dark .btn.ghost:hover,.on-img .btn.ghost:hover{background:var(--a);color:var(--p);border-color:var(--a)}
+.link{display:inline-block;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;padding-bottom:6px;background:linear-gradient(var(--a),var(--a)) 0 100%/100% 1px no-repeat;transition:background-size .6s var(--ease)}
+.link:hover{background-size:0 1px;background-position:100% 100%}
+.btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background .6s var(--ease),box-shadow .6s var(--ease),color .6s var(--ease);color:var(--on-p)}
+.hdr .bar{display:flex;align-items:center;justify-content:space-between;height:88px;gap:24px;transition:height .5s var(--ease)}
+.hdr.solid{background:color-mix(in srgb,var(--s) 94%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.hdr.solid .bar{height:72px}
+.brand{display:flex;align-items:center;gap:12px;line-height:1}
+.brand .mark{width:30px;height:30px;color:var(--a)}
+.brand .wm{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:.01em;display:block}
+.brand small{display:block;font-size:9.5px;letter-spacing:.42em;text-transform:uppercase;margin-top:5px;opacity:.75}
+.nav{display:flex;gap:clamp(18px,2.2vw,36px);font-size:13px;letter-spacing:.08em}
+.nav a{position:relative;padding:6px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--a);transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease)}
+.nav a:hover::after,.nav a.on::after{transform:scaleX(1);transform-origin:left}
+.hdr-r{display:flex;align-items:center;gap:22px}
+.hdr-r .tel{font-size:13px;letter-spacing:.06em;display:flex;align-items:center;gap:8px}
+.hdr .btn{height:44px;padding:0 22px;font-size:11.5px;background:transparent;color:inherit;border-color:color-mix(in srgb,var(--a) 80%,transparent)}
+.hdr .btn:hover{background:var(--a);color:var(--p);border-color:var(--a)}
+.burger{display:none;background:none;border:0;width:44px;height:44px;cursor:pointer;padding:10px}
+.burger span{display:block;height:1px;background:currentColor;margin:6px 0}
+.mnav{position:fixed;inset:0;z-index:60;background:var(--p);color:var(--on-p);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 24px) var(--pad) calc(env(safe-area-inset-bottom,0px) + 24px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.mnav.open{opacity:1;pointer-events:auto}
+.mnav .top{display:flex;justify-content:space-between;align-items:center}
+.mnav nav{margin:auto 0;display:flex;flex-direction:column;gap:6px}
+.mnav nav a{font-family:var(--serif);font-size:40px;font-weight:300;line-height:1.3}
+.mnav .x{background:none;border:0;color:inherit;width:44px;height:44px;cursor:pointer}
+@media (max-width:1080px){.nav,.hdr-r .tel{display:none}.burger{display:block}}
+@media (max-width:560px){.hdr-r .btn{display:none}}
+
+/* ---------- image frames ---------- */
+.ph{position:relative;overflow:hidden;background:var(--p);margin:0;isolation:isolate}
+.ph .art{position:absolute;inset:0;width:100%;height:100%}
+.ph::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:2}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s var(--ease),transform 1.6s var(--ease);z-index:1}
+.ph img.ok{opacity:1}
+.ph.loaded::after{opacity:0}
+.ph figcaption{position:absolute;left:14px;bottom:12px;z-index:3;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--s) 80%,transparent);background:color-mix(in srgb,var(--p) 55%,transparent);padding:5px 9px;backdrop-filter:blur(4px);max-width:calc(100% - 28px)}
+.ph.loaded figcaption{display:none}
+.zoom:hover img.ok{transform:scale(1.04)}
+.arch{border-radius:999px 999px 0 0}
+.r43{aspect-ratio:4/3}.r32{aspect-ratio:3/2}.r34{aspect-ratio:3/4}.r45{aspect-ratio:4/5}.r11{aspect-ratio:1}.r169{aspect-ratio:16/9}.r23{aspect-ratio:2/3}
+.frame{position:relative}
+.frame::before{content:"";position:absolute;inset:-14px 14px 14px -14px;border:1px solid var(--a);pointer-events:none;z-index:0}
+.frame.arch-f::before{border-radius:999px 999px 0 0}
+.frame>.ph{z-index:1}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:100vh;height:100svh;min-height:640px;color:var(--on-p);overflow:hidden;background:var(--p)}
+.hero .slides,.hero .slide{position:absolute;inset:0}
+.hero .slide{opacity:0;transition:opacity 2s var(--ease)}
+.hero .slide.on{opacity:1}
+.hero .slide .ph{position:absolute;inset:0}
+.hero .slide.on .ph>*{animation:kb 14s linear both}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+.hero .shade{position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,color-mix(in srgb,var(--p) 55%,transparent) 0%,transparent 28%,transparent 46%,color-mix(in srgb,var(--pd) 82%,transparent) 100%)}
+.hero .inner{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(150px,20vh,210px)}
+.hero .inner>.wrap{width:100%}
+.hero h1{font-size:clamp(44px,6.6vw,104px);font-weight:300;line-height:1;max-width:13ch;letter-spacing:-.01em}
+.hero .sub{font-size:clamp(16px,1.3vw,19px);max-width:46ch;margin-top:28px;color:color-mix(in srgb,var(--on-p) 88%,transparent)}
+.hero .ld>*{opacity:0;transform:translateY(22px);animation:up 1.4s var(--ease) forwards}
+.hero .ld>*:nth-child(2){animation-delay:.25s}.hero .ld>*:nth-child(3){animation-delay:.5s}
+@keyframes up{to{opacity:1;transform:none}}
+.hero .dots{position:absolute;z-index:5;right:var(--pad);bottom:clamp(150px,20vh,210px);display:flex;gap:10px}
+.hero .dots button{width:36px;height:24px;background:none;border:0;cursor:pointer;position:relative}
+.hero .dots button::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:color-mix(in srgb,var(--s) 40%,transparent)}
+.hero .dots button.on::before{background:var(--a)}
+.page-hero{height:78vh;min-height:520px}
+.page-hero .inner{padding-bottom:clamp(64px,10vh,110px)}
+
+/* enquiry bar */
+.qbar{position:relative;z-index:6;margin-top:calc(-84px - clamp(28px,5vh,52px))}
+.qbar form{display:grid;grid-template-columns:repeat(4,1fr) auto;background:var(--s);color:var(--ink);box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.qbar label{display:flex;flex-direction:column;padding:16px 24px;border-right:1px solid var(--line);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);gap:4px;min-width:0}
+.qbar input,.qbar select{border:0;background:transparent;font-family:var(--serif);font-size:21px;letter-spacing:0;text-transform:none;color:var(--ink);padding:0;outline:none;width:100%;min-width:0;-webkit-appearance:none;appearance:none}
+.qbar .btn{height:auto;min-height:84px;padding:0 36px}
+@media (max-width:900px){
+  .qbar{margin-top:0}
+  .qbar .wrap{padding:0}
+  .qbar form{grid-template-columns:1fr 1fr;box-shadow:none;border-bottom:1px solid var(--line)}
+  .qbar label{border-bottom:1px solid var(--line);padding:14px 20px}
+  .qbar input,.qbar select{font-size:18px}
+  .qbar .btn{grid-column:1/-1;min-height:60px}
+  .hero.has-q .inner{padding-bottom:72px}
+  .hero.has-q .dots{bottom:40px}
+  .hero.has-q{height:82svh}
+}
+
+/* ---------- intro ---------- */
+.intro-g{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(40px,8vw,140px);align-items:center}
+.intro-imgs{position:relative;padding:0 0 18% 0}
+.intro-imgs .a{width:78%;margin-left:auto}
+.intro-imgs .b{position:absolute;left:0;bottom:0;width:46%;border:10px solid var(--s);z-index:2}
+.ledger{display:grid;grid-template-columns:repeat(4,1fr);margin-top:clamp(64px,8vw,110px);border-top:1px solid var(--line)}
+.ledger>div{padding:30px 26px 0 0;border-right:1px solid var(--line);margin-right:26px}
+.ledger>div:last-child{border-right:0;margin-right:0}
+.ledger b{display:block;font-family:var(--serif);font-weight:300;font-size:clamp(44px,4.4vw,64px);line-height:1;color:var(--ink)}
+.ledger span{display:block;margin-top:12px;font-size:14px;color:var(--muted);max-width:20ch;line-height:1.5}
+.dark .ledger{border-color:color-mix(in srgb,var(--a) 35%,transparent)}
+.dark .ledger>div{border-color:color-mix(in srgb,var(--a) 35%,transparent)}
+.dark .ledger b{color:var(--a)}
+@media (max-width:900px){.intro-g{grid-template-columns:1fr}.ledger{grid-template-columns:1fr 1fr}.ledger>div{padding-bottom:28px;border-bottom:1px solid var(--line)}.ledger>div:nth-child(2n){border-right:0;margin-right:0}}
+
+/* ---------- rooms showcase ---------- */
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:clamp(44px,6vw,80px);flex-wrap:wrap}
+.sec-head p{margin:0;max-width:44ch}
+.rooms-g{display:grid;grid-template-columns:minmax(260px,.8fr) 1.6fr;gap:clamp(32px,6vw,96px);align-items:start}
+.rlist{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.rlist li{border-bottom:1px solid var(--line)}
+.rlist button{width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:24px 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px;color:var(--muted);transition:color .5s var(--ease)}
+.rlist button .n{font-family:var(--serif);font-size:clamp(24px,2.2vw,32px);line-height:1.15}
+.rlist button .f{font-size:13px;letter-spacing:.06em;white-space:nowrap}
+.rlist button.on,.rlist button:hover{color:var(--ink)}
+.rlist button.on .n{font-style:italic}
+.rview .ph{aspect-ratio:3/2}
+.rview .stack{position:relative}
+.rview .stack .ph{position:absolute;inset:0;opacity:0;transition:opacity 1s var(--ease)}
+.rview .stack .ph.on{position:relative;opacity:1}
+.rmeta{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;margin-top:36px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;font-size:14.5px;align-content:start}
+.specs div{display:flex;gap:12px;align-items:center}
+.specs svg{width:20px;height:20px;color:var(--a-ink);flex:none}
+.price{font-family:var(--serif);font-size:30px;line-height:1.1;margin:18px 0 0}
+.price small{font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.04em}
+@media (max-width:900px){.rooms-g{grid-template-columns:1fr}.rmeta{grid-template-columns:1fr}.rlist{display:flex;overflow-x:auto;border:0;gap:24px;scrollbar-width:none}.rlist li{border:0;flex:none}.rlist button{padding:0 0 10px;border-bottom:1px solid transparent}.rlist button.on{border-color:var(--a)}.rlist .f{display:none}.rlist button .n{font-size:22px}}
+
+/* ---------- dining ---------- */
+.dine{position:relative}
+.dine .big{height:min(86vh,820px)}
+.dine .panel{position:relative;margin:-200px 0 0 auto;width:min(560px,92%);background:var(--s);padding:clamp(36px,4.5vw,64px);z-index:5}
+.dine .hours{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:22px;margin-top:8px;font-size:14.5px}
+.dine .hours div{display:flex;justify-content:space-between;gap:16px}
+.mosaic{display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(12px,1.6vw,22px);margin-top:clamp(56px,7vw,100px)}
+.mosaic .ph:nth-child(2){margin-top:60px}
+@media (max-width:760px){.dine .panel{margin-top:-80px}.mosaic{grid-template-columns:1fr 1fr}.mosaic .ph:nth-child(2){margin-top:0}.mosaic .ph:nth-child(3){display:none}}
+
+/* ---------- mahal feature ---------- */
+.mahal-g{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(48px,8vw,140px);align-items:center}
+.mahal-g .frame::before{border-color:color-mix(in srgb,var(--a) 70%,transparent)}
+.wordmark{font-family:var(--serif);font-weight:300;font-size:clamp(64px,8vw,124px);line-height:.9;letter-spacing:-.015em;color:var(--on-p)}
+@media (max-width:900px){.mahal-g{grid-template-columns:1fr}.mahal-g .frame{max-width:420px}}
+
+/* ---------- amenities ---------- */
+.amen{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.amen div{padding:34px 26px 30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5}
+.amen svg{width:28px;height:28px;color:var(--a-ink);margin-bottom:22px}
+.amen b{display:block;font-family:var(--serif);font-weight:500;font-size:20px;margin-bottom:4px}
+@media (max-width:1000px){.amen{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- experiences ---------- */
+.exp3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,44px)}
+.exp3 .ph{aspect-ratio:3/4}
+.exp3 .km{font-family:var(--serif);font-style:italic;color:var(--a-ink);font-size:19px;margin:22px 0 4px}
+@media (max-width:860px){.exp3{grid-template-columns:1fr}.exp3 .ph{aspect-ratio:4/3}}
+
+/* ---------- gallery ---------- */
+.masonry{columns:4 260px;column-gap:16px}
+.masonry button{display:block;width:100%;margin:0 0 16px;padding:0;border:0;background:none;cursor:zoom-in;break-inside:avoid}
+.lb{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--pd) 96%,transparent);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.lb.open{opacity:1;pointer-events:auto}
+.lb .ph{width:min(1200px,90vw);aspect-ratio:3/2;max-height:82vh}
+.lb .ph img{object-fit:contain}
+.lb button{position:absolute;background:none;border:0;color:var(--on-p);cursor:pointer;width:56px;height:56px}
+.lb .x{top:calc(env(safe-area-inset-top,0px) + 16px);right:16px}
+.lb .pv{left:12px;top:50%;transform:translateY(-50%)}.lb .nx{right:12px;top:50%;transform:translateY(-50%)}
+
+/* ---------- quote ---------- */
+.quote{text-align:center}
+.quote blockquote{margin:0 auto;max-width:28ch;font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(28px,3.4vw,48px);line-height:1.3}
+.quote cite{display:block;margin-top:32px;font-style:normal;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--a)}
+.quote .qm{width:40px;height:40px;color:var(--a);margin:0 auto 30px}
+.quote .note{font-size:11px;color:var(--on-p-muted);margin-top:14px;letter-spacing:.06em}
+
+/* ---------- forms ---------- */
+.enq-g{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(48px,8vw,140px)}
+.contact-l{display:grid;gap:26px;margin-top:40px;font-size:15px}
+.contact-l div{display:grid;grid-template-columns:28px 1fr;gap:14px}
+.contact-l svg{width:20px;height:20px;color:var(--a-ink);margin-top:4px}
+.contact-l b{font-weight:400;display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.fm{display:grid;grid-template-columns:1fr 1fr;gap:30px 32px}
+.fm .full{grid-column:1/-1}
+.fld{display:flex;flex-direction:column;gap:2px}
+.fld span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.fld input,.fld select,.fld textarea{border:0;border-bottom:1px solid color-mix(in srgb,var(--p) 25%,var(--s));background:transparent;padding:10px 0 12px;font-family:var(--serif);font-size:21px;outline:none;border-radius:0;-webkit-appearance:none;appearance:none;transition:border-color .4s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--a)}
+.fld textarea{resize:vertical;min-height:90px;line-height:1.4}
+.fld select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23999'/%3E%3C/svg%3E") right 4px center no-repeat}
+.dark .fld input,.dark .fld select,.dark .fld textarea{border-color:color-mix(in srgb,var(--a) 40%,transparent);color:var(--on-p)}
+.dark .fld select option{color:#111}
+.fm .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.fm .hp{position:absolute;left:-9999px}
+.fm small{font-size:13px;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0}
+.seg span{display:inline-block;padding:9px 16px;border:1px solid var(--line);font-size:13px;letter-spacing:.04em;text-transform:none;color:var(--ink);transition:all .3s}
+.dark .seg span{color:var(--on-p);border-color:color-mix(in srgb,var(--a) 35%,transparent)}
+.dark .seg input:checked+span{background:color-mix(in srgb,var(--a) 22%,transparent)}
+.seg input:checked+span{border-color:var(--a);background:var(--a-soft)}
+.seg input:focus-visible+span{outline:1px solid var(--a);outline-offset:3px}
+@media (max-width:900px){.enq-g{grid-template-columns:1fr}.fm{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+.ftr{background:var(--pd);color:var(--on-p-muted);padding:clamp(72px,9vw,120px) 0 calc(env(safe-area-inset-bottom,0px) + 40px);font-size:14.5px}
+.ftr .brand{color:var(--on-p)}
+.ftr-g{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px}
+.ftr h4{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);font-weight:400;margin-bottom:20px}
+.ftr ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ftr a:hover{color:var(--on-p)}
+.ftr .base{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;border-top:1px solid color-mix(in srgb,var(--a) 22%,transparent);margin-top:72px;padding-top:28px;font-size:12.5px;letter-spacing:.04em}
+@media (max-width:900px){.ftr-g{grid-template-columns:1fr 1fr}.ftr-g>div:first-child{grid-column:1/-1}}
+
+/* mobile action bar */
+.mbar{display:none}
+@media (max-width:760px){
+  .mbar{display:grid;grid-template-columns:1fr 1fr 1.3fr;position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--p);color:var(--on-p);padding-bottom:env(safe-area-inset-bottom,0px);border-top:1px solid color-mix(in srgb,var(--a) 30%,transparent)}
+  .mbar a{display:flex;align-items:center;justify-content:center;gap:8px;height:58px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
+  .mbar a+a{border-left:1px solid color-mix(in srgb,var(--a) 22%,transparent)}
+  .mbar a.e{background:var(--a);color:var(--p)}
+  .mbar svg{width:18px;height:18px}
+  body.site{padding-bottom:58px}
+}
+
+/* ---------- inner pages ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,8vw,130px);align-items:center}
+.split.rev>:first-child{order:2}
+@media (max-width:900px){.split{grid-template-columns:1fr}.split.rev>:first-child{order:0}}
+.roomcard{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;padding:clamp(48px,6vw,90px) 0;border-bottom:1px solid var(--line)}
+.roomcard:nth-child(even) .ph{order:2}
+.roomcard .tag{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--a-ink);margin:8px 0 20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;padding:0;list-style:none}
+.chips li{font-size:12.5px;padding:6px 12px;border:1px solid var(--line);letter-spacing:.03em}
+@media (max-width:900px){.roomcard{grid-template-columns:1fr}.roomcard:nth-child(even) .ph{order:0}}
+.policy-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line)}
+.policy-strip div{padding:28px 24px 0 0;font-size:14.5px}
+.policy-strip b{display:block;font-family:var(--serif);font-size:22px;font-weight:500;margin-bottom:6px}
+@media (max-width:900px){.policy-strip{grid-template-columns:1fr 1fr;gap:24px}}
+.compare{width:100%;border-collapse:collapse;font-size:15px}
+.compare th{font-family:var(--sans);font-weight:400;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;text-align:left;padding:0 24px 18px 0;color:var(--muted);border-bottom:1px solid var(--line)}
+.compare th:last-child{color:var(--a-ink)}
+.compare td{padding:26px 24px 26px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.compare td:first-child{font-family:var(--serif);font-size:22px;width:22%}
+.compare td:nth-child(2){color:var(--muted);width:34%}
+.compare td:last-child{font-weight:400}
+.scroll-x{overflow-x:auto}
+.fac{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.fac div{padding:28px 28px 28px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:30px 1fr;gap:16px;font-size:15px}
+.fac svg{width:22px;height:22px;color:var(--a-ink);margin-top:3px}
+@media (max-width:900px){.fac{grid-template-columns:1fr}}
+.attr{display:grid;grid-template-columns:120px 1fr 1.2fr;gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(40px,5vw,70px) 0;border-bottom:1px solid var(--line)}
+.attr .d{font-family:var(--serif);font-weight:300;font-size:clamp(44px,4vw,60px);line-height:1;color:var(--a-ink)}
+.attr .d small{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+@media (max-width:900px){.attr{grid-template-columns:1fr}}
+.prose{max-width:760px}
+.prose h2{font-size:clamp(30px,3vw,40px);margin:56px 0 18px}
+.prose h2:first-child{margin-top:0}
+.prose ul{padding-left:20px;margin:0 0 1.1em}
+.prose li{margin-bottom:8px}
+.map{position:relative;aspect-ratio:16/10;background:var(--s2);overflow:hidden;border:1px solid var(--line)}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.map a{position:absolute;left:24px;bottom:24px}
+.policy-nav{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:56px;font-size:13px;letter-spacing:.08em}
+.policy-nav a{padding-bottom:6px;border-bottom:1px solid transparent}
+.policy-nav a.on{border-color:var(--a)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px;background:color-mix(in srgb,var(--pd) 70%,transparent);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.modal.open{opacity:1;pointer-events:auto}
+.modal .box{background:var(--s);max-width:560px;width:100%;padding:clamp(36px,5vw,60px);text-align:center;transform:translateY(16px);transition:transform .6s var(--ease);max-height:90vh;overflow:auto}
+.modal.open .box{transform:none}
+.modal .box .mark{width:44px;height:44px;color:var(--a);margin:0 auto 20px}
+.modal .btns{justify-content:center}
+
+/* prototype badge */
+.proto.hide{opacity:0;pointer-events:none}
+.proto{transition:opacity .4s;position:fixed;left:16px;bottom:16px;z-index:44;display:flex;gap:2px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--s);color:var(--ink);border:1px solid var(--line);box-shadow:0 10px 30px -12px rgba(0,0,0,.3)}
+.proto span{padding:9px 12px;color:var(--muted)}
+.proto a{padding:9px 14px;background:var(--p);color:var(--s)}
+@media (max-width:760px){.proto{bottom:calc(env(safe-area-inset-bottom,0px) + 70px);left:10px}}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.hero .ld>*{opacity:1;transform:none}}
+
+/* ================= ADMIN ================= */
+body.adm{background:#F4F5F7;color:#1D2430;font-size:14.5px;line-height:1.5;font-weight:400}
+.adm-login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.adm-login .side{position:relative;background:var(--p);color:var(--on-p);display:flex;flex-direction:column;justify-content:flex-end;padding:56px}
+.adm-login .side .ph{position:absolute;inset:0}
+.adm-login .side>*:not(.ph){position:relative;z-index:4}
+.adm-login .side::after{content:"";position:absolute;inset:0;z-index:3;background:linear-gradient(transparent 40%,color-mix(in srgb,var(--pd) 85%,transparent))}
+.adm-login .form{display:flex;align-items:center;justify-content:center;padding:40px;background:var(--s)}
+.adm-login .form>div{width:min(380px,100%)}
+.gbtn{width:100%;height:50px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #D7DAE0;background:#fff;cursor:pointer;font-size:14.5px;color:#1D2430}
+.or{display:flex;align-items:center;gap:14px;color:#8A93A3;font-size:12px;margin:24px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:#E3E6EB}
+@media (max-width:820px){.adm-login{grid-template-columns:1fr}.adm-login .side{min-height:220px;padding:32px}}
+.adm-shell{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.adm-side{background:var(--p);color:var(--on-p);padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.adm-side .brand{padding:0 8px 28px}
+.adm-side nav{display:grid;gap:2px}
+.adm-side nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:6px;color:var(--on-p-muted);font-size:14px}
+.adm-side nav a svg{width:18px;height:18px}
+.adm-side nav a:hover{color:var(--on-p);background:color-mix(in srgb,var(--s) 6%,transparent)}
+.adm-side nav a.on{color:var(--p);background:var(--a)}
+.adm-side .bottom{margin-top:auto;display:grid;gap:2px}
+.adm-main{padding:28px clamp(16px,3vw,40px) 60px;min-width:0}
+.adm-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.adm-top h1{font-family:var(--sans);font-size:22px;font-weight:500;letter-spacing:0}
+.adm-top p{margin:2px 0 0;color:#6B7485;font-size:13.5px}
+.card{background:#fff;border:1px solid #E3E6EB;border-radius:10px;padding:22px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpis .card b{display:block;font-size:30px;font-weight:500;margin-top:6px}
+.kpis .card span{color:#6B7485;font-size:13px}
+.abtn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:7px;border:1px solid #D7DAE0;background:#fff;cursor:pointer;font-size:13.5px;color:#1D2430}
+.abtn.pri{background:var(--p);color:#fff;border-color:var(--p)}
+.abtn.sm{height:30px;padding:0 10px;font-size:12.5px}
+.abtn.dg{color:#B42318}
+.abtn svg{width:16px;height:16px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-weight:500;color:#6B7485;font-size:12px;padding:10px 12px;border-bottom:1px solid #E3E6EB;white-space:nowrap}
+.tbl td{padding:12px;border-bottom:1px solid #EEF0F3;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.thumb{width:72px;height:48px;border-radius:5px;overflow:hidden}
+.thumb .ph figcaption{display:none}
+.thumb .ph,#rimg .ph{height:100%}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500}
+.pill.New{background:#EAF2FF;color:#1849A9}.pill.Contacted{background:#FEF6E7;color:#93370D}.pill.Confirmed{background:#ECFDF3;color:#067647}.pill.Lost{background:#F2F4F7;color:#475467}
+.pill.Room{background:var(--a-soft);color:var(--a-ink)}.pill.Mahal{background:color-mix(in srgb,var(--p) 10%,#fff);color:var(--p)}.pill.Contact{background:#F2F4F7;color:#475467}
+.af{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.af .full{grid-column:1/-1}
+.af label{display:grid;gap:6px;font-size:12.5px;color:#4A5465;font-weight:500}
+.af input,.af select,.af textarea{height:40px;border:1px solid #D7DAE0;border-radius:7px;padding:0 12px;font-size:14px;font-weight:400;background:#fff;color:#1D2430}
+.af textarea{height:auto;padding:10px 12px;min-height:90px}
+.af input:focus,.af select:focus,.af textarea:focus{outline:2px solid color-mix(in srgb,var(--a) 50%,transparent);border-color:var(--a)}
+.af .hint{font-weight:400;color:#8A93A3;font-size:12px}
+.drawer{position:fixed;inset:0;z-index:95;background:rgba(16,24,40,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer.open{opacity:1;pointer-events:auto}
+.drawer .pane{position:absolute;top:0;right:0;bottom:0;width:min(620px,100%);background:#fff;padding:28px;overflow:auto;transform:translateX(30px);transition:transform .4s var(--ease)}
+.drawer.open .pane{transform:none}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.sw{border:1px solid #E3E6EB;border-radius:8px;padding:12px;cursor:pointer;background:#fff;text-align:left}
+.sw.on{outline:2px solid var(--a)}
+.sw .c{display:flex;height:34px;border-radius:5px;overflow:hidden;margin-bottom:8px}
+.sw .c i{flex:1}
+.colorrow{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center}
+.colorrow input[type=color]{width:52px;height:40px;padding:2px;border:1px solid #D7DAE0;border-radius:7px;background:#fff}
+.preview{border:1px solid #E3E6EB;border-radius:10px;overflow:hidden}
+.warn{display:flex;gap:8px;padding:10px 12px;border-radius:7px;background:#FEF6E7;color:#93370D;font-size:12.5px;margin-top:12px}
+.ok-msg{background:#ECFDF3;color:#067647}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:#1D2430;color:#fff;padding:12px 18px;border-radius:8px;font-size:13.5px;opacity:0;transition:all .4s var(--ease);z-index:99;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.media-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.media-g .m{border:1px solid #E3E6EB;border-radius:8px;overflow:hidden;background:#fff}
+.media-g .m .ph{aspect-ratio:4/3}
+.media-g .m .ph figcaption{font-size:9px}
+.media-g .m div.t{padding:8px 10px;font-size:12px;color:#4A5465;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-mtop{display:none}
+@media (max-width:900px){
+  .adm-shell{grid-template-columns:1fr}
+  .adm-side{position:fixed;inset:0 auto 0 0;width:260px;z-index:70;transform:translateX(-100%);transition:transform .4s var(--ease)}
+  .adm-side.open{transform:none}
+  .adm-mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .af{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body class="site">
+<div id="app"></div>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Gallery">
+  <button class="x" aria-label="Close" data-lb="x"></button>
+  <button class="pv" aria-label="Previous" data-lb="p"></button>
+  <div class="ph" id="lbimg"></div>
+  <button class="nx" aria-label="Next" data-lb="n"></button>
+</div>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="box" id="modalbox"></div></div>
+<div class="drawer" id="drawer"><div class="pane" id="drawerpane"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ============ Queen's Inn prototype ============ */
+const WX = (id, ext = 'jpg', pre = '8ab1a8') =>
+  `https://static.wixstatic.com/media/${pre}_${id}~mv2.${ext}/v1/fit/w_2200,h_2200,q_85,enc_auto/img.${ext}`;
+
+const PRESETS = [
+  { name: 'Royal Navy & Gold', p: '#0F243E', a: '#C5A880', s: '#FBFBF9' },
+  { name: 'Emerald & Brass', p: '#12352B', a: '#C2A46B', s: '#FAF9F5' },
+  { name: 'Burgundy & Champagne', p: '#3E1220', a: '#D4B98C', s: '#FCFAF7' },
+  { name: 'Charcoal & Rose Gold', p: '#24262B', a: '#C9A08A', s: '#FAF8F7' },
+];
+
+const DEFAULT = {
+  theme: { p: '#0F243E', a: '#C5A880', s: '#FBFBF9' },
+  settings: {
+    name: "Queen's Inn", place: 'Velankanni',
+    phone1: '+91 91593 99988', phone2: '+91 91594 99988', whatsapp: '919159399988',
+    email1: 'reservations@queensinn.co.in', email2: 'sales@queensinn.co.in',
+    address: '# 41/A, ECR Main Road, Arch West Street, Velankanni 611 111, Tamil Nadu',
+    checkin: '12:00 PM', checkout: '11:00 AM',
+  },
+  hero: {
+    headline: 'Tranquility meets luxury in the sacred heart of Velankanni',
+    sub: 'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.',
+    slides: [
+      { u: WX('abf85ce7c5174e31bcee85170e747e56', 'png'), art: 'dusk', cap: 'Drone view · the 3-acre campus at dusk' },
+      { u: WX('6cc8340bc2f446348136cfbb3d80ff0c'), art: 'garden', cap: 'The garden lawn' },
+      { u: WX('174b94e2ddd747b0b8a751ff5af843ce'), art: 'arch', cap: 'Reception and lobby' },
+    ],
+  },
+  rooms: [
+    { id: 1, active: true, name: 'Deluxe Double Room', tag: 'Garden views for two', size: 325, bed: 'King bed', view: 'Garden view', guests: 2, tariff: 2500,
+      desc: 'A calm retreat for couples and solo pilgrims, looking out over the manicured lawns. Split air conditioning, plush bedding, a work desk and blackout curtains for an unhurried rest after early mass.',
+      am: ['Free Wi-Fi', 'Split AC', 'Smart TV', 'Tea & coffee kettle', 'Electronic safe', 'Minibar', '24h hot water'],
+      img: { u: WX('76c8b895cd1f4ca6bb998c54550d70c2'), art: 'room', cap: 'Deluxe Double · garden view' } },
+    { id: 2, active: true, name: 'Executive Triple Room', tag: 'Room for three, without compromise', size: 350, bed: 'Double + single bed', view: 'City view', guests: 3, tariff: 3500,
+      desc: 'A flexible layout for small families and pilgrimage companions travelling together, with a double and a single bed, a full wardrobe and space to settle in for several nights.',
+      am: ['Free Wi-Fi', 'Air conditioning', 'Wardrobe', 'Tea & coffee kettle', 'Electronic safe', '24h hot water'],
+      img: { u: WX('2f93c0f439f84a41bf5b4d928587e677'), art: 'room', cap: 'Executive Triple · city view' } },
+    { id: 3, active: true, name: 'Family Room', tag: 'Four guests and a private balcony', size: 405, bed: 'Two double beds', view: 'Balcony', guests: 4, tariff: 4500,
+      desc: 'A bright corner room that keeps the whole family together, with two double beds and a private sit-out balcony above the garden and children’s play lawn.',
+      am: ['Free Wi-Fi', 'Air conditioning', 'Private balcony', 'Minibar', 'Electronic safe', '24h hot water'],
+      img: { u: WX('f20b31a0bbf84dd5ab2597455d7f348d'), art: 'room', cap: 'Family Room · balcony' } },
+    { id: 4, active: true, name: "The Queen's Suite", tag: 'A separate lounge for bridal parties and dignitaries', size: 576, bed: 'King bed + living lounge', view: 'Balcony view', guests: 3, tariff: 6000,
+      desc: 'Our signature accommodation: a royal living lounge, a master bedroom with king bed and premium bath fixtures. Chosen by bridal parties at KVR Mahal and guests staying longer.',
+      am: ['Living lounge', 'King bed', 'Premium bath', 'Balcony', 'Minibar', 'Smart TV', 'In-room dining'],
+      img: { u: WX('232b208344874608880be72ded7009c2'), art: 'suite', cap: "The Queen's Suite · living lounge" } },
+  ],
+  enquiries: [
+    { id: 103, type: 'Mahal', name: 'Arul Prakash', phone: '+91 98940 22xxx', email: 'arul@example.com', detail: 'Wedding · 14 Feb 2027 · ~800 guests · 30 rooms', status: 'New', at: '2026-10-07 09:14' },
+    { id: 102, type: 'Room', name: 'Merlin D’Souza', phone: '+91 99860 41xxx', email: 'merlin@example.com', detail: 'Family Room · 26–28 Dec · 4 adults', status: 'Contacted', at: '2026-10-06 18:40' },
+    { id: 101, type: 'Room', name: 'S. Ramanathan', phone: '+91 94430 10xxx', email: '', detail: "Queen's Suite · 2–4 Nov · 2 adults", status: 'Confirmed', at: '2026-10-05 11:02' },
+  ],
+};
+
+const IMG = {
+  intro: { u: WX('d8c5570ec36a421eb069d0d5c27a9b4d'), art: 'dusk', cap: 'Hotel façade on ECR Main Road' },
+  intro2: { u: WX('174b94e2ddd747b0b8a751ff5af843ce'), art: 'arch', cap: '24-hour reception' },
+  dine: { u: WX('3592f141741849e8b2cb99afa8e3a412', 'jpg', 'a3c153'), art: 'dine', cap: 'Q Multi-Cuisine Restaurant' },
+  dine1: { u: WX('7376abd213d94fd899d429fcf19b5844'), art: 'leaf', cap: 'South Indian breakfast' },
+  dine2: { u: WX('eaed86886ba54f859dfbe58de8fe2e8b'), art: 'dine', cap: 'Chettinad thali' },
+  dine3: { u: WX('ed7a98230db24ef280ea3a33f9a452f5'), art: 'sea', cap: 'Coastal seafood' },
+  mahal: { u: '', art: 'mandap', cap: 'KVR Mahal · ceremonial stage' },
+  mahalHall: { u: '', art: 'hall', cap: 'Grand Ceremonial Hall · aisle view' },
+  mahalDine: { u: '', art: 'leaf', cap: 'Bhojana Saalai · banana-leaf service' },
+  mahalNight: { u: '', art: 'portico', cap: 'Entrance portico at night' },
+  meet: { u: WX('47f4fd5bbf0d4b3eb285e4f2c853210e'), art: 'hall', cap: 'Indoor meeting hall' },
+  lawn: { u: WX('6cc8340bc2f446348136cfbb3d80ff0c'), art: 'garden', cap: 'Outdoor lawn' },
+};
+const GALLERY = ['232b208344874608880be72ded7009c2', 'd8c5570ec36a421eb069d0d5c27a9b4d', '48fa19e768694934ab488b74435342ac', 'd00ef27f735f424cbe26d2eba6473487',
+  'bc6c575a896d4a579142f8c7cadca3d2', 'f4d88b9981964f9f9c32a9e3a13695a3', 'c4e7787d62e248d48415e04ba83c8e49', '20ecbc417a5b4111986e68ede055e699',
+  '2f93c0f439f84a41bf5b4d928587e677', '1724b73ed7be446ebbca9b07842d21dd', '48df30262c744f4990c1828f4d757773', '1ee4dbbc9a3f463b83134d05a47159d9']
+  .map((id, i) => ({ u: WX(id), art: ['room', 'garden', 'dusk', 'suite', 'dine', 'arch'][i % 6], cap: 'Gallery image ' + (i + 1), r: ['r34', 'r43', 'r23', 'r43', 'r11', 'r34'][i % 6] }));
+
+const ATTR = [
+  { n: 'Velankanni Basilica', d: 0.5, art: 'basilica', t: 'The Shrine Basilica of Our Lady of Good Health and the Morning Star Church, with the holy tank. A ten-minute walk from the hotel for dawn mass, prayer and the evening procession.' },
+  { n: 'Nagore Dargah', d: 14, art: 'minaret', t: 'The centuries-old shrine of Hazrat Syed Shahul Hameed, with its five white minarets. A symbol of the coast’s interfaith harmony, especially moving during the Kandoori festival.' },
+  { n: 'Thirunallar Saniswaran', d: 35, art: 'gopuram', t: 'The Dharbaranyeswarar temple, revered for its shrine to Lord Shani. Pilgrims bathe in the Nala Theertham tank before darshan; best visited early on a Saturday.' },
+  { n: 'Point Calimere Sanctuary', d: 45, art: 'sea', t: 'A protected coastal reserve at Kodiakkarai where flamingos arrive between November and February, and herds of blackbuck graze the dry grasslands.' },
+  { n: 'Muthupet Mangroves', d: 50, art: 'mangrove', t: 'Glide by wooden boat through quiet lagoons and mangrove canopy to the sea. Morning trips offer the calmest water and the most birdlife.' },
+  { n: 'Tranquebar · Dansborg', d: 55, art: 'fort', t: 'The 17th-century Danish fort facing the Bay of Bengal, with colonial streets, a maritime museum and long seaside walks at Tharangambadi.' },
+];
+
+const QUOTES = [
+  { q: 'We came for the Basilica and stayed an extra night for the quiet. The gardens at dawn are something else.', c: 'Guest from Bengaluru' },
+  { q: 'Eight hundred guests, thirty rooms, one campus. Our families never had to step onto the main road.', c: 'Wedding host, Thanjavur' },
+  { q: 'Spotless rooms, a breakfast worth waking for, and a front desk that remembered our names.', c: 'Guest from Chennai' },
+];
+
+/* ---------- state ---------- */
+let S;
+function load() {
+  try { const raw = localStorage.getItem('qi-proto-v1'); S = raw ? JSON.parse(raw) : null; } catch (e) { S = null; }
+  if (!S || !S.rooms) S = JSON.parse(JSON.stringify(DEFAULT));
+}
+function save() { try { localStorage.setItem('qi-proto-v1', JSON.stringify(S)); } catch (e) {} }
+load();
+
+function applyTheme(t = S.theme) {
+  const r = document.documentElement.style;
+  r.setProperty('--p', t.p); r.setProperty('--a', t.a); r.setProperty('--s', t.s);
+}
+applyTheme();
+
+/* ---------- utils ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const inr = (n) => '₹' + Number(n).toLocaleString('en-IN');
+const tel = (p) => 'tel:' + p.replace(/\s/g, '');
+const wa = (msg) => `https://wa.me/${S.settings.whatsapp}?text=${encodeURIComponent(msg || "Hello Queen's Inn, I'd like to enquire about a stay.")}`;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 2200); }
+
+/* ---------- icons ---------- */
+const IC = {
+  bell: 'M4 18h16M5.5 18a6.5 6.5 0 0 1 13 0M12 9.5V8M10 7.5h4',
+  wifi: 'M2.5 9a14 14 0 0 1 19 0M5.5 12.4a9.5 9.5 0 0 1 13 0M8.6 15.7a5 5 0 0 1 6.8 0M12 19.2v.01',
+  snow: 'M12 2.5v19M4 7l16 10M4 17L20 7M9.5 4l2.5 2 2.5-2M9.5 20l2.5-2 2.5 2',
+  bolt: 'M13 2.5 5 13.5h6l-1 8 8-11h-6z',
+  car: 'M4 16.5V12l2-5h12l2 5v4.5zM4 12h16M7 16.5V19M17 16.5V19M7.5 14.2h.01M16.5 14.2h.01',
+  fork: 'M7 3v8M5 3v4.5a2 2 0 0 0 4 0V3M7 11.5V21M17 3c-2.2 2-2.2 7.5 0 9.5V21',
+  people: 'M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 10a2.5 2.5 0 1 0 0-5M3 20a5.5 5.5 0 0 1 11 0M15.5 14.5A5 5 0 0 1 21 19.5',
+  leaf: 'M5 19.5C5 10.5 11 5 20 4c-1 9-6 15.5-15 15.5zM5 19.5l8.5-8.5',
+  bed: 'M3 19V7M3 14h18v5M21 14a3.5 3.5 0 0 0-3.5-3.5H11V14M7 12.2a1.6 1.6 0 1 0 0-.01',
+  drop: 'M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z',
+  tray: 'M3 18.5h18M5 18.5a7 7 0 0 1 14 0M12 9.5V7.5M10.5 7.5h3',
+  shield: 'M12 3l7.5 3v6c0 4.8-3.3 8-7.5 9-4.2-1-7.5-4.2-7.5-9V6zM9 12l2 2 4-4',
+  sqft: 'M4 4h16v16H4zM4 9h5M15 4v5M9 20v-5',
+  eye: 'M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12zM12 14.8a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6z',
+  guest: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 20a7 7 0 0 1 14 0',
+  phone: 'M5 3.5h3.5l1.5 4.5-2.2 1.4a11 11 0 0 0 6.8 6.8l1.4-2.2 4.5 1.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.1A1.5 1.5 0 0 1 5 3.5z',
+  wa: 'M20 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.4-4A8.4 8.4 0 1 1 20 11.6zM9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-.9-.9 1a4.6 4.6 0 0 1-2.6-2.6l1-.9-.9-2z',
+  mail: 'M3.5 6h17v12h-17zM3.5 6.5l8.5 6.5 8.5-6.5',
+  pin: 'M12 21s7-6.3 7-11.5a7 7 0 0 0-14 0C5 14.7 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+  stage: 'M3 20h18M5 20v-6h14v6M7 14V8a5 5 0 0 1 10 0v6',
+  ac: 'M3 5h18v7H3zM6 9h12M7 15c0 2 2 2 2 4M12 15c0 2 2 2 2 4M17 15c0 2 2 2 2 4',
+  sound: 'M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11',
+  pot: 'M4 10h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6zM2.5 10h19M9 4.5c0 1.5 1.5 1.5 1.5 3M13.5 4.5c0 1.5 1.5 1.5 1.5 3',
+  flow: 'M4 7h12M13 4l3 3-3 3M20 17H8M11 14l-3 3 3 3',
+  dash: 'M4 4h7v8H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 14h7v6H4z',
+  inbox: 'M3.5 13.5 6 5h12l2.5 8.5V19h-17zM3.5 13.5H9l1.2 2h3.6l1.2-2h5.5',
+  image: 'M3.5 5h17v14h-17zM3.5 15.5l5-5 4 4 2.5-2.5 5.5 5.5M15.5 9.5h.01',
+  palette: 'M12 3.5a8.5 8.5 0 0 0 0 17c1.2 0 1.6-.9 1.2-1.8-.5-1.1.2-2.2 1.4-2.2H17a3.5 3.5 0 0 0 3.5-3.5C20.5 7.2 16.7 3.5 12 3.5zM7.5 11h.01M10 7.5h.01M14.5 7.5h.01',
+  cog: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-2.1 1.2L14.7 21h-4l-.4-2.4a7 7 0 0 1-2.1-1.2l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-2.4L4.3 9.9l2-3.4 1.9.7a7 7 0 0 1 2.1-1.2l.4-2.4h4l.4 2.4a7 7 0 0 1 2.1 1.2l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 2.4z',
+  ext: 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
+  out: 'M15 4h5v16h-5M10 8l-4 4 4 4M6 12h10',
+  plus: 'M12 5v14M5 12h14',
+  edit: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
+  up: 'M12 19V5M6 11l6-6 6 6', down: 'M12 5v14M6 13l6 6 6-6',
+  menu: 'M4 7h16M4 12h16M4 17h16', x: 'M5 5l14 14M19 5L5 19',
+  arrowL: 'M15 5l-7 7 7 7', arrowR: 'M9 5l7 7-7 7',
+  upload: 'M12 16V4M7 9l5-5 5 5M4 16v4h16v-4',
+  quote: 'M10 7c-3 1-5 3.5-5 7v3h5v-5H7.5c0-2 1-3.5 3-4.3zM19 7c-3 1-5 3.5-5 7v3h5v-5h-2.5c0-2 1-3.5 3-4.3z',
+};
+const ic = (k, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}><path d="${IC[k]}"/></svg>`;
+const CROWN = `<svg class="mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M7 29h26M8.5 29 6 13l8.5 7L20 8l5.5 12L34 13l-2.5 16"/><circle cx="6" cy="12" r="1.6"/><circle cx="20" cy="7" r="1.6"/><circle cx="34" cy="12" r="1.6"/><path d="M10 33h20"/></svg>`;
+const brand = (sub = true) => `<a class="brand" href="#/" aria-label="Queen's Inn home">${CROWN}<span><span class="wm">${esc(S.settings.name)}</span>${sub ? `<small>${esc(S.settings.place)}</small>` : ''}</span></a>`;
+
+/* ---------- placeholder art (theme-aware SVG) ---------- */
+function palm(x, y, h, s = 1) {
+  const tx = x + 14 * s, ty = y - h;
+  let d = `M${x} ${y} Q${x + 6 * s} ${y - h * .55} ${tx} ${ty}`;
+  const fr = [[-70, 18], [-40, 30], [-10, 26], [20, 30], [55, 22], [80, 14], [-95, 10]];
+  fr.forEach(([dx, dy]) => { d += ` M${tx} ${ty} q${dx * .45 * s} ${-dy * s} ${dx * s} ${dy * .55 * s}`; });
+  return d;
+}
+function art(kind) {
+  const W = 1600, H = 1000;
+  const g = (id, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, op = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op}"/>`).join('')}</linearGradient>`;
+  const P = 'var(--p)', A = 'var(--a)', D = 'var(--pd)', SF = 'var(--s)';
+  const uid = 'a' + Math.random().toString(36).slice(2, 7);
+  let defs = '', body = '';
+  switch (kind) {
+    case 'dusk': case 'garden': {
+      defs = g(uid + 'k', [[0, D], [.55, P], [.86, A, .55], [1, A, .85]]) + `<radialGradient id="${uid}r" cx=".72" cy=".78" r=".5"><stop offset="0" stop-color="${A}" stop-opacity=".55"/><stop offset="1" stop-color="${A}" stop-opacity="0"/></radialGradient>`;
+      body = `<rect width="${W}" height="${H}" fill="url(#${uid}k)"/><rect width="${W}" height="${H}" fill="url(#${uid}r)"/>`;
+      body += `<path d="M1180 760 V560 l14-40 14 40 V760" fill="${D}" opacity=".7"/><path d="M1194 520v-60M1186 475h16" stroke="${D}" stroke-width="4" opacity=".7"/>`;
+      if (kind === 'dusk') {
+        body += `<rect x="260" y="610" width="760" height="170" fill="${D}"/><rect x="420" y="560" width="440" height="60" fill="${D}"/>`;
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 14; c++) body += `<rect x="${290 + c * 52}" y="${640 + r * 42}" width="22" height="16" fill="${A}" opacity="${(c * 7 + r * 3) % 5 ? .75 : .2}"/>`;
+      }
+      body += `<path d="M0 790 Q400 760 800 785 T1600 775 V1000 H0z" fill="${D}"/>`;
+      body += `<path d="${palm(140, 800, 330, 1.1)} ${palm(1380, 800, 380, 1.2)} ${palm(1500, 810, 280, .9)} ${palm(60, 810, 240, .8)}" stroke="${D}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+      if (kind === 'garden') body += `<g fill="${D}">${[260, 520, 800, 1050].map((x, i) => `<ellipse cx="${x}" cy="${770 - i % 2 * 10}" rx="${110 + i * 12}" ry="${70 + i * 6}"/>`).join('')}</g><path d="M0 860 Q800 830 1600 860" stroke="${A}" stroke-opacity=".35" stroke-width="2" fill="none"/>`;
+      break;
+    }
+    case 'arch': case 'hall': case 'mandap': case 'portico': {
+      defs = g(uid + 'k', [[0, D], [1, P]]) + `<radialGradient id="${uid}r" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="${A}" stop-opacity=".45"/><stop offset="1" stop-color="${A}" stop-opacity="0"/></radialGradient>`;
+      body = `<rect width="${W}" height="${H}" fill="url(#${uid}k)"/><rect width="${W}" height="${H}" fill="url(#${uid}r)"/>`;
+      const n = kind === 'hall' ? 7 : 5, w = W / n;
+      for (let i = 0; i < n; i++) { const x = i * w + w * .14, aw = w * .72; body += `<path d="M${x} 1000 V${kind === 'hall' ? 420 : 380} A${aw / 2} ${aw / 2} 0 0 1 ${x + aw} ${kind === 'hall' ? 420 : 380} V1000" fill="none" stroke="${A}" stroke-opacity="${kind === 'portico' ? .7 : .38}" stroke-width="2"/>`; }
+      if (kind === 'hall' || kind === 'arch') for (let i = 0; i < 3; i++) { const cx = 400 + i * 400; body += `<path d="M${cx} 0 V130" stroke="${A}" stroke-opacity=".5"/><g fill="${A}">${[...Array(9)].map((_, j) => `<circle cx="${cx - 60 + j * 15}" cy="${150 + Math.abs(4 - j) * -6 + 24}" r="3.5" opacity=".85"/>`).join('')}</g><ellipse cx="${cx}" cy="175" rx="80" ry="40" fill="${A}" opacity=".12"/>`; }
+      if (kind === 'hall') body += `<path d="M640 1000 L760 600 H840 L960 1000z" fill="${A}" opacity=".12"/>`;
+      if (kind === 'mandap') {
+        body += `<rect x="420" y="700" width="760" height="40" fill="${A}" opacity=".5"/><path d="M500 700 V420 M1100 700 V420 M470 420 H1130 M520 420 Q800 280 1080 420" stroke="${A}" stroke-width="3" fill="none"/>`;
+        body += `<g fill="${A}" opacity=".7">${[...Array(28)].map((_, i) => `<circle cx="${520 + i * 20}" cy="${430 + Math.sin(i / 2) * 10}" r="5"/>`).join('')}</g>`;
+        body += `<path d="M500 420 q-30 140 0 280 M1100 420 q30 140 0 280" stroke="${A}" stroke-opacity=".5" stroke-width="10" fill="none" stroke-dasharray="2 14" stroke-linecap="round"/>`;
+      }
+      if (kind === 'portico') body += `<rect x="0" y="880" width="${W}" height="120" fill="${D}"/><path d="M560 880 V520 H1040 V880" fill="none" stroke="${A}" stroke-width="3"/><path d="M520 520 H1080 L800 380z" fill="none" stroke="${A}" stroke-width="3"/>`;
+      break;
+    }
+    case 'room': case 'suite': {
+      defs = g(uid + 'k', [[0, SF, .18], [1, P, 1]], 1, 1) + g(uid + 'w', [[0, A, .55], [1, A, .05]]);
+      body = `<rect width="${W}" height="${H}" fill="${P}"/><rect width="${W}" height="${H}" fill="url(#${uid}k)"/>`;
+      body += `<rect x="1060" y="140" width="380" height="520" fill="url(#${uid}w)"/><path d="M1250 140 V660 M1060 400 H1440" stroke="${D}" stroke-width="6"/>`;
+      body += `<path d="M1000 120 q20 300 -10 560 M1500 120 q-20 300 10 560" stroke="${A}" stroke-opacity=".35" stroke-width="40" fill="none"/>`;
+      body += `<rect x="180" y="470" width="760" height="70" rx="6" fill="${A}" opacity=".35"/><rect x="200" y="540" width="720" height="140" fill="${D}" opacity=".8"/><rect x="230" y="420" width="200" height="70" rx="30" fill="${SF}" opacity=".5"/><rect x="460" y="420" width="200" height="70" rx="30" fill="${SF}" opacity=".5"/>`;
+      body += `<rect x="150" y="300" width="820" height="130" fill="none" stroke="${A}" stroke-opacity=".45" stroke-width="2"/>`;
+      if (kind === 'suite') body += `<path d="M1100 820 h340 v-90 a40 40 0 0 0 -40 -40 h-260 a40 40 0 0 0 -40 40z" fill="${D}" opacity=".85"/><circle cx="560" cy="200" r="40" fill="${A}" opacity=".35"/>`;
+      body += `<rect y="${H - 180}" width="${W}" height="180" fill="${D}" opacity=".6"/>`;
+      break;
+    }
+    case 'dine': case 'leaf': {
+      defs = g(uid + 'k', [[0, P], [1, D]], 1, 1);
+      body = `<rect width="${W}" height="${H}" fill="url(#${uid}k)"/>`;
+      if (kind === 'leaf') {
+        body += `<path d="M180 760 Q700 120 1460 260 Q1050 980 180 760z" fill="${A}" opacity=".28"/><path d="M180 760 Q820 520 1460 260" stroke="${A}" stroke-opacity=".6" stroke-width="3" fill="none"/>`;
+        [[560, 520, 70], [760, 470, 56], [920, 560, 64], [700, 660, 50], [1060, 440, 46]].forEach(([x, y, r]) => body += `<circle cx="${x}" cy="${y}" r="${r}" fill="${SF}" opacity=".22"/><circle cx="${x}" cy="${y}" r="${r * .55}" fill="${A}" opacity=".35"/>`);
+      } else {
+        [[420, 500], [800, 500], [1180, 500]].forEach(([x, y]) => body += `<circle cx="${x}" cy="${y}" r="150" fill="none" stroke="${A}" stroke-opacity=".5" stroke-width="2"/><circle cx="${x}" cy="${y}" r="104" fill="${SF}" opacity=".12"/><path d="M${x - 210} ${y - 90} v180 M${x + 210} ${y - 90} v180" stroke="${A}" stroke-opacity=".55" stroke-width="3"/>`);
+        body += `<g fill="${A}" opacity=".7">${[...Array(5)].map((_, i) => `<circle cx="${300 + i * 250}" cy="140" r="5"/><path d="M${300 + i * 250} 0V135" stroke="${A}" stroke-opacity=".5"/>`).join('')}</g>`;
+      }
+      break;
+    }
+    case 'sea': case 'fort': case 'mangrove': {
+      defs = g(uid + 'k', [[0, D], [.62, P], [.64, A, .5], [1, D]]);
+      body = `<rect width="${W}" height="${H}" fill="url(#${uid}k)"/><circle cx="1150" cy="560" r="90" fill="${A}" opacity=".55"/>`;
+      body += [...Array(8)].map((_, i) => `<path d="M${100 + i * 40} ${700 + i * 32} H${1500 - i * 50}" stroke="${A}" stroke-opacity="${.35 - i * .03}" stroke-width="2"/>`).join('');
+      if (kind === 'fort') body += `<path d="M220 640 V500 h40 v-30 h30 v30 h40 v-30 h30 v30 h40 v-30 h30 v30 h40 V640z" fill="${D}"/>`;
+      if (kind === 'mangrove') body += `<path d="M0 640 Q200 520 420 600 Q600 500 820 610 L820 640z" fill="${D}"/><path d="M600 760 h220 l-30 22 h-160z" fill="${D}"/>`;
+      if (kind === 'sea') body += `<g fill="none" stroke="${SF}" stroke-opacity=".6" stroke-width="3">${[[300, 300], [380, 260], [460, 320], [520, 280]].map(([x, y]) => `<path d="M${x} ${y} q16 -14 32 0 q16 -14 32 0"/>`).join('')}</g>`;
+      break;
+    }
+    case 'basilica': case 'minaret': case 'gopuram': {
+      defs = g(uid + 'k', [[0, D], [.7, P], [1, A, .6]]);
+      body = `<rect width="${W}" height="${H}" fill="url(#${uid}k)"/>`;
+      if (kind === 'basilica') body += `<path d="M560 900 V520 l90 -70 90 70 V900z M860 900 V520 l90 -70 90 70 V900z M740 900 V600 h120 V900z" fill="${A}" opacity=".55"/><path d="M650 450 V330 M950 450 V330 M638 360h24 M938 360h24" stroke="${A}" stroke-opacity=".6" stroke-width="5"/><path d="M770 900 V700 a30 30 0 0 1 60 0 V900" fill="${P}"/>`;
+      if (kind === 'minaret') { [480, 620, 980, 1120].forEach((x, i) => body += `<rect x="${x}" y="${380 - (i % 3) * 60}" width="34" height="${520 + (i % 3) * 60}" fill="${A}" opacity=".55"/><circle cx="${x + 17}" cy="${370 - (i % 3) * 60}" r="24" fill="${A}" opacity=".55"/>`); body += `<path d="M680 900 V600 q120 -160 240 0 V900z" fill="${A}" opacity=".55"/><rect x="790" y="280" width="20" height="640" fill="${A}" opacity=".6"/>`; }
+      if (kind === 'gopuram') body += `<path d="M560 900 L620 300 H980 L1040 900z" fill="${A}" opacity=".7"/>${[...Array(8)].map((_, i) => `<path d="M${575 + i * 7} ${840 - i * 70} H${1025 - i * 7}" stroke="${D}" stroke-width="3"/>`).join('')}<rect x="760" y="760" width="80" height="140" fill="${D}"/><rect x="0" y="900" width="${W}" height="100" fill="${A}" opacity=".25"/>`;
+      body += `<rect y="900" width="${W}" height="100" fill="${D}"/>`;
+      break;
+    }
+    default: body = `<rect width="${W}" height="${H}" fill="${P}"/>`;
+  }
+  return `<svg class="art" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${defs}</defs>${body}</svg>`;
+}
+
+/* image frame: placeholder art + real photo that fades in when it loads */
+function ph(img, cls = '', alt = '') {
+  img = img || {};
+  return `<figure class="ph ${cls}">${art(img.art)}${img.u ? `<img data-src="${esc(img.u)}" alt="${esc(alt || img.cap || '')}" decoding="async">` : ''}<figcaption>${esc(img.cap || 'Photograph')}</figcaption></figure>`;
+}
+function hydrateImages(root = document) {
+  $$('img[data-src]', root).forEach((im) => {
+    const src = im.dataset.src; im.removeAttribute('data-src');
+    im.onload = () => { if (im.naturalWidth > 2) { im.classList.add('ok'); im.closest('.ph')?.classList.add('loaded'); } };
+    im.onerror = () => im.remove();
+    im.src = src;
+  });
+}
+/* ---------- layout ---------- */
+const NAV = [['#/bookroom', 'Stay'], ['#/kvr-mahal', 'KVR Mahal'], ['#/#restaurant', 'Dining'], ['#/activities', 'Experiences'], ['#/about-us', 'Our story'], ['#/contact', 'Contact']];
+function header(route) {
+  return `<header class="hdr" id="hdr"><div class="wrap bar">
+    ${brand()}
+    <nav class="nav" aria-label="Main">${NAV.map(([h, l]) => `<a href="${h}" class="${h === '#' + route ? 'on' : ''}">${l}</a>`).join('')}</nav>
+    <div class="hdr-r"><a class="tel" href="${tel(S.settings.phone1)}">${ic('phone', 'width="16" height="16"')}${esc(S.settings.phone1)}</a>
+      <a class="btn" href="#/bookroom">Reserve</a>
+      <button class="burger" aria-label="Open menu" data-act="menu"><span></span><span></span><span></span></button></div>
+  </div></header>
+  <div class="mnav" id="mnav"><div class="top">${brand()}<button class="x" data-act="menu-x" aria-label="Close menu">${ic('x', 'width="28" height="28"')}</button></div>
+    <nav>${[['#/', 'Home'], ...NAV].map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}</nav>
+    <div class="muted" style="color:var(--on-p-muted)">${esc(S.settings.phone1)}<br>${esc(S.settings.email1)}</div></div>`;
+}
+function footer() {
+  const st = S.settings;
+  return `<footer class="ftr"><div class="wrap">
+    <div class="ftr-g">
+      <div>${brand()}<p style="margin-top:28px;max-width:34ch">${esc(st.address)}</p>
+        <div class="btns" style="margin-top:20px"><a class="btn gold" href="${wa()}" target="_blank" rel="noopener">${ic('wa', 'width="18" height="18"')}WhatsApp us</a></div></div>
+      <div><h4>Stay</h4><ul><li><a href="#/bookroom">Rooms & tariffs</a></li><li><a href="#/#restaurant">Dining</a></li><li><a href="#/activities">Experiences</a></li><li><a href="#/#gallery">Gallery</a></li></ul></div>
+      <div><h4>Celebrate</h4><ul><li><a href="#/kvr-mahal">KVR Mahal</a></li><li><a href="#/kvr-mahal#mahal-enquiry">Plan an event</a></li><li><a href="#/about-us">Our story</a></li><li><a href="#/contact">Contact</a></li></ul></div>
+      <div><h4>Reach us</h4><ul><li><a href="${tel(st.phone1)}">${esc(st.phone1)}</a></li><li><a href="${tel(st.phone2)}">${esc(st.phone2)}</a></li><li><a href="mailto:${esc(st.email1)}">${esc(st.email1)}</a></li><li><a href="mailto:${esc(st.email2)}">${esc(st.email2)}</a></li></ul></div>
+    </div>
+    <div class="base"><span>© 2026 Hotel Queen's Inn, Velankanni</span><span style="display:flex;gap:22px;flex-wrap:wrap"><a href="#/terms-conditions">Terms & conditions</a><a href="#/cancellation-policy">Cancellation & refund</a><a href="#/privacy-policy">Privacy policy</a></span></div>
+  </div></footer>
+  <div class="mbar"><a href="${tel(st.phone1)}">${ic('phone')}Call</a><a href="${wa()}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a><a class="e" href="#/bookroom#reserve">Enquire</a></div>
+  <div class="proto"><span>Prototype</span><a href="#/admin">Open admin</a></div>`;
+}
+
+/* ---------- shared blocks ---------- */
+function heroBlock({ slides, title, sub, cls = '', withBar = false, kicker = '' }) {
+  return `<section class="hero ${cls} ${withBar ? 'has-q' : ''}" aria-label="Introduction">
+    <div class="slides">${slides.map((s, i) => `<div class="slide ${i ? '' : 'on'}">${ph(s)}</div>`).join('')}</div>
+    <div class="shade"></div>
+    <div class="inner"><div class="wrap ld">${kicker ? `<span class="kicker" style="color:var(--a)">${kicker}</span>` : '<span></span>'}<h1>${esc(title)}</h1><p class="sub">${esc(sub)}</p></div></div>
+    ${slides.length > 1 ? `<div class="dots">${slides.map((_, i) => `<button class="${i ? '' : 'on'}" aria-label="Show image ${i + 1}" data-slide="${i}"></button>`).join('')}</div>` : ''}
+  </section>${withBar ? `<div class="qbar"><div class="wrap">${quickBar()}</div></div>` : ''}`;
+}
+function roomOptions(sel) { return S.rooms.filter((r) => r.active).map((r) => `<option ${sel == r.id ? 'selected' : ''} value="${r.id}">${esc(r.name)}</option>`).join(''); }
+const today = (d = 0) => { const t = new Date(); t.setDate(t.getDate() + d); return t.toISOString().slice(0, 10); };
+function quickBar() {
+  return `<form id="qform" aria-label="Quick enquiry">
+    <label>Arrive<input type="date" name="in" value="${today(7)}" min="${today()}"></label>
+    <label>Depart<input type="date" name="out" value="${today(9)}" min="${today(1)}"></label>
+    <label>Room<select name="room">${roomOptions()}</select></label>
+    <label>Guests<select name="guests">${[1, 2, 3, 4, 5, 6].map((n) => `<option ${n === 2 ? 'selected' : ''}>${n} ${n > 1 ? 'adults' : 'adult'}</option>`).join('')}</select></label>
+    <button class="btn" type="submit">Request tariff</button></form>`;
+}
+function roomForm(pre = {}) {
+  return `<form class="fm" data-enq="Room" novalidate>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="fld"><span>Arrive</span><input type="date" name="in" required value="${pre.in || today(7)}"></label>
+    <label class="fld"><span>Depart</span><input type="date" name="out" required value="${pre.out || today(9)}"></label>
+    <label class="fld"><span>Room</span><select name="room">${roomOptions(pre.room)}</select></label>
+    <label class="fld"><span>Guests</span><select name="guests">${[1, 2, 3, 4, 5, 6].map((n) => `<option ${(pre.guests || '2 adults').startsWith(n + ' ') ? 'selected' : ''}>${n} ${n > 1 ? 'adults' : 'adult'}</option>`).join('')}</select></label>
+    <label class="fld"><span>Full name</span><input name="name" required autocomplete="name"></label>
+    <label class="fld"><span>Phone</span><input name="phone" type="tel" required autocomplete="tel" placeholder="+91"></label>
+    <label class="fld full"><span>Email (optional)</span><input name="email" type="email" autocomplete="email"></label>
+    <label class="fld full"><span>Anything we should know</span><textarea name="msg" rows="2" placeholder="Arrival time, feast-day visit, accessibility needs…"></textarea></label>
+    <div class="acts"><button class="btn" type="submit">Send enquiry</button><a class="btn ghost" href="${wa()}" target="_blank" rel="noopener">${ic('wa', 'width="18" height="18"')}WhatsApp instead</a></div>
+    <small class="full">Our reservations desk replies within two hours, 7 AM to 11 PM. No payment is taken online.</small>
+  </form>`;
+}
+
+/* ---------- HOME ---------- */
+function pageHome() {
+  const st = S.settings, rooms = S.rooms.filter((r) => r.active);
+  return `${heroBlock({ slides: S.hero.slides, title: S.hero.headline, sub: S.hero.sub, withBar: true })}
+
+  <section class="sec" id="about"><div class="wrap">
+    <div class="intro-g">
+      <div>
+        <span class="kicker">Welcome to Queen's Inn</span>
+        <h2>Half a kilometre from the Basilica. A world away from the crowd.</h2>
+        <hr class="rule">
+        <p class="lede">Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.</p>
+        <p class="muted">Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017.</p>
+        <div class="btns"><a class="link" href="#/about-us">Read our story</a></div>
+      </div>
+      <div class="intro-imgs"><div class="frame arch-f a">${ph(IMG.intro, 'arch r34 zoom')}</div>${ph(IMG.intro2, 'r34 b')}</div>
+    </div>
+    <div class="ledger">
+      <div><b>3</b><span>acres of gated gardens and lawns</span></div>
+      <div><b>51</b><span>air-conditioned rooms in four categories</span></div>
+      <div><b>500 m</b><span>walk to the Shrine Basilica</span></div>
+      <div><b>24 h</b><span>reception and in-room dining</span></div>
+    </div>
+  </div></section>
+
+  <section class="sec tint" id="rooms"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Rooms & suites</span><h2>Rest, well considered</h2></div><p class="muted">Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.</p></div>
+    <div class="rooms-g">
+      <ul class="rlist" role="tablist">${rooms.map((r, i) => `<li><button role="tab" aria-selected="${!i}" class="${i ? '' : 'on'}" data-room="${i}"><span class="n">${esc(r.name)}</span><span class="f">from ${inr(r.tariff)}</span></button></li>`).join('')}</ul>
+      <div class="rview">
+        <div class="stack">${rooms.map((r, i) => ph(r.img, (i ? '' : 'on') + ' zoom', r.name)).join('')}</div>
+        <div id="rmeta">${roomMeta(rooms[0])}</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="dine" id="restaurant">
+    ${ph(IMG.dine, 'big')}
+    <div class="wrap"><div class="panel">
+      <span class="kicker">Q Multi-Cuisine Restaurant</span>
+      <h2 style="font-size:clamp(34px,3.6vw,50px)">From temple-town breakfasts to coastal suppers</h2>
+      <p class="muted" style="margin-top:22px">South Indian and Chettinad classics, North Indian and Continental plates, and seafood from the Nagapattinam coast. Vegetarian and non-vegetarian dishes are prepared in separate kitchens.</p>
+      <div class="hours"><div><span>Breakfast buffet</span><span>7:00 – 10:30</span></div><div><span>Lunch</span><span>12:30 – 15:30</span></div><div><span>Dinner</span><span>19:30 – 22:30</span></div><div><span>In-room dining</span><span>24 hours</span></div></div>
+    </div></div>
+    <div class="wrap"><div class="mosaic">${ph(IMG.dine1, 'r45 zoom')}${ph(IMG.dine2, 'r45 zoom')}${ph(IMG.dine3, 'r45 zoom')}</div></div>
+  </section>
+
+  <section class="sec dark"><div class="wrap mahal-g">
+    <div class="frame arch-f">${ph(IMG.mahal, 'arch r23 zoom')}</div>
+    <div>
+      <span class="kicker">On the same campus</span>
+      <div class="wordmark">KVR Mahal</div>
+      <p class="lede" style="margin-top:28px">Where sacred vows meet timeless hospitality.</p>
+      <p class="muted">Velankanni's grandest fully air-conditioned mandapam, with a 300-seat dining pavilion and every guest room a short garden walk away. Your families arrive, celebrate and rest without leaving the gates.</p>
+      <div class="ledger" style="margin-top:44px;grid-template-columns:repeat(2,1fr)">
+        <div><b>1,000</b><span>guests in the ceremonial hall</span></div>
+        <div><b>300+</b><span>seats in the dining pavilion</span></div>
+      </div>
+      <div class="btns"><a class="btn gold" href="#/kvr-mahal">Discover KVR Mahal</a><a class="btn ghost" href="#/kvr-mahal#mahal-enquiry">Plan your event</a></div>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Within the gates</span><h2>Everything close at hand</h2></div></div>
+    <div class="amen">${[
+      ['bell', '24-hour reception', 'Concierge help with darshan timings and travel'], ['snow', 'Silent central cooling', 'Quiet air conditioning across the campus'],
+      ['bolt', 'Full power backup', 'Silent generators for rooms and halls'], ['wifi', 'Wi-Fi throughout', 'Rooms, lobby and restaurant'],
+      ['car', 'Secure parking', '100+ cars and tour buses inside the gates'], ['tray', 'In-room dining', 'Served around the clock'],
+      ['people', 'Meeting hall', 'For family gatherings and business groups'], ['leaf', 'Garden lawns', 'With a children’s play area'],
+      ['bed', 'Driver quarters', 'Rest rooms, washrooms and meals for drivers'], ['shield', 'Gated & guarded', 'CCTV and round-the-clock security'],
+    ].map(([i, t, d]) => `<div>${ic(i)}<b>${t}</b><span class="muted">${d}</span></div>`).join('')}</div>
+  </div></section>
+
+  <section class="sec tint"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Around Velankanni</span><h2>Pilgrim trails and coastal days</h2></div><a class="link" href="#/activities">All experiences</a></div>
+    <div class="exp3">${[ATTR[0], ATTR[1], ATTR[3]].map((a) => `<a href="#/activities" class="zoom">${ph({ art: a.art, cap: a.n }, '')}<div class="km">${a.d} km away</div><h3>${esc(a.n)}</h3></a>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" id="gallery"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Gallery</span><h2>A look inside</h2></div></div>
+    <div class="masonry">${GALLERY.map((g, i) => `<button data-gal="${i}" aria-label="Open image ${i + 1}">${ph(g, g.r + ' zoom')}</button>`).join('')}</div>
+  </div></section>
+
+  <section class="sec dark quote"><div class="wrap">
+    <div class="qm">${ic('quote', 'width="40" height="40"')}</div>
+    <div id="qrot"><blockquote>${esc(QUOTES[0].q)}</blockquote><cite>${esc(QUOTES[0].c)}</cite></div>
+    <div class="note">Sample guest words for the prototype · real testimonials are managed in admin</div>
+  </div></section>
+
+  <section class="sec" id="enquiry"><div class="wrap enq-g">
+    <div>
+      <span class="kicker">Room enquiry</span>
+      <h2>Tell us when you're coming</h2>
+      <p class="muted" style="margin-top:24px">Share your dates and our reservations desk will confirm availability and the best tariff, usually within two hours.</p>
+      ${contactList()}
+    </div>
+    <div>${roomForm()}</div>
+  </div></section>`;
+}
+function roomMeta(r) {
+  return `<div class="rmeta"><div><h3>${esc(r.name)}</h3><p class="muted" style="margin-top:14px">${esc(r.desc)}</p></div>
+    <div><div class="specs"><div>${ic('sqft')}${r.size} sq ft</div><div>${ic('bed')}${esc(r.bed)}</div><div>${ic('eye')}${esc(r.view)}</div><div>${ic('guest')}Up to ${r.guests} guests</div></div>
+    <p class="price">${inr(r.tariff)} <small>per night + GST</small></p>
+    <div class="btns" style="margin-top:22px"><a class="btn" href="#/bookroom?room=${r.id}#reserve">Enquire</a><a class="link" href="#/bookroom" style="align-self:center">All rooms</a></div></div></div>`;
+}
+function contactList() {
+  const st = S.settings;
+  return `<div class="contact-l">
+    <div>${ic('phone')}<span><b>Call</b><a href="${tel(st.phone1)}">${esc(st.phone1)}</a> · <a href="${tel(st.phone2)}">${esc(st.phone2)}</a></span></div>
+    <div>${ic('wa')}<span><b>WhatsApp</b><a href="${wa()}" target="_blank" rel="noopener">Message the front desk</a></span></div>
+    <div>${ic('mail')}<span><b>Email</b><a href="mailto:${esc(st.email1)}">${esc(st.email1)}</a></span></div>
+    <div>${ic('pin')}<span><b>Address</b>${esc(st.address)}</span></div></div>`;
+}
+
+/* ---------- BOOK ROOM (enquiry) ---------- */
+function pageBook(q) {
+  const rooms = S.rooms.filter((r) => r.active);
+  return `${heroBlock({ slides: [rooms[rooms.length - 1]?.img || S.hero.slides[0]], title: 'Rooms & suites', sub: 'Fifty-one air-conditioned rooms in four categories, set around three acres of garden.', cls: 'page-hero', kicker: 'Stay with us' })}
+  <section><div class="wrap">${rooms.map((r) => `<article class="roomcard">
+      ${ph(r.img, 'r43 zoom', r.name)}
+      <div><h2 style="font-size:clamp(34px,3.4vw,48px)">${esc(r.name)}</h2><div class="tag">${esc(r.tag)}</div>
+        <p class="muted">${esc(r.desc)}</p>
+        <div class="specs" style="margin-top:24px"><div>${ic('sqft')}${r.size} sq ft</div><div>${ic('bed')}${esc(r.bed)}</div><div>${ic('eye')}${esc(r.view)}</div><div>${ic('guest')}Up to ${r.guests} guests</div></div>
+        <ul class="chips">${r.am.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
+        <p class="price" style="margin-top:28px">${inr(r.tariff)} <small>per night + GST</small></p>
+        <div class="btns" style="margin-top:20px"><a class="btn" href="#/bookroom?room=${r.id}#reserve">Enquire for this room</a></div>
+      </div></article>`).join('')}</div></section>
+  <section class="sec tint" id="reserve"><div class="wrap enq-g">
+    <div><span class="kicker">Reserve your stay</span><h2>Request a reservation</h2>
+      <p class="muted" style="margin-top:24px">We don't take bookings or payments online. Send your dates and the desk will confirm by phone or WhatsApp.</p>${contactList()}</div>
+    <div>${roomForm({ room: q.room, in: q.in, out: q.out, guests: q.guests })}</div>
+  </div></section>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Before you arrive</span><h2>Good to know</h2></div><a class="link" href="#/terms-conditions">Full policies</a></div>
+    <div class="policy-strip">
+      <div><b>Check-in ${esc(S.settings.checkin)}</b><span class="muted">Early check-in on request, subject to availability.</span></div>
+      <div><b>Check-out ${esc(S.settings.checkout)}</b><span class="muted">Late check-out can be arranged at the desk.</span></div>
+      <div><b>Photo ID</b><span class="muted">Government-issued ID required for every adult guest.</span></div>
+      <div><b>Free cancellation</b><span class="muted">Up to 48 hours before arrival. Feast-period rules differ.</span></div>
+    </div></div></section>`;
+}
+
+/* ---------- KVR MAHAL ---------- */
+function pageMahal() {
+  return `${heroBlock({ slides: [IMG.mahal, IMG.mahalNight], title: 'Where sacred vows meet timeless hospitality', sub: "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", kicker: 'KVR Mahal' })}
+  <section class="sec dark" style="padding:clamp(56px,6vw,90px) 0"><div class="wrap">
+    <div class="ledger" style="margin-top:0;border-top:0">
+      <div><b>1,000</b><span>guests in the ceremonial hall, from 500</span></div><div><b>300+</b><span>seats in the dining pavilion</span></div>
+      <div><b>100%</b><span>central air conditioning with silent backup</span></div><div><b>100+</b><span>cars and tour buses parked inside the gates</span></div>
+    </div></div></section>
+  <section class="sec"><div class="wrap split">
+    <div><span class="kicker">The Grand Ceremonial Hall</span><h2>A stage worthy of the vow</h2><hr class="rule">
+      <p class="lede">High ceilings, crystal chandeliers and wide, pillarless sightlines, so every guest sees the muhurtham.</p>
+      <div class="fac" style="grid-template-columns:1fr;margin-top:36px">
+        <div>${ic('stage')}<span>Elevated main stage with a customisable backdrop</span></div>
+        <div>${ic('sound')}<span>Acoustically tuned hall with balanced PA distribution</span></div>
+        <div>${ic('ac')}<span>High-capacity central AC with silent generator backup</span></div>
+      </div></div>
+    <div class="frame arch-f">${ph(IMG.mahalHall, 'arch r34 zoom')}</div>
+  </div></section>
+  <section class="sec tint"><div class="wrap split rev">
+    <div><span class="kicker">Bhojana Saalai</span><h2>A feast for three hundred at once</h2><hr class="rule">
+      <p class="lede">Organised banquet rows for traditional banana-leaf service, served from our own commercial kitchen.</p>
+      <div class="fac" style="grid-template-columns:1fr;margin-top:36px">
+        <div>${ic('pot')}<span>Dedicated kitchen with high-pressure burners</span></div>
+        <div>${ic('flow')}<span>Separate service flow, so the hall never crowds</span></div>
+        <div>${ic('drop')}<span>Built-in RO water plant and multi-basin wash bays</span></div>
+      </div></div>
+    <div>${ph(IMG.mahalDine, 'r43 zoom')}</div>
+  </div></section>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Stay & celebrate</span><h2>Why one campus changes everything</h2></div><p class="muted">Outstation weddings usually scatter families across lodges. At KVR Mahal they stay together.</p></div>
+    <div class="scroll-x"><table class="compare"><thead><tr><th></th><th>A typical standalone mandapam</th><th>KVR Mahal with Queen's Inn</th></tr></thead><tbody>
+      <tr><td>Guest stays</td><td>Guests spread across outside lodges</td><td>51 air-conditioned rooms on the same 3-acre campus</td></tr>
+      <tr><td>Bridal comfort</td><td>Small, basic dressing rooms</td><td>Two private AC green rooms with attached vanity suites</td></tr>
+      <tr><td>Parking</td><td>Street congestion and narrow access roads</td><td>Enclosed parking for 100+ cars and tour buses</td></tr>
+      <tr><td>Drivers</td><td>No facilities for tour drivers</td><td>Rest quarters, washrooms and meals for drivers</td></tr>
+    </tbody></table></div>
+  </div></section>
+  <section class="sec dark" id="mahal-enquiry"><div class="wrap enq-g">
+    <div><span class="kicker">Plan your event</span><h2>Check a date for your celebration</h2>
+      <p class="muted" style="margin-top:24px">Tell us about the occasion. Our events team will share availability, a quotation and room blocks for your guests.</p>
+      <div class="contact-l" style="color:var(--on-p)"><div>${ic('phone')}<span><b style="color:var(--on-p-muted)">Events desk</b><a href="${tel(S.settings.phone2)}">${esc(S.settings.phone2)}</a></span></div><div>${ic('mail')}<span><b style="color:var(--on-p-muted)">Email</b><a href="mailto:${esc(S.settings.email2)}">${esc(S.settings.email2)}</a></span></div></div>
+    </div>
+    <form class="fm" data-enq="Mahal" novalidate>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="fld full"><span>Occasion</span><div class="seg">${['Wedding', 'Reception', 'Engagement', 'Community event', 'Corporate'].map((o, i) => `<label><input type="radio" name="etype" value="${o}" ${i ? '' : 'checked'}><span>${o}</span></label>`).join('')}</div></div>
+      <label class="fld"><span>Preferred date</span><input type="date" name="date" min="${today()}" required></label>
+      <label class="fld"><span>Alternate date</span><input type="date" name="alt" min="${today()}"></label>
+      <label class="fld"><span>Expected guests</span><select name="count"><option>Up to 300</option><option selected>300 – 600</option><option>600 – 1,000</option></select></label>
+      <label class="fld"><span>Rooms needed</span><select name="rooms"><option>None</option><option>Up to 10</option><option selected>10 – 25</option><option>25 – 51 (whole hotel)</option></select></label>
+      <label class="fld"><span>Full name</span><input name="name" required></label>
+      <label class="fld"><span>Phone</span><input name="phone" type="tel" required placeholder="+91"></label>
+      <label class="fld full"><span>Tell us more</span><textarea name="msg" rows="2"></textarea></label>
+      <div class="acts"><button class="btn gold" type="submit">Request a quotation</button><a class="btn ghost" href="${wa('Hello, I would like to enquire about KVR Mahal for an event.')}" target="_blank" rel="noopener">${ic('wa', 'width="18" height="18"')}WhatsApp</a></div>
+    </form>
+  </div></section>`;
+}
+
+/* ---------- ABOUT ---------- */
+function pageAbout() {
+  return `${heroBlock({ slides: [IMG.intro], title: 'A quiet house near a sacred shore', sub: 'Welcoming pilgrims, families and celebrations to Velankanni since October 2017.', cls: 'page-hero', kicker: 'Our story' })}
+  <section class="sec"><div class="wrap split">
+    <div><h2>Built for the people who come to pray, and the families who come with them</h2><hr class="rule">
+      <p class="lede">Queen's Inn opened in October 2017 on East Coast Road, half a kilometre from the Shrine Basilica.</p>
+      <p class="muted">We set out to give Velankanni a hotel that matched the importance of the journey: rooms that are calm and spotless, food that is honest, and a campus large enough that it never feels crowded, even during the Feast.</p>
+      <p class="muted">Today the three-acre campus holds 51 rooms, the Q Multi-Cuisine Restaurant, garden lawns and KVR Mahal, our ceremonial hall for weddings and community celebrations.</p></div>
+    <div class="frame">${ph(IMG.lawn, 'r45 zoom')}</div>
+  </div></section>
+  <section class="sec tint"><div class="wrap">
+    <div class="sec-head"><div><span class="kicker">Our standards</span><h2>What you can count on</h2></div></div>
+    <div class="fac">
+      <div>${ic('shield')}<span><b class="serif" style="font-size:21px;font-weight:500;display:block">Safety first</b><span class="muted">Gated campus, CCTV, trained night security and verified guest registration.</span></span></div>
+      <div>${ic('snow')}<span><b class="serif" style="font-size:21px;font-weight:500;display:block">Silent comfort</b><span class="muted">Central cooling and silent generators, so rest is never interrupted.</span></span></div>
+      <div>${ic('drop')}<span><b class="serif" style="font-size:21px;font-weight:500;display:block">Hygiene</b><span class="muted">Daily housekeeping, RO drinking water and separate veg and non-veg kitchens.</span></span></div>
+    </div></div></section>
+  <section class="sec"><div class="wrap split rev">
+    <div><span class="kicker">Location</span><h2>On ECR, minutes from everything</h2><hr class="rule">
+      <p class="muted">The hotel stands on East Coast Road at Arch West Street, ten minutes' walk from the Basilica and the holy tank, and within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar.</p>
+      <div class="btns"><a class="btn ghost" href="#/activities">Explore the region</a></div></div>
+    ${mapBlock()}
+  </div></section>`;
+}
+function mapBlock() {
+  return `<div class="map"><svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="800" height="500" fill="var(--s2)"/><path d="M560 0 Q520 160 600 300 T580 500 H800 V0z" fill="color-mix(in srgb,var(--p) 14%,var(--s))"/>
+    <path d="M120 0 Q260 200 380 260 T520 500" stroke="var(--a)" stroke-width="5" fill="none"/><path d="M0 300 Q260 240 400 260 T800 220" stroke="color-mix(in srgb,var(--p) 22%,var(--s))" stroke-width="3" fill="none"/>
+    <circle cx="360" cy="250" r="9" fill="var(--p)"/><circle cx="360" cy="250" r="22" fill="none" stroke="var(--p)" stroke-opacity=".3"/>
+    <circle cx="470" cy="300" r="6" fill="var(--a)"/><text x="384" y="244" font-family="Jost,sans-serif" font-size="15" fill="var(--p)">Queen's Inn</text><text x="482" y="320" font-family="Jost,sans-serif" font-size="13" fill="var(--muted)">Basilica · 0.5 km</text>
+    <text x="630" y="260" font-family="Cormorant Garamond,serif" font-style="italic" font-size="22" fill="var(--muted)">Bay of Bengal</text><text x="60" y="80" font-family="Jost,sans-serif" font-size="12" fill="var(--muted)" letter-spacing="2">ECR MAIN ROAD</text>
+  </svg><a class="btn" href="https://maps.google.com/?q=Hotel+Queens+Inn+Velankanni" target="_blank" rel="noopener">Open in Google Maps</a></div>`;
+}
+
+/* ---------- ACTIVITIES ---------- */
+function pageActivities() {
+  return `${heroBlock({ slides: [{ art: 'basilica', cap: 'Velankanni Basilica at sunrise' }, { art: 'sea', cap: 'Point Calimere flamingos' }], title: 'Pilgrim trails and coastal days', sub: 'Queen’s Inn is a gentle base for the sacred sites and wild coast of the Cauvery delta.', cls: 'page-hero', kicker: 'Experiences' })}
+  <section><div class="wrap">${ATTR.map((a) => `<article class="attr">
+      <div class="d">${a.d}<small>km away</small></div>
+      <div><h3 style="font-size:clamp(30px,3vw,42px)">${esc(a.n)}</h3><p class="muted" style="margin-top:14px">${esc(a.t)}</p></div>
+      ${ph({ art: a.art, cap: a.n }, 'r32 zoom')}</article>`).join('')}</div></section>
+  <section class="sec tint"><div class="wrap split">
+    <div><span class="kicker">Travel desk</span><h2>Let us plan the day</h2><hr class="rule"><p class="muted">Our front desk arranges cars and drivers, temple timings and boat trips at Muthupet. Tell us what you'd like to see.</p>
+    <div class="btns"><a class="btn" href="${wa('Hello, I would like help planning a day trip from Queen’s Inn.')}" target="_blank" rel="noopener">${ic('wa', 'width="18" height="18"')}Plan on WhatsApp</a></div></div>
+    ${ph({ art: 'fort', cap: 'Dansborg, Tranquebar' }, 'r43')}
+  </div></section>`;
+}
+
+/* ---------- CONTACT ---------- */
+function pageContact() {
+  return `<section class="sec" style="padding-top:calc(var(--sec) + 60px)"><div class="wrap enq-g">
+    <div><span class="kicker">Contact</span><h2 style="font-size:clamp(44px,5.4vw,80px)">We're a call away</h2>${contactList()}
+      <div style="margin-top:48px">${mapBlock()}</div></div>
+    <div><h3 style="margin-bottom:32px">Send us a message</h3>
+      <form class="fm" data-enq="Contact" novalidate><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="fld"><span>Full name</span><input name="name" required></label><label class="fld"><span>Phone</span><input name="phone" type="tel" required></label>
+        <label class="fld full"><span>Email</span><input name="email" type="email"></label>
+        <label class="fld full"><span>Subject</span><select name="subj"><option>General question</option><option>Room reservation</option><option>KVR Mahal event</option><option>Feedback</option></select></label>
+        <label class="fld full"><span>Message</span><textarea name="msg" rows="4" required></textarea></label>
+        <div class="acts"><button class="btn" type="submit">Send message</button></div></form></div>
+  </div></section>`;
+}
+
+/* ---------- POLICIES ---------- */
+const POLICIES = {
+  'terms-conditions': ['Terms & conditions', `<h2>Check-in and check-out</h2><p>Check-in is from ${S.settings.checkin} and check-out by ${S.settings.checkout}. Early check-in and late check-out depend on availability and may be charged.</p>
+    <h2>Identification</h2><p>Every adult guest must present a valid government-issued photo ID (Aadhaar, passport, driving licence or voter ID) at check-in. Foreign nationals must present a passport and valid visa.</p>
+    <h2>On the campus</h2><ul><li>Visitors are welcome in the lobby and restaurant; only registered guests may stay overnight.</li><li>Smoking is not permitted inside rooms or halls.</li><li>Outside food delivery is accepted at reception.</li><li>Guests are responsible for damage to hotel property during their stay.</li></ul>
+    <h2>Tariffs</h2><p>Tariffs are per room per night and exclude GST, which is charged at the applicable government rate.</p>`],
+  'cancellation-policy': ['Cancellation & refund', `<h2>Standard cancellations</h2><p>Reservations can be cancelled free of charge up to 48 hours before the arrival date. Cancellations inside 48 hours, or no-shows, are charged one night's tariff.</p>
+    <h2>Annual Feast (29 August – 8 September)</h2><p>Reservations during the Feast of Our Lady of Good Health are non-refundable once confirmed, as rooms are allocated months in advance. Date changes may be possible, subject to availability.</p>
+    <h2>KVR Mahal events</h2><p>Event bookings follow the terms in your quotation. Advances are refundable on a sliding scale based on notice given.</p>
+    <h2>Refund timelines</h2><p>Approved refunds are processed within 7 working days to the original payment method.</p>`],
+  'privacy-policy': ['Privacy policy', `<h2>What we collect</h2><p>When you send an enquiry we collect your name, phone number, email address, travel dates and any message you write. At check-in we record the ID details required by law.</p>
+    <h2>How we use it</h2><p>We use these details only to respond to your enquiry, manage your stay and meet legal obligations. We do not sell or share your information for marketing.</p>
+    <h2>Keeping it safe</h2><p>Enquiries are stored on secured servers accessible only to authorised hotel staff. You may ask us to delete your enquiry data at any time by writing to ${S.settings.email1}.</p>`],
+};
+function pagePolicy(slug) {
+  const [t, body] = POLICIES[slug];
+  return `<section class="sec" style="padding-top:calc(var(--sec) + 60px)"><div class="wrap">
+    <nav class="policy-nav">${Object.entries(POLICIES).map(([s, [n]]) => `<a href="#/${s}" class="${s === slug ? 'on' : ''}">${n}</a>`).join('')}</nav>
+    <h1 style="font-size:clamp(44px,5.4vw,80px);font-weight:300;margin-bottom:56px">${t}</h1>
+    <div class="prose">${body}<p class="muted" style="margin-top:48px;font-size:14px">Last updated October 2026 · Edited from the admin panel</p></div>
+  </div></section>`;
+}
+/* ---------- router ---------- */
+const ROUTES = {
+  '/': pageHome, '/bookroom': pageBook, '/kvr-mahal': pageMahal, '/about-us': pageAbout, '/activities': pageActivities,
+  '/contact': pageContact, '/terms-conditions': () => pagePolicy('terms-conditions'), '/cancellation-policy': () => pagePolicy('cancellation-policy'), '/privacy-policy': () => pagePolicy('privacy-policy'),
+};
+const NO_HERO = ['/contact', '/terms-conditions', '/cancellation-policy', '/privacy-policy'];
+let heroTimer, quoteTimer, lastPath = null;
+
+function parse() {
+  // formats: #/path?x=1#anchor
+  let h = location.hash.slice(1) || '/';
+  let anchor = '';
+  const ai = h.indexOf('#', 1); if (ai > -1) { anchor = h.slice(ai + 1); h = h.slice(0, ai); }
+  const [path, qs = ''] = h.split('?');
+  const q = Object.fromEntries(new URLSearchParams(qs));
+  return { path: path || '/', q, anchor };
+}
+
+function render() {
+  const { path, q, anchor } = parse();
+  clearInterval(heroTimer); clearInterval(quoteTimer);
+  if (path.startsWith('/admin')) { renderAdmin(path, q); lastPath = path; return; }
+  document.body.className = 'site';
+  const fn = ROUTES[path] || pageHome;
+  const same = lastPath === path;
+  if (!same) {
+    $('#app').innerHTML = header(path) + `<main id="main">${fn(q)}</main>` + footer();
+    document.title = (path === '/' ? "Hotel Queen's Inn, Velankanni · Luxury stay & KVR Mahal" : `${($('h1')?.textContent || '').trim()} · Hotel Queen's Inn`);
+    wireSite(path);
+    hydrateImages();
+  }
+  lastPath = path;
+  requestAnimationFrame(() => {
+    if (anchor) { const el = document.getElementById(anchor); if (el) { el.scrollIntoView({ behavior: same ? 'smooth' : 'auto' }); return; } }
+    if (!same) window.scrollTo(0, 0);
+  });
+}
+window.addEventListener('hashchange', render);
+
+function wireSite(path) {
+  const hdr = $('#hdr');
+  const solidAlways = NO_HERO.includes(path);
+  const badge = $('.proto');
+  const onScroll = () => { hdr.classList.toggle('solid', solidAlways || window.scrollY > 40); badge?.classList.toggle('hide', !solidAlways && window.scrollY < window.innerHeight * .8); };
+  window.onscroll = onScroll; onScroll();
+
+  $$('[data-act="menu"]').forEach((b) => b.onclick = () => $('#mnav').classList.add('open'));
+  $$('#mnav a, [data-act="menu-x"]').forEach((b) => b.addEventListener('click', () => $('#mnav').classList.remove('open')));
+
+  // hero slides
+  const slides = $$('.hero .slide'), dots = $$('.hero .dots button');
+  if (slides.length > 1) {
+    let i = 0;
+    const go = (n) => { slides[i].classList.remove('on'); dots[i]?.classList.remove('on'); i = (n + slides.length) % slides.length; slides[i].classList.add('on'); dots[i]?.classList.add('on'); };
+    heroTimer = setInterval(() => go(i + 1), 7000);
+    dots.forEach((d, n) => d.onclick = () => { clearInterval(heroTimer); go(n); });
+  }
+
+  // room tabs
+  const rooms = S.rooms.filter((r) => r.active);
+  $$('[data-room]').forEach((b) => b.onclick = () => {
+    const n = +b.dataset.room;
+    $$('[data-room]').forEach((x, k) => { x.classList.toggle('on', k === n); x.setAttribute('aria-selected', k === n); });
+    $$('.rview .stack .ph').forEach((x, k) => x.classList.toggle('on', k === n));
+    $('#rmeta').innerHTML = roomMeta(rooms[n]);
+  });
+
+  // quotes
+  const qr = $('#qrot');
+  if (qr) { let k = 0; quoteTimer = setInterval(() => { k = (k + 1) % QUOTES.length; qr.style.transition = 'opacity .8s'; qr.style.opacity = 0; setTimeout(() => { qr.innerHTML = `<blockquote>${esc(QUOTES[k].q)}</blockquote><cite>${esc(QUOTES[k].c)}</cite>`; qr.style.opacity = 1; }, 800); }, 8000); }
+
+  // quick bar → bookroom
+  const qf = $('#qform');
+  if (qf) qf.onsubmit = (e) => { e.preventDefault(); const f = new FormData(qf); location.hash = `#/bookroom?room=${f.get('room')}&in=${f.get('in')}&out=${f.get('out')}&guests=${encodeURIComponent(f.get('guests'))}#reserve`; };
+
+  // enquiry forms
+  $$('form[data-enq]').forEach((f) => f.onsubmit = (e) => { e.preventDefault(); submitEnquiry(f); });
+
+  // gallery
+  $$('[data-gal]').forEach((b) => b.onclick = () => openLb(+b.dataset.gal));
+}
+
+function submitEnquiry(f) {
+  const d = Object.fromEntries(new FormData(f));
+  if (d.website) return;
+  const missing = $$('[required]', f).filter((i) => !i.value.trim());
+  $$('[required]', f).forEach((i) => i.style.borderColor = '');
+  if (missing.length) { missing.forEach((i) => i.style.borderColor = '#B42318'); missing[0].focus(); toast('Please fill in your name and phone number'); return; }
+  const type = f.dataset.enq; let detail = '', waMsg = '';
+  if (type === 'Room') {
+    const r = S.rooms.find((x) => x.id == d.room);
+    detail = `${r?.name} · ${d.in} → ${d.out} · ${d.guests}`;
+    waMsg = `Hello Queen's Inn, I've sent an enquiry for the ${r?.name} from ${d.in} to ${d.out}, ${d.guests}. Name: ${d.name}.`;
+  } else if (type === 'Mahal') {
+    detail = `${d.etype} · ${d.date || 'date TBC'} · ${d.count} guests · rooms: ${d.rooms}`;
+    waMsg = `Hello, I've sent a KVR Mahal enquiry for a ${d.etype} on ${d.date || 'a date to be confirmed'}, ${d.count} guests. Name: ${d.name}.`;
+  } else { detail = `${d.subj}: ${(d.msg || '').slice(0, 60)}`; waMsg = `Hello Queen's Inn, I've just sent a message: ${d.subj}. Name: ${d.name}.`; }
+  S.enquiries.unshift({ id: Date.now() % 100000, type, name: d.name, phone: d.phone, email: d.email || '', detail, status: 'New', at: new Date().toISOString().slice(0, 16).replace('T', ' ') });
+  save();
+  f.reset();
+  openModal(`<div class="mark">${CROWN}</div><span class="kicker" style="margin-bottom:8px">Thank you, ${esc(d.name.split(' ')[0])}</span>
+    <h3 style="font-size:36px;font-weight:300">Your enquiry has reached us</h3>
+    <p class="muted" style="margin:18px auto 0">${type === 'Mahal' ? 'Our events team will call you within one working day with availability and a quotation.' : 'Our reservations desk will call you shortly to confirm availability and tariff.'} For a quicker reply, continue on WhatsApp.</p>
+    <div class="btns"><a class="btn" href="${wa(waMsg)}" target="_blank" rel="noopener">${ic('wa', 'width="18" height="18"')}Continue on WhatsApp</a><button class="btn ghost" data-close>Close</button></div>
+    <p style="font-size:12px;margin:22px auto 0" class="muted">Prototype: this enquiry now appears in the admin inbox.</p>`);
+}
+
+/* lightbox */
+let lbI = 0;
+function openLb(i) { lbI = i; const lb = $('#lb'); $('#lbimg').outerHTML = `<div class="ph" id="lbimg">${art(GALLERY[i].art)}<img data-src="${esc(GALLERY[i].u)}" alt=""><figcaption>${esc(GALLERY[i].cap)}</figcaption></div>`; hydrateImages(lb); lb.classList.add('open'); }
+$('#lb').addEventListener('click', (e) => { const a = e.target.closest('[data-lb]')?.dataset.lb; if (a === 'x' || e.target.id === 'lb') $('#lb').classList.remove('open'); if (a === 'p') openLb((lbI - 1 + GALLERY.length) % GALLERY.length); if (a === 'n') openLb((lbI + 1) % GALLERY.length); });
+$('[data-lb="x"]').innerHTML = ic('x', 'width="30" height="30"'); $('[data-lb="p"]').innerHTML = ic('arrowL', 'width="34" height="34"'); $('[data-lb="n"]').innerHTML = ic('arrowR', 'width="34" height="34"');
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { $('#lb').classList.remove('open'); closeModal(); $('#drawer').classList.remove('open'); $('#mnav')?.classList.remove('open'); }
+  if ($('#lb').classList.contains('open')) { if (e.key === 'ArrowRight') openLb((lbI + 1) % GALLERY.length); if (e.key === 'ArrowLeft') openLb((lbI - 1 + GALLERY.length) % GALLERY.length); }
+});
+function openModal(html) { $('#modalbox').innerHTML = html; $('#modal').classList.add('open'); hydrateImages($('#modal')); }
+function closeModal() { $('#modal').classList.remove('open'); }
+$('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
+
+/* =================== ADMIN =================== */
+let adminAuthed = false;
+try { adminAuthed = sessionStorage.getItem('qi-admin') === '1'; } catch (e) {}
+const ANAV = [['dashboard', 'Dashboard', 'dash'], ['enquiries', 'Enquiries', 'inbox'], ['rooms', 'Rooms', 'bed'], ['media', 'Hero & media', 'image'], ['theme', 'Theme', 'palette'], ['settings', 'Site settings', 'cog']];
+
+function renderAdmin(path) {
+  document.body.className = 'adm';
+  window.onscroll = null;
+  if (!adminAuthed) { $('#app').innerHTML = adminLogin(); hydrateImages(); wireLogin(); return; }
+  const sub = path.split('/')[2] || 'dashboard';
+  const body = { dashboard: aDash, enquiries: aEnq, rooms: aRooms, media: aMedia, theme: aTheme, settings: aSettings }[sub] || aDash;
+  $('#app').innerHTML = `<div class="adm-shell"><aside class="adm-side" id="aside">${brand(false)}
+      <nav>${ANAV.map(([k, l, i]) => `<a href="#/admin/${k}" class="${k === sub ? 'on' : ''}">${ic(i)}${l}${k === 'enquiries' ? ` <span style="margin-left:auto;font-size:11px;opacity:.8">${S.enquiries.filter((e) => e.status === 'New').length}</span>` : ''}</a>`).join('')}</nav>
+      <div class="bottom"><nav><a href="#/" target="_self">${ic('ext')}View website</a><a href="#/admin" data-act="logout">${ic('out')}Sign out</a></nav></div></aside>
+    <main class="adm-main"><div class="adm-mtop"><button class="abtn" data-act="aside">${ic('menu')}Menu</button>${brand(false).replace('class="brand"', 'class="brand" style="color:var(--p)"')}</div>${body()}</main></div>`;
+  hydrateImages();
+  $('[data-act="logout"]').onclick = () => { adminAuthed = false; try { sessionStorage.removeItem('qi-admin'); } catch (e) {} };
+  $('[data-act="aside"]').onclick = () => $('#aside').classList.toggle('open');
+  ({ enquiries: wireEnq, rooms: wireRooms, media: wireMedia, theme: wireTheme, settings: wireSettings }[sub] || (() => {}))();
+}
+function adminLogin() {
+  return `<div class="adm-login"><div class="side">${ph(S.hero.slides[0])}${brand()}<p style="margin-top:20px;max-width:36ch;color:var(--on-p-muted)">Manage rooms, photographs, colours and enquiries for queensinn.co.in.</p></div>
+    <div class="form"><div><h1 style="font-family:var(--serif);font-weight:400;font-size:40px;margin-bottom:8px">Welcome back</h1><p style="color:#6B7485;margin-bottom:32px">Sign in to the Queen's Inn admin.</p>
+      <button class="gbtn" data-act="login"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google</button>
+      <div class="or">or with email</div>
+      <form class="af" style="grid-template-columns:1fr" data-act="loginform"><label>Email<input type="email" value="admin@queensinn.co.in" required></label><label>Password<input type="password" value="prototype" required></label>
+        <button class="abtn pri" style="height:46px;justify-content:center">Sign in</button></form>
+      <p style="color:#8A93A3;font-size:12.5px;margin-top:22px">Prototype: any credentials work. Google sign-in is limited to approved staff emails in the real build.</p></div></div></div>`;
+}
+function wireLogin() {
+  const go = () => { adminAuthed = true; try { sessionStorage.setItem('qi-admin', '1'); } catch (e) {} location.hash = '#/admin/dashboard'; render(); };
+  $('[data-act="login"]').onclick = go; $('[data-act="loginform"]').onsubmit = (e) => { e.preventDefault(); go(); };
+}
+const atop = (t, p, act = '') => `<div class="adm-top"><div><h1>${t}</h1><p>${p}</p></div><div style="display:flex;gap:8px">${act}</div></div>`;
+
+function aDash() {
+  const e = S.enquiries, c = (f) => e.filter(f).length;
+  return atop('Good morning', 'Here is what needs attention today.') + `
+    <div class="kpis"><div class="card"><span>New enquiries</span><b>${c((x) => x.status === 'New')}</b></div><div class="card"><span>Room enquiries</span><b>${c((x) => x.type === 'Room')}</b></div>
+    <div class="card"><span>KVR Mahal enquiries</span><b>${c((x) => x.type === 'Mahal')}</b></div><div class="card"><span>Active rooms</span><b>${S.rooms.filter((r) => r.active).length}</b></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-weight:500">Latest enquiries</b><a class="abtn sm" href="#/admin/enquiries">View all</a></div>${enqTable(e.slice(0, 5), false)}</div>`;
+}
+function enqTable(list, editable = true) {
+  if (!list.length) return '<p style="color:#6B7485;padding:20px 0">No enquiries yet. Submit one from the website to see it here.</p>';
+  return `<div class="scroll-x"><table class="tbl"><thead><tr><th>Received</th><th>Type</th><th>Guest</th><th>Details</th><th>Status</th></tr></thead><tbody>${list.map((x) => `<tr>
+    <td style="white-space:nowrap;color:#6B7485">${esc(x.at)}</td><td><span class="pill ${x.type}">${x.type}</span></td>
+    <td><div style="font-weight:500">${esc(x.name)}</div><div style="color:#6B7485;font-size:12.5px">${esc(x.phone)}${x.email ? ' · ' + esc(x.email) : ''}</div></td>
+    <td>${esc(x.detail)}</td>
+    <td>${editable ? `<select class="abtn sm" data-status="${x.id}">${['New', 'Contacted', 'Confirmed', 'Lost'].map((s) => `<option ${s === x.status ? 'selected' : ''}>${s}</option>`).join('')}</select>` : `<span class="pill ${x.status}">${x.status}</span>`}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function aEnq() {
+  return atop('Enquiries', 'Room, KVR Mahal and contact enquiries from the website.', `<button class="abtn" onclick="toast('CSV export starts in the real build')">Export CSV</button>`) +
+    `<div class="card"><div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">${['All', 'Room', 'Mahal', 'Contact'].map((t, i) => `<button class="abtn sm ${i ? '' : 'pri'}" data-filter="${t}">${t}</button>`).join('')}</div><div id="enqt">${enqTable(S.enquiries)}</div></div>`;
+}
+function wireEnq() {
+  const bind = () => $$('[data-status]').forEach((s) => s.onchange = () => { S.enquiries.find((x) => x.id == s.dataset.status).status = s.value; save(); toast('Status updated'); });
+  bind();
+  $$('[data-filter]').forEach((b) => b.onclick = () => { $$('[data-filter]').forEach((x) => x.classList.remove('pri')); b.classList.add('pri'); const t = b.dataset.filter; $('#enqt').innerHTML = enqTable(t === 'All' ? S.enquiries : S.enquiries.filter((x) => x.type === t)); bind(); });
+}
+
+function aRooms() {
+  return atop('Rooms', 'Rooms appear on the home page and the Stay page in this order.', `<button class="abtn pri" data-act="addroom">${ic('plus')}Add room</button>`) +
+    `<div class="card"><div class="scroll-x"><table class="tbl"><thead><tr><th>Photo</th><th>Room</th><th>Size</th><th>Guests</th><th>From</th><th>Visible</th><th style="text-align:right">Actions</th></tr></thead><tbody>${S.rooms.map((r, i) => `<tr>
+      <td><div class="thumb">${ph(r.img, '', '')}</div></td><td><div style="font-weight:500">${esc(r.name)}</div><div style="color:#6B7485;font-size:12.5px">${esc(r.bed)} · ${esc(r.view)}</div></td>
+      <td>${r.size} sq ft</td><td>${r.guests}</td><td>${inr(r.tariff)}</td>
+      <td><label style="display:inline-flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" data-vis="${r.id}" ${r.active ? 'checked' : ''}> ${r.active ? 'Shown' : 'Hidden'}</label></td>
+      <td style="text-align:right;white-space:nowrap"><button class="abtn sm" data-mv="${i},-1" aria-label="Move up" ${i ? '' : 'disabled'}>${ic('up')}</button> <button class="abtn sm" data-mv="${i},1" aria-label="Move down" ${i < S.rooms.length - 1 ? '' : 'disabled'}>${ic('down')}</button> <button class="abtn sm" data-edit="${r.id}">${ic('edit')}Edit</button> <button class="abtn sm dg" data-del="${r.id}" aria-label="Delete">${ic('trash')}</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function roomDrawer(r) {
+  const isNew = !r; r = r || { id: Date.now(), active: true, name: '', tag: '', size: '', bed: '', view: '', guests: 2, tariff: '', desc: '', am: [], img: { u: '', art: 'room', cap: 'New room' } };
+  $('#drawerpane').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h2 style="font-family:var(--sans);font-size:20px;font-weight:500">${isNew ? 'Add room' : 'Edit room'}</h2><button class="abtn sm" data-close-d>${ic('x')}</button></div>
+    <form class="af" id="roomf">
+      <div class="full"><div id="rimg" style="border-radius:8px;overflow:hidden;aspect-ratio:16/9">${ph(r.img)}</div>
+        <label style="margin-top:10px">Photo<input type="file" accept="image/*" name="file"><span class="hint">Uploaded images are converted to WebP in four sizes. Paste a URL instead:</span><input name="url" placeholder="https://…" value="${r.img.u?.startsWith('data:') ? '' : esc(r.img.u)}"></label></div>
+      <label class="full">Room name<input name="name" required value="${esc(r.name)}"></label>
+      <label class="full">Tagline<input name="tag" value="${esc(r.tag)}"></label>
+      <label class="full">Description<textarea name="desc">${esc(r.desc)}</textarea></label>
+      <label>Size (sq ft)<input name="size" type="number" value="${r.size}"></label><label>Max guests<input name="guests" type="number" min="1" value="${r.guests}"></label>
+      <label>Bed type<input name="bed" value="${esc(r.bed)}"></label><label>View<input name="view" value="${esc(r.view)}"></label>
+      <label>Starting tariff (₹ / night)<input name="tariff" type="number" value="${r.tariff}"></label><label>Visible on website<select name="active"><option value="1" ${r.active ? 'selected' : ''}>Shown</option><option value="0" ${r.active ? '' : 'selected'}>Hidden</option></select></label>
+      <label class="full">Amenities<input name="am" value="${esc(r.am.join(', '))}"><span class="hint">Comma-separated</span></label>
+      <div class="full" style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="abtn" data-close-d>Cancel</button><button class="abtn pri">${isNew ? 'Add room' : 'Save changes'}</button></div>
+    </form>`;
+  $('#drawer').classList.add('open'); hydrateImages($('#drawer'));
+  let newImg = null;
+  const f = $('#roomf');
+  f.file.onchange = () => { const file = f.file.files[0]; if (!file) return; const rd = new FileReader(); rd.onload = () => { newImg = rd.result; $('#rimg').innerHTML = ph({ u: newImg, art: 'room', cap: file.name }); hydrateImages($('#rimg')); }; rd.readAsDataURL(file); };
+  $$('[data-close-d]').forEach((b) => b.onclick = () => $('#drawer').classList.remove('open'));
+  f.onsubmit = (e) => {
+    e.preventDefault(); const d = Object.fromEntries(new FormData(f));
+    if (!d.name.trim()) { toast('Give the room a name'); return; }
+    Object.assign(r, { name: d.name, tag: d.tag, desc: d.desc, size: +d.size || 0, guests: +d.guests || 1, bed: d.bed, view: d.view, tariff: +d.tariff || 0, active: d.active === '1', am: d.am.split(',').map((s) => s.trim()).filter(Boolean) });
+    if (newImg) r.img = { u: newImg, art: 'room', cap: r.name }; else if (d.url && d.url !== r.img.u) r.img = { u: d.url, art: 'room', cap: r.name };
+    if (isNew) S.rooms.push(r);
+    save(); $('#drawer').classList.remove('open'); render(); toast(isNew ? 'Room added — it now shows on the website' : 'Room saved');
+  };
+}
+function wireRooms() {
+  $('[data-act="addroom"]').onclick = () => roomDrawer(null);
+  $$('[data-edit]').forEach((b) => b.onclick = () => roomDrawer(S.rooms.find((r) => r.id == b.dataset.edit)));
+  $$('[data-del]').forEach((b) => b.onclick = () => { const r = S.rooms.find((x) => x.id == b.dataset.del); if (confirm(`Delete “${r.name}”? This removes it from the website.`)) { S.rooms = S.rooms.filter((x) => x !== r); save(); render(); toast('Room deleted'); } });
+  $$('[data-vis]').forEach((c) => c.onchange = () => { S.rooms.find((x) => x.id == c.dataset.vis).active = c.checked; save(); render(); });
+  $$('[data-mv]').forEach((b) => b.onclick = () => { const [i, d] = b.dataset.mv.split(',').map(Number); const a = S.rooms; [a[i], a[i + d]] = [a[i + d], a[i]]; save(); render(); });
+}
+
+function aMedia() {
+  return atop('Hero & media', 'The home page hero cross-fades between these images. Upload your best wide photographs (2400 px or more).') +
+    `<div class="card" style="margin-bottom:20px"><form class="af" id="herof"><label class="full">Headline<input name="headline" value="${esc(S.hero.headline)}"></label><label class="full">Sub-headline<textarea name="sub">${esc(S.hero.sub)}</textarea></label><div class="full" style="text-align:right"><button class="abtn pri">Save text</button></div></form></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap"><b style="font-weight:500">Hero slides</b><label class="abtn pri" style="cursor:pointer">${ic('upload')}Upload image<input type="file" accept="image/*" id="heroup" hidden></label></div>
+    <div class="media-g">${S.hero.slides.map((s, i) => `<div class="m">${ph(s)}<div class="t">${esc(s.cap)}</div><div style="display:flex;gap:6px;padding:0 10px 10px"><button class="abtn sm" data-hmv="${i}" ${i ? '' : 'disabled'}>${ic('arrowL')}</button><button class="abtn sm dg" data-hdel="${i}" ${S.hero.slides.length > 1 ? '' : 'disabled'}>${ic('trash')}</button></div></div>`).join('')}</div>
+    <p style="color:#6B7485;font-size:12.5px;margin-top:14px">In the real build every page has its own hero, and a central media library tracks alt text, categories and where each image is used.</p></div>`;
+}
+function wireMedia() {
+  $('#herof').onsubmit = (e) => { e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)); S.hero.headline = d.headline; S.hero.sub = d.sub; save(); toast('Hero text saved'); };
+  $('#heroup').onchange = (e) => { const file = e.target.files[0]; if (!file) return; const rd = new FileReader(); rd.onload = () => { S.hero.slides.push({ u: rd.result, art: 'dusk', cap: file.name }); save(); render(); toast('Image added to the hero'); }; rd.readAsDataURL(file); };
+  $$('[data-hdel]').forEach((b) => b.onclick = () => { S.hero.slides.splice(+b.dataset.hdel, 1); save(); render(); });
+  $$('[data-hmv]').forEach((b) => b.onclick = () => { const i = +b.dataset.hmv, a = S.hero.slides; [a[i - 1], a[i]] = [a[i], a[i - 1]]; save(); render(); });
+}
+
+function lum(hex) { const m = hex.replace('#', '').match(/../g).map((x) => { const c = parseInt(x, 16) / 255; return c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }); return .2126 * m[0] + .7152 * m[1] + .0722 * m[2]; }
+function contrast(a, b) { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + .05) / (y + .05); }
+function aTheme() {
+  const t = S.theme;
+  return atop('Theme', 'Three colours drive the whole website. Changes apply instantly.', `<button class="abtn" data-act="reset">Reset to default</button>`) +
+    `<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px" class="theme-g">
+     <div class="card"><b style="font-weight:500;display:block;margin-bottom:12px">Presets</b><div class="swatches">${PRESETS.map((p, i) => `<button class="sw ${p.p === t.p && p.a === t.a ? 'on' : ''}" data-preset="${i}"><div class="c"><i style="background:${p.p}"></i><i style="background:${p.a}"></i><i style="background:${p.s}"></i></div>${p.name}</button>`).join('')}</div>
+       <b style="font-weight:500;display:block;margin:24px 0 12px">Custom colours</b>
+       <div class="af" style="grid-template-columns:1fr">${[['p', 'Primary', 'Header over images, dark sections, text'], ['a', 'Accent', 'Fine lines, highlights and call-to-action details'], ['s', 'Surface', 'Page background']].map(([k, l, h]) => `<label>${l}<div class="colorrow"><input type="color" data-col="${k}" value="${t[k]}"><input value="${t[k]}" data-hex="${k}" maxlength="7"></div><span class="hint">${h}</span></label>`).join('')}</div>
+       <div id="cwarn"></div></div>
+     <div class="card"><b style="font-weight:500;display:block;margin-bottom:12px">Preview</b><div class="preview" id="tprev"></div></div></div>
+     <style>@media(max-width:1000px){.theme-g{grid-template-columns:1fr!important}}</style>`;
+}
+function themePreview() {
+  return `<div style="background:var(--p);color:var(--on-p);padding:18px 22px;display:flex;justify-content:space-between;align-items:center">${brand()}<span class="btn" style="height:38px;font-size:10.5px;padding:0 16px;background:transparent;color:var(--on-p);border-color:var(--a)">Reserve</span></div>
+    <div style="background:var(--s);color:var(--ink);padding:30px 22px;font-family:var(--sans)"><span class="kicker" style="font-size:18px">Rooms & suites</span><div style="font-family:var(--serif);font-size:34px;font-weight:300;line-height:1.1">Rest, well considered</div><hr class="rule" style="margin:18px 0"><p class="muted" style="font-size:14.5px">Four room categories with garden and balcony views.</p><div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><span class="btn" style="height:42px;font-size:11px">Enquire</span><span class="btn ghost" style="height:42px;font-size:11px">All rooms</span></div></div>
+    <div class="dark" style="padding:22px"><div class="ledger" style="grid-template-columns:1fr 1fr;margin:0"><div><b style="font-size:40px">1,000</b><span>guests</span></div><div><b style="font-size:40px">51</b><span>rooms</span></div></div></div>`;
+}
+function wireTheme() {
+  const upd = () => {
+    applyTheme(); save(); $('#tprev').innerHTML = themePreview();
+    const c1 = contrast(S.theme.p, S.theme.s), c2 = contrast(S.theme.a, S.theme.p);
+    $('#cwarn').innerHTML = c1 < 4.5 ? `<div class="warn">Primary on surface is ${c1.toFixed(1)}:1. Text needs at least 4.5:1 to stay readable.</div>` : c2 < 3 ? `<div class="warn">Accent on primary is ${c2.toFixed(1)}:1. Gold details may be hard to see; aim for 3:1 or more.</div>` : `<div class="warn ok-msg">Contrast passes WCAG AA (${c1.toFixed(1)}:1 text, ${c2.toFixed(1)}:1 accent).</div>`;
+  };
+  upd();
+  $$('[data-col]').forEach((i) => i.oninput = () => { S.theme[i.dataset.col] = i.value; $(`[data-hex="${i.dataset.col}"]`).value = i.value; $$('.sw').forEach((s) => s.classList.remove('on')); upd(); });
+  $$('[data-hex]').forEach((i) => i.oninput = () => { if (/^#[0-9a-f]{6}$/i.test(i.value)) { S.theme[i.dataset.hex] = i.value; $(`[data-col="${i.dataset.hex}"]`).value = i.value; upd(); } });
+  $$('[data-preset]').forEach((b) => b.onclick = () => { const p = PRESETS[+b.dataset.preset]; S.theme = { p: p.p, a: p.a, s: p.s }; render(); toast(p.name + ' applied'); });
+  $('[data-act="reset"]').onclick = () => { S.theme = { ...DEFAULT.theme }; render(); toast('Theme reset'); };
+}
+
+function aSettings() {
+  const st = S.settings;
+  return atop('Site settings', 'Contact details shown in the header, footer, forms and WhatsApp buttons.') +
+    `<div class="card"><form class="af" id="setf">${[['name', 'Hotel name'], ['place', 'Location line'], ['phone1', 'Primary phone'], ['phone2', 'Second phone'], ['whatsapp', 'WhatsApp number (digits, with country code)'], ['email1', 'Reservations email'], ['email2', 'Sales & events email'], ['checkin', 'Check-in time'], ['checkout', 'Check-out time']].map(([k, l]) => `<label>${l}<input name="${k}" value="${esc(st[k])}"></label>`).join('')}
+      <label class="full">Address<textarea name="address">${esc(st.address)}</textarea></label>
+      <div class="full" style="text-align:right"><button class="abtn pri">Save settings</button></div></form></div>
+    <div class="card" style="margin-top:20px"><b style="font-weight:500">Prototype data</b><p style="color:#6B7485;margin:6px 0 12px">Changes made here are stored in this browser only.</p><button class="abtn dg" data-act="wipe">Reset all prototype data</button></div>`;
+}
+function wireSettings() {
+  $('#setf').onsubmit = (e) => { e.preventDefault(); Object.assign(S.settings, Object.fromEntries(new FormData(e.target))); save(); render(); toast('Settings saved'); };
+  $('[data-act="wipe"]').onclick = () => { if (confirm('Reset rooms, theme, enquiries and settings to the defaults?')) { S = JSON.parse(JSON.stringify(DEFAULT)); save(); applyTheme(); render(); toast('Prototype reset'); } };
+}
+
+render();
+</script></body></html>
