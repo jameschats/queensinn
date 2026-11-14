@@ -97,6 +97,7 @@ export class SettingsComponent {
       fields: [
         { key: 'HotelName', label: 'Hotel name', hint: 'Shown in the logo lockup.' },
         { key: 'LocationLine', label: 'Location line', hint: 'Small line under the name.' },
+        { key: 'LogoLightUrl', label: 'Logo image address', type: 'text', wide: true, hint: 'Shown in the header, menu and footer in place of the text logo. Use the address of a photo from the media library (it starts with /uploads/). Leave empty to show the text logo.' },
       ],
     },
     {

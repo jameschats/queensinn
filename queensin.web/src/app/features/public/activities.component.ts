@@ -38,6 +38,12 @@ const ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fort'];
         } @empty {
           <p class="text-muted">Our guide to the region is on its way. Ask the front desk on {{ site.get('Phone1') }}.</p>
         }
+        @if (credits().length) {
+          <p class="mt-10 max-w-[90ch] text-[12.5px] leading-relaxed text-muted">
+            Photo credits:
+            @for (c of credits(); track c.name; let last = $last) { <span>{{ c.name }}: {{ c.text }}{{ last ? '.' : '; ' }}</span> }
+          </p>
+        }
       </div>
     </section>
 
@@ -65,6 +71,9 @@ export class ActivitiesComponent {
   protected readonly heroVideo = computed(() => this.page()?.heroVideo ?? null);
   protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
   protected readonly places = computed(() => this.cs.content().attractions);
+  /** Credit lines for photos used under a free licence: the photo's caption in the media library, shown as "Place: caption". */
+  protected readonly credits = computed(() =>
+    this.places().filter((a) => a.image?.caption).map((a) => ({ name: a.name, text: (a.image!.caption as string).replace(/^Photo:\s*/i, '') })));
 
   constructor() {
     const seo = this.cs.seo('activities');

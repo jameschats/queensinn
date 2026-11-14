@@ -9,6 +9,7 @@ import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
 import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
+import { ShowcaseStripComponent } from '../../shared/showcase-strip.component';
 
 const HALL_ICONS = ['stage', 'sound', 'ac'];
 const DINING_ICONS = ['pot', 'flow', 'drop'];
@@ -19,7 +20,7 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
  */
 @Component({
   selector: 'qi-kvr-mahal',
-  imports: [PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent],
+  imports: [PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="mandap"
@@ -72,6 +73,15 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
         </div>
       </div>
     </section>
+
+    @if (strip().length) {
+      <section class="sec">
+        <div class="wrap">
+          <div class="mb-[clamp(28px,4vw,48px)]"><span class="kicker">{{ t('gallery', 'kicker') }}</span><h2 class="h-display">{{ t('gallery', 'title') }}</h2></div>
+        </div>
+        <qi-showcase-strip [items]="strip()" [moreText]="t('gallery', 'moreText')" />
+      </section>
+    }
 
     <section class="sec">
       <div class="wrap">
@@ -131,6 +141,7 @@ export class KvrMahalComponent {
   protected readonly hall = computed(() => this.cs.rows('kvr-mahal', 'hall', 'items').map((r, i) => ({ icon: HALL_ICONS[i] ?? 'shield', text: r[0] ?? '' })));
   protected readonly dining = computed(() => this.cs.rows('kvr-mahal', 'dining', 'items').map((r, i) => ({ icon: DINING_ICONS[i] ?? 'shield', text: r[0] ?? '' })));
   protected readonly compare = computed(() => this.cs.rows('kvr-mahal', 'compare', 'rows'));
+  protected readonly strip = computed(() => this.cs.content().mahalStrip);
 
   constructor() {
     const seo = this.cs.seo('kvr-mahal');

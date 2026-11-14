@@ -9,7 +9,7 @@ import { AdminApiService } from '../../../core/services/admin-api.service';
 import { IconComponent } from '../../../shared/icon.component';
 import { MediaPickerComponent } from '../media/media-picker.component';
 
-type Placement = 'collage' | 'strip';
+type Placement = 'collage' | 'strip' | 'mahal';
 
 interface Row {
   id?: number;
@@ -27,8 +27,9 @@ interface GalleryState {
 }
 
 /**
- * The two home-page galleries. "Collage" is the photo grid that opens in a full-screen viewer; "Sliding strip" is the
- * scrolling row of cards above the facilities, where each card can have a title, a caption and a link. Photos are
+ * The galleries. "Collage" is the home page's photo grid that opens in a full-screen viewer; "Sliding strip" is the
+ * scrolling row of cards above the facilities, and "KVR Mahal strip" is the same kind of row on the KVR Mahal page;
+ * each card in a strip can have a title, a caption and a link. Photos are
  * chosen from the media library (several at once), reordered, shown or hidden, and saved per gallery.
  */
 @Component({
@@ -39,12 +40,12 @@ interface GalleryState {
     <header class="mb-5 flex flex-wrap items-start justify-between gap-4">
       <div>
         <h1 class="text-[22px] font-medium">Galleries</h1>
-        <p class="mt-0.5 text-[13.5px] text-[#6B7485]">The photo galleries on the home page. Add photos from the media library, drag them into order with the arrows, and save.</p>
+        <p class="mt-0.5 text-[13.5px] text-[#6B7485]">The photo galleries on the home page and the KVR Mahal page. Add photos from the media library, drag them into order with the arrows, and save.</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         @if (state().dirty) { <span class="pill pill-warn">Unsaved changes</span> }
         <a href="/#gallery" target="_blank" rel="noopener" class="abtn"><qi-icon name="ext" [size]="15" />View site</a>
-        <button type="button" class="abtn abtn-pri" [disabled]="saving() || loading() || !state().dirty" (click)="save()">{{ saving() ? 'Saving…' : 'Save ' + (tab() === 'strip' ? 'strip' : 'collage') }}</button>
+        <button type="button" class="abtn abtn-pri" [disabled]="saving() || loading() || !state().dirty" (click)="save()">{{ saving() ? 'Saving…' : 'Save ' + saveLabel() }}</button>
       </div>
     </header>
 
@@ -65,6 +66,9 @@ interface GalleryState {
       @if (tab() === 'strip') {
         The scrolling row above “Within the gates”. On phones it becomes a list, one photo under another. The heading and scroll speed are under
         <a routerLink="/admin/pages/home" class="underline">Pages &amp; content → Home → Page text</a>.
+      } @else if (tab() === 'mahal') {
+        The scrolling row on the KVR Mahal page, between the dining pavilion and the “Why one campus” table. The heading is under
+        <a routerLink="/admin/pages/kvr-mahal" class="underline">Pages &amp; content → KVR Mahal → Page text</a>.
       } @else {
         The photo grid near the bottom of the home page. Visitors tap a photo to see it full screen.
       }
@@ -78,7 +82,7 @@ interface GalleryState {
 
       @if (!state().rows.length) {
         <div class="card text-center text-[#6B7485]">This gallery is empty, so it is hidden on the website. Add some photos to show it.</div>
-      } @else if (tab() === 'strip') {
+      } @else if (tab() !== 'collage') {
         <ul class="m-0 grid list-none gap-3 p-0">
           @for (r of state().rows; track $index; let i = $index) {
             <li class="card grid gap-4 !p-3 sm:grid-cols-[132px_1fr_auto]" [class.opacity-60]="!r.visible">
@@ -117,7 +121,7 @@ interface GalleryState {
       }
 
       <div class="mt-6 flex justify-end">
-        <button type="button" class="abtn abtn-pri" [disabled]="saving() || !state().dirty" (click)="save()">{{ saving() ? 'Saving…' : 'Save ' + (tab() === 'strip' ? 'strip' : 'collage') }}</button>
+        <button type="button" class="abtn abtn-pri" [disabled]="saving() || !state().dirty" (click)="save()">{{ saving() ? 'Saving…' : 'Save ' + saveLabel() }}</button>
       </div>
     }
 
@@ -131,13 +135,16 @@ export class GalleryAdminComponent implements HasUnsavedChanges {
   protected readonly tabs: { id: Placement; label: string }[] = [
     { id: 'strip', label: 'Sliding strip' },
     { id: 'collage', label: 'Collage gallery' },
+    { id: 'mahal', label: 'KVR Mahal strip' },
   ];
   protected readonly tab = signal<Placement>('strip');
   protected readonly states = signal<Record<Placement, GalleryState>>({
     strip: { rows: [], loaded: false, dirty: false },
     collage: { rows: [], loaded: false, dirty: false },
+    mahal: { rows: [], loaded: false, dirty: false },
   });
   protected readonly state = computed(() => this.states()[this.tab()]);
+  protected readonly saveLabel = computed(() => ({ strip: 'strip', collage: 'collage', mahal: 'KVR Mahal strip' })[this.tab()]);
   protected readonly visibleCount = computed(() => this.state().rows.filter((r) => r.visible).length);
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
@@ -150,7 +157,7 @@ export class GalleryAdminComponent implements HasUnsavedChanges {
 
   hasUnsavedChanges(): boolean {
     const s = this.states();
-    return s.strip.dirty || s.collage.dirty;
+    return s.strip.dirty || s.collage.dirty || s.mahal.dirty;
   }
 
   @HostListener('window:beforeunload', ['$event'])

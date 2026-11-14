@@ -1,256 +1,310 @@
 [
-    {
-        "key":  "hero-dusk",
-        "file":  "media/hero-dusk.jpg",
-        "category":  "Campus",
-        "alt":  "Hotel Queen\u0027s Inn front elevation with the entrance porch, fountain and landscaped forecourt",
-        "caption":  null
-    },
-    {
-        "key":  "hero-garden",
-        "file":  "media/hero-garden.jpg",
-        "category":  "Events",
-        "alt":  "Garden lawn set with white-covered chairs and a stage for an evening celebration at sunset",
-        "caption":  null
-    },
-    {
-        "key":  "hero-lobby",
-        "file":  "media/hero-lobby.jpg",
-        "category":  "Campus",
-        "alt":  "Reception lounge with a long sofa, brass lamps and polished marble floor",
-        "caption":  null
-    },
-    {
-        "key":  "campus-aerial",
-        "file":  "media/campus-aerial.jpg",
-        "category":  "Campus",
-        "alt":  "Aerial view of Hotel Queen\u0027s Inn and KVR Mahal in the green countryside near Velankanni",
-        "caption":  null
-    },
-    {
-        "key":  "exterior-night",
-        "file":  "media/exterior-night.jpg",
-        "category":  "Campus",
-        "alt":  "Hotel Queen\u0027s Inn lit up at night with warm lights along its facade",
-        "caption":  null
-    },
-    {
-        "key":  "pool-aerial-wide",
-        "file":  "media/pool-aerial-wide.jpg",
-        "category":  "Campus",
-        "alt":  "Swimming pool and lawn seen from above, with a white pergola at the edge",
-        "caption":  null
-    },
-    {
-        "key":  "room-deluxe",
-        "file":  "media/room-deluxe.jpg",
-        "category":  "Rooms",
-        "alt":  "Deluxe room with a king bed, work desk, daybed and large curtained windows",
-        "caption":  null
-    },
-    {
-        "key":  "room-executive",
-        "file":  "media/room-executive.jpg",
-        "category":  "Rooms",
-        "alt":  "Guest room with a double bed, two armchairs and a work desk",
-        "caption":  null
-    },
-    {
-        "key":  "room-family",
-        "file":  "media/room-family.jpg",
-        "category":  "Rooms",
-        "alt":  "Family room with two double beds and wood-tone flooring",
-        "caption":  null
-    },
-    {
-        "key":  "room-suite",
-        "file":  "media/room-suite.jpg",
-        "category":  "Rooms",
-        "alt":  "Suite with a leather lounge chair, desk, wardrobe and a bed at the far end",
-        "caption":  null
-    },
-    {
-        "key":  "room-twin",
-        "file":  "media/room-twin.jpg",
-        "category":  "Rooms",
-        "alt":  "Guest room with a wall-mounted TV, writing desk and double bed",
-        "caption":  null
-    },
-    {
-        "key":  "dish-breakfast",
-        "file":  "media/dish-breakfast.jpg",
-        "category":  "Dining",
-        "alt":  "Dining hall at the Q Multi-Cuisine Restaurant with wooden tables and glass tops",
-        "caption":  null
-    },
-    {
-        "key":  "dish-thali",
-        "file":  "media/dish-thali.jpg",
-        "category":  "Dining",
-        "alt":  "Restaurant table laid with glasses and cutlery under a bowl of fresh flowers",
-        "caption":  null
-    },
-    {
-        "key":  "dish-seafood",
-        "file":  "media/dish-seafood.jpg",
-        "category":  "Dining",
-        "alt":  "Long rows of tables in the air-conditioned restaurant with pendant lanterns",
-        "caption":  null
-    },
-    {
-        "key":  "meeting-hall",
-        "file":  "media/meeting-hall.jpg",
-        "category":  "Events",
-        "alt":  "Meeting and banquet room with round tables in yellow cloths, white chair covers and a small stage",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-01",
-        "file":  "media/gallery-01.jpg",
-        "category":  "Campus",
-        "alt":  "Queen\u0027s Inn entrance porch and fountain in daylight",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-02",
-        "file":  "media/gallery-02.jpg",
-        "category":  "Campus",
-        "alt":  "Swimming pool beside the lawn, with the hotel building behind",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-03",
-        "file":  "media/gallery-03.jpg",
-        "category":  "Campus",
-        "alt":  "Hotel Queen\u0027s Inn at night with coloured lights on its tower",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-04",
-        "file":  "media/gallery-04.jpg",
-        "category":  "Campus",
-        "alt":  "Swimming pool and manicured lawn seen from above",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-05",
-        "file":  "media/gallery-05.jpg",
-        "category":  "Dining",
-        "alt":  "A family seated together for a meal in the restaurant",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-06",
-        "file":  "media/gallery-06.jpg",
-        "category":  "Campus",
-        "alt":  "Hotel Queen\u0027s Inn and KVR Mahal with the paved driveway and parking between them",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-07",
-        "file":  "media/gallery-07.jpg",
-        "category":  "Campus",
-        "alt":  "Queen\u0027s Inn gate sign and the paved approach road",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-08",
-        "file":  "media/gallery-08.jpg",
-        "category":  "Events",
-        "alt":  "Open-air seating on the lawn at dusk, with a flower-decorated stage in the distance",
-        "caption":  null
-    },
-    {
-        "key":  "gallery-09",
-        "file":  "media/gallery-09.jpg",
-        "category":  "Campus",
-        "alt":  "White pergola gateway leading to the pool and gardens",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-exterior",
-        "file":  "media/mahal-exterior.jpg",
-        "category":  "Mahal",
-        "alt":  "KVR Thirumana Mahal building, three storeys with a covered entrance porch",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-hall-stage",
-        "file":  "media/mahal-hall-stage.jpg",
-        "category":  "Mahal",
-        "alt":  "KVR Mahal ceremonial hall with rows of chairs facing the main stage",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-hall",
-        "file":  "media/mahal-hall.jpg",
-        "category":  "Mahal",
-        "alt":  "KVR Mahal hall with a chandelier, balcony level and pink sofas at the front",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-hall-balcony",
-        "file":  "media/mahal-hall-balcony.jpg",
-        "category":  "Mahal",
-        "alt":  "KVR Mahal hall seen from the stage, with chandelier and upper balcony",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-dining",
-        "file":  "media/mahal-dining.jpg",
-        "category":  "Mahal",
-        "alt":  "KVR Mahal dining pavilion with long white banquet tables and seating",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-aisle",
-        "file":  "media/mahal-aisle.jpg",
-        "category":  "Mahal",
-        "alt":  "Wedding aisle in KVR Mahal with golden arches and a blue carpet",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-backdrop",
-        "file":  "media/mahal-backdrop.jpg",
-        "category":  "Mahal",
-        "alt":  "Red and cream draped stage backdrop with fresh flowers and a floral cycle",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-aisle-day",
-        "file":  "media/mahal-aisle-day.jpg",
-        "category":  "Mahal",
-        "alt":  "Golden arch aisle running between rows of chairs in KVR Mahal",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-stage",
-        "file":  "media/mahal-stage.jpg",
-        "category":  "Mahal",
-        "alt":  "Wedding stage at KVR Mahal with floral arches, a sofa and a flower-edged platform",
-        "caption":  null
-    },
-    {
-        "key":  "mahal-doorway",
-        "file":  "media/mahal-doorway.jpg",
-        "category":  "Mahal",
-        "alt":  "Carved wooden doorway into KVR Mahal draped in orange and cream cloth and flowers",
-        "caption":  null
-    },
-    {
-        "key":  "video-queens-inn",
-        "file":  "media/video-queens-inn.mp4",
-        "kind":  "video",
-        "category":  "Campus",
-        "alt":  "Short silent tour of Hotel Queen\u0027s Inn: entrance, pool, lobby, restaurant and rooms",
-        "caption":  null
-    },
-    {
-        "key":  "video-kvr-mahal",
-        "file":  "media/video-kvr-mahal.mp4",
-        "kind":  "video",
-        "category":  "Mahal",
-        "alt":  "Short silent tour of KVR Mahal: exterior, entrance, stage decor and the ceremonial hall",
-        "caption":  null
-    }
+  {
+    "key": "hero-dusk",
+    "file": "media/hero-dusk.jpg",
+    "category": "Campus",
+    "alt": "Hotel Queen's Inn front elevation with the entrance porch, fountain and landscaped forecourt",
+    "caption": null
+  },
+  {
+    "key": "hero-garden",
+    "file": "media/hero-garden.jpg",
+    "category": "Events",
+    "alt": "Garden lawn set with white-covered chairs and a stage for an evening celebration at sunset",
+    "caption": null
+  },
+  {
+    "key": "hero-lobby",
+    "file": "media/hero-lobby.jpg",
+    "category": "Campus",
+    "alt": "Reception lounge with a long sofa, brass lamps and polished marble floor",
+    "caption": null
+  },
+  {
+    "key": "campus-aerial",
+    "file": "media/campus-aerial.jpg",
+    "category": "Campus",
+    "alt": "Aerial view of Hotel Queen's Inn and KVR Mahal in the green countryside near Velankanni",
+    "caption": null
+  },
+  {
+    "key": "exterior-night",
+    "file": "media/exterior-night.jpg",
+    "category": "Campus",
+    "alt": "Hotel Queen's Inn lit up at night with warm lights along its facade",
+    "caption": null
+  },
+  {
+    "key": "pool-aerial-wide",
+    "file": "media/pool-aerial-wide.jpg",
+    "category": "Campus",
+    "alt": "Swimming pool and lawn seen from above, with a white pergola at the edge",
+    "caption": null
+  },
+  {
+    "key": "room-deluxe",
+    "file": "media/room-deluxe.jpg",
+    "category": "Rooms",
+    "alt": "Deluxe room with a king bed, work desk, daybed and large curtained windows",
+    "caption": null
+  },
+  {
+    "key": "room-executive",
+    "file": "media/room-executive.jpg",
+    "category": "Rooms",
+    "alt": "Guest room with a double bed, two armchairs and a work desk",
+    "caption": null
+  },
+  {
+    "key": "room-family",
+    "file": "media/room-family.jpg",
+    "category": "Rooms",
+    "alt": "Family room with two double beds and wood-tone flooring",
+    "caption": null
+  },
+  {
+    "key": "room-suite",
+    "file": "media/room-suite.jpg",
+    "category": "Rooms",
+    "alt": "Suite with a leather lounge chair, desk, wardrobe and a bed at the far end",
+    "caption": null
+  },
+  {
+    "key": "room-twin",
+    "file": "media/room-twin.jpg",
+    "category": "Rooms",
+    "alt": "Guest room with a wall-mounted TV, writing desk and double bed",
+    "caption": null
+  },
+  {
+    "key": "dish-breakfast",
+    "file": "media/dish-breakfast.jpg",
+    "category": "Dining",
+    "alt": "Dining hall at the Q Multi-Cuisine Restaurant with wooden tables and glass tops",
+    "caption": null
+  },
+  {
+    "key": "dish-thali",
+    "file": "media/dish-thali.jpg",
+    "category": "Dining",
+    "alt": "Restaurant table laid with glasses and cutlery under a bowl of fresh flowers",
+    "caption": null
+  },
+  {
+    "key": "dish-seafood",
+    "file": "media/dish-seafood.jpg",
+    "category": "Dining",
+    "alt": "Long rows of tables in the air-conditioned restaurant with pendant lanterns",
+    "caption": null
+  },
+  {
+    "key": "meeting-hall",
+    "file": "media/meeting-hall.jpg",
+    "category": "Events",
+    "alt": "Meeting and banquet room with round tables in yellow cloths, white chair covers and a small stage",
+    "caption": null
+  },
+  {
+    "key": "gallery-01",
+    "file": "media/gallery-01.jpg",
+    "category": "Campus",
+    "alt": "Queen's Inn entrance porch and fountain in daylight",
+    "caption": null
+  },
+  {
+    "key": "gallery-02",
+    "file": "media/gallery-02.jpg",
+    "category": "Campus",
+    "alt": "Swimming pool beside the lawn, with the hotel building behind",
+    "caption": null
+  },
+  {
+    "key": "gallery-03",
+    "file": "media/gallery-03.jpg",
+    "category": "Campus",
+    "alt": "Hotel Queen's Inn at night with coloured lights on its tower",
+    "caption": null
+  },
+  {
+    "key": "gallery-04",
+    "file": "media/gallery-04.jpg",
+    "category": "Campus",
+    "alt": "Swimming pool and manicured lawn seen from above",
+    "caption": null
+  },
+  {
+    "key": "gallery-05",
+    "file": "media/gallery-05.jpg",
+    "category": "Dining",
+    "alt": "A family seated together for a meal in the restaurant",
+    "caption": null
+  },
+  {
+    "key": "gallery-06",
+    "file": "media/gallery-06.jpg",
+    "category": "Campus",
+    "alt": "Hotel Queen's Inn and KVR Mahal with the paved driveway and parking between them",
+    "caption": null
+  },
+  {
+    "key": "gallery-07",
+    "file": "media/gallery-07.jpg",
+    "category": "Campus",
+    "alt": "Queen's Inn gate sign and the paved approach road",
+    "caption": null
+  },
+  {
+    "key": "gallery-08",
+    "file": "media/gallery-08.jpg",
+    "category": "Events",
+    "alt": "Open-air seating on the lawn at dusk, with a flower-decorated stage in the distance",
+    "caption": null
+  },
+  {
+    "key": "gallery-09",
+    "file": "media/gallery-09.jpg",
+    "category": "Campus",
+    "alt": "White pergola gateway leading to the pool and gardens",
+    "caption": null
+  },
+  {
+    "key": "mahal-exterior",
+    "file": "media/mahal-exterior.jpg",
+    "category": "Mahal",
+    "alt": "KVR Thirumana Mahal building, three storeys with a covered entrance porch",
+    "caption": null
+  },
+  {
+    "key": "mahal-hall-stage",
+    "file": "media/mahal-hall-stage.jpg",
+    "category": "Mahal",
+    "alt": "KVR Mahal ceremonial hall with rows of chairs facing the main stage",
+    "caption": null
+  },
+  {
+    "key": "mahal-hall",
+    "file": "media/mahal-hall.jpg",
+    "category": "Mahal",
+    "alt": "KVR Mahal hall with a chandelier, balcony level and pink sofas at the front",
+    "caption": null
+  },
+  {
+    "key": "mahal-hall-balcony",
+    "file": "media/mahal-hall-balcony.jpg",
+    "category": "Mahal",
+    "alt": "KVR Mahal hall seen from the stage, with chandelier and upper balcony",
+    "caption": null
+  },
+  {
+    "key": "mahal-dining",
+    "file": "media/mahal-dining.jpg",
+    "category": "Mahal",
+    "alt": "KVR Mahal dining pavilion with long white banquet tables and seating",
+    "caption": null
+  },
+  {
+    "key": "mahal-aisle",
+    "file": "media/mahal-aisle.jpg",
+    "category": "Mahal",
+    "alt": "Wedding aisle in KVR Mahal with golden arches and a blue carpet",
+    "caption": null
+  },
+  {
+    "key": "mahal-backdrop",
+    "file": "media/mahal-backdrop.jpg",
+    "category": "Mahal",
+    "alt": "Red and cream draped stage backdrop with fresh flowers and a floral cycle",
+    "caption": null
+  },
+  {
+    "key": "mahal-aisle-day",
+    "file": "media/mahal-aisle-day.jpg",
+    "category": "Mahal",
+    "alt": "Golden arch aisle running between rows of chairs in KVR Mahal",
+    "caption": null
+  },
+  {
+    "key": "mahal-stage",
+    "file": "media/mahal-stage.jpg",
+    "category": "Mahal",
+    "alt": "Wedding stage at KVR Mahal with floral arches, a sofa and a flower-edged platform",
+    "caption": null
+  },
+  {
+    "key": "mahal-doorway",
+    "file": "media/mahal-doorway.jpg",
+    "category": "Mahal",
+    "alt": "Carved wooden doorway into KVR Mahal draped in orange and cream cloth and flowers",
+    "caption": null
+  },
+  {
+    "key": "video-queens-inn",
+    "file": "media/video-queens-inn.mp4",
+    "kind": "video",
+    "category": "Campus",
+    "alt": "Short silent tour of Hotel Queen's Inn: entrance, pool, lobby, restaurant and rooms",
+    "caption": null
+  },
+  {
+    "key": "video-kvr-mahal",
+    "file": "media/video-kvr-mahal.mp4",
+    "kind": "video",
+    "category": "Mahal",
+    "alt": "Short silent tour of KVR Mahal: exterior, entrance, stage decor and the ceremonial hall",
+    "caption": null
+  },
+  {
+    "key": "attraction-basilica",
+    "file": "media/attraction-basilica.jpg",
+    "category": "Attractions",
+    "alt": "Aerial view of the Basilica of Our Lady of Good Health and its curved forecourt in Velankanni",
+    "caption": null
+  },
+  {
+    "key": "attraction-nagore",
+    "file": "media/attraction-nagore.jpg",
+    "category": "Attractions",
+    "alt": "Nagore Dargah's white tiered minarets rising beside the temple tank under a cloudy sky",
+    "caption": null
+  },
+  {
+    "key": "attraction-thirunallar",
+    "file": "media/attraction-thirunallar.jpg",
+    "category": "Attractions",
+    "alt": "Small shrines and temple buildings around the tank at Thirunallar",
+    "caption": "Photo: VasuVR, CC BY-SA 3.0, via Wikimedia Commons"
+  },
+  {
+    "key": "attraction-calimere",
+    "file": "media/attraction-calimere.jpg",
+    "category": "Attractions",
+    "alt": "Entrance gate of the Point Calimere Wildlife and Bird Sanctuary with flamingo and blackbuck figures",
+    "caption": "Photo: Selvaganesh17, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  {
+    "key": "attraction-muthupet",
+    "file": "media/attraction-muthupet.jpg",
+    "category": "Attractions",
+    "alt": "A boat on the Muthupet lagoon beside a wall of mangroves",
+    "caption": "Photo: Marinebalaji, CC BY 3.0, via Wikimedia Commons"
+  },
+  {
+    "key": "attraction-tranquebar",
+    "file": "media/attraction-tranquebar.jpg",
+    "category": "Attractions",
+    "alt": "Dansborg Fort at Tranquebar seen from the beach",
+    "caption": "Photo: Rangan Datta Wiki, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  {
+    "key": "brand-logo",
+    "file": "media/brand-logo.png",
+    "category": "General",
+    "alt": "Hotel Queen's Inn logo: a crowned queen's face beside the name in gold script",
+    "caption": null
+  },
+  {
+    "key": "brand-favicon",
+    "file": "media/brand-favicon.png",
+    "kind": "favicon"
+  }
 ]

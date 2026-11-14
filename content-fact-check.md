@@ -1,0 +1,101 @@
+# Content fact-check — Hotel Queen's Inn & KVR Mahal
+
+The website text was written with AI help. Nothing below is verified until the hotel confirms it.
+Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Experiences) or send the right value.
+
+**Source key:** **B** = from the client's architecture blueprint PDF · **S** = earlier seed text, source unknown · **N** = written in this content pass (migration 017 / page defaults)
+
+## 0. Checked against the current official website (www.queensinn.co.in, read 14 Nov 2026)
+
+**Applied already:** room starting rates now match the official site (Deluxe Double Rs 3,500, Executive Triple Rs 4,500, Family Room Rs 5,500, Queen's Suite Rs 7,000, plus GST; migration 020). The seeded rates were Rs 2,500 / 3,500 / 4,500 / 6,000. The official logo and favicon are installed.
+
+**The official site disagrees with, or adds to, our text. Client to decide:**
+- [ ] **Third phone** +91 93639 70177 is listed on the official site; ours shows only the first two.
+- [ ] **Emails:** the official site lists reservations@queensinn.co.in and **hotelqueensinn@gmail.com**. Ours also shows **sales@queensinn.co.in**, which the official site does not. Which address should KVR Mahal enquiries use?
+- [ ] **"½ km"** on the official site is "from the centre of the town", not from the Basilica. That is where our "500 m from the Basilica" came from.
+- [ ] **Deluxe Double bed:** official says "Double Bed"; the blueprint and our page say "King bed".
+- [ ] **Room categories:** official About text says "03 categories: Suite, Deluxe Double & Deluxe Triple"; it lists four rooms elsewhere.
+- [ ] **Facilities the official site mentions that we do not:** spa, swimming pool (confirmed), indoor and outdoor games, campfire, private boating, private trekking for groups, currency exchange, safe deposit lockers, complimentary mineral water, iron and ironing board on request, complimentary accommodation and cafeteria for drivers, banqueting hall.
+- [ ] **Facilities we state that the official site does not:** CCTV and trained night security, silent generators, concierge help with darshan timings.
+- [ ] **Restaurant:** official lists South Indian, North Indian, Continental, Chinese, Seafood, Italian and French, cocktails, juices, desserts, buffet breakfast, lunch and dinner. It gives no serving hours (ours are unverified).
+- [ ] **Experiences:** official also lists **Karaikal**, **Poompuhar** and **Velankanni Beach**; it does not list Tranquebar (which came from the blueprint).
+- [ ] **Distances from the official About page:** 150 km from Trichy airport; within 2 km of Velankanni railway station and bus stand.
+- [ ] **Old URLs to keep (100% URL preservation):** the official site also has `/book-online` and `/properties`, which our site does not serve yet. Redirect them (for example to /bookroom).
+- [ ] **Search title and description on the official site:** "Hotel Queen's Inn, Velankanni | High End Luxury Hotel". Ours is "... | Luxury Hotel & KVR Mahal". Keep ours or match theirs.
+
+## 1. Location and distances (most important)
+
+- [x] **Distance to the Shrine Basilica** — the client confirmed: about **10 minutes by road** (about 30 minutes on foot, which the site does not state). The old "500 m" / "half a kilometre" / "ten-minute walk" wording (B and S) is replaced with "ten minutes by road" in the Home hero, welcome heading and figure ("10 min · by road to the Shrine Basilica"), About lead and location text, Contact directions, and the Home search description (migration 018 and page defaults).
+- [ ] **Basilica distance in kilometres on the Experiences page** still reads "0.5 km away" (B). Needs the by-road distance in km from the client, or it should be changed in the admin (Experiences).
+- [ ] "Within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar" (S) — removed. The blueprint lists them at 14 to 55 km; drive times are not stated.
+- [ ] Attraction distances: Nagore 14 km, Thirunallar 35 km, Point Calimere 45 km, Muthupet 50 km, Tranquebar 55 km (B). Confirm by road from the hotel.
+- [ ] Map coordinates saved in Site settings: 10.6806, 79.8474 (S). Used for the search-engine "Hotel" data. Confirm against the hotel's Google Maps pin.
+- [ ] Address: "# 41/A, ECR Main Road, Arch West Street, Velankanni 611 111, Tamil Nadu" (S).
+
+## 2. The property
+
+- [ ] 51 air-conditioned rooms, 3 gated acres (B)
+- [ ] Opened October 2017 (B)
+- [ ] Swimming pool (photos show it; **not in the blueprint**): is it open to guests, hours, any charge? (N: mentioned on Home)
+- [ ] Children's play area (S)
+- [ ] CCTV, trained night security, verified guest registration (S)
+- [ ] Silent central cooling; full power backup with silent generators for rooms and halls (B for the hall; S for rooms)
+- [ ] Wi-Fi throughout rooms, lobby and restaurant (S)
+- [ ] 24-hour reception and 24-hour in-room dining (B)
+- [ ] Driver quarters with rest rooms, washrooms and meals (B)
+- [ ] Secure parking for 100+ cars and tour buses (B)
+- [ ] Meeting hall for family and business groups (S)
+- [ ] Concierge help with darshan timings and travel (S)
+
+## 3. Rooms (tariffs and sizes are per night, plus GST)
+
+- [ ] Deluxe Double: 325 sq ft, king bed, garden view, from ₹2,500; split AC, smart TV, tea/coffee kettle (B sizes and features; **tariff S**)
+- [ ] Executive Triple: 350 sq ft, double + single bed, city view, from ₹3,500; Wi-Fi, wardrobe, 24/7 hot water (B; **tariff S**)
+- [ ] Family Room: 405 sq ft, two double beds, balcony, 4 guests, from ₹4,500 (B; **tariff S**)
+- [ ] The Queen's Suite: 576 sq ft, separate living lounge, from ₹6,000 (B; **tariff S**)
+- [ ] Electronic safe and minibar listed as amenities (S)
+- [ ] **Which photo belongs to which room** (N): matched by eye. The Executive Triple has no clear double-plus-single-bed photo.
+
+## 4. Restaurant
+
+- [ ] "Pure vegetarian delicacies and coastal seafood" prepared in separate, hygienic kitchen zones (B)
+- [ ] Breakfast buffet daily (B)
+- [ ] **Serving times** on Home: breakfast 7:00 to 10:30, lunch 12:30 to 15:30, dinner 19:30 to 22:30 (S)
+- [ ] South Indian, Chettinad, North Indian and Continental menus; seafood from the Nagapattinam coast (S)
+
+## 5. KVR Mahal
+
+- [ ] 500 to 1,000 guests; 300+ seat dining pavilion; central air conditioning with silent generator backup (B)
+- [ ] Two private AC bride and groom green rooms with attached vanity suites (B)
+- [ ] Crystal chandeliers, pillarless hall, acoustic tuning, PA system (B)
+- [ ] Commercial kitchen with high-pressure burners, RO water plant, banana-leaf service (B)
+- [ ] "Velankanni's grandest" (B, a marketing claim)
+
+## 6. Policies
+
+- [ ] Check-in 12:00 PM, check-out 11:00 AM; government photo ID for every adult guest (B)
+- [ ] Free cancellation up to 48 hours before arrival (B)
+- [ ] Annual Feast 29 August to 8 September has special cancellation conditions (B). **The conditions themselves are missing.**
+- [ ] **Refund timeline** (missing; the page promises to state it at cancellation)
+- [x] Terms line "a photograph on a phone is not accepted" (N) — removed: the hotel never stated that rule (migration 018).
+- [ ] Terms wording written by AI (N): reservations confirmed by phone, WhatsApp or email only; "guests are responsible for loss or damage"; "keep the campus peaceful". Hotel to approve or replace.
+- [ ] Cancellation wording (N): "we acknowledge every cancellation"; refunds returned to the original payment method
+- [ ] Privacy wording (N): what is collected (name, phone, email, dates, message, IP address) matches the enquiry forms; "we do not sell your information"; retention wording. Hotel and a legal reviewer to approve.
+
+## 7. Contact
+
+- [ ] Phones +91 91593 99988 and +91 91594 99988; reservations@queensinn.co.in; sales@queensinn.co.in (B for the first three; S for sales@)
+- [ ] WhatsApp number 91 91593 99988 (S)
+
+## 8. Experiences descriptions (S)
+
+- [ ] Basilica: Shrine Basilica of Our Lady of Good Health, Morning Star Church, holy tank
+- [ ] Nagore Dargah: "five white minarets", "centuries-old"
+- [ ] Thirunallar: Dharbaranyeswarar temple, shrine to Lord Shani, Nala Theertham tank
+- [ ] Point Calimere: flamingos arrive between November and February; blackbuck
+- [ ] Muthupet: wooden boat rides through lagoons and mangroves
+- [ ] Tranquebar: 17th-century Danish fort (Dansborg)
+
+## 9. Guest quotes on Home (S)
+
+- [ ] Three starter quotes are **invented placeholders** attributed to "Guest", "Wedding host". Replace with real, permitted reviews or hide them in the admin (Guest quotes).

@@ -70,6 +70,8 @@ export interface PublicContent {
   rooms: Room[];
   gallery: MediaItem[];
   strip: StripItem[];
+  /** The KVR Mahal page's own photo strip. */
+  mahalStrip: StripItem[];
   attractions: Attraction[];
   testimonials: Testimonial[];
   /** Named photo positions (e.g. 'restaurant'); a missing key means no photo yet. */
@@ -78,4 +80,4 @@ export interface PublicContent {
   pages: Record<string, PageContent>;
 }
 
-export const EMPTY_CONTENT: PublicContent = { rooms: [], gallery: [], strip: [], attractions: [], testimonials: [], slots: {}, pages: {} };
+export const EMPTY_CONTENT: PublicContent = { rooms: [], gallery: [], strip: [], mahalStrip: [], attractions: [], testimonials: [], slots: {}, pages: {} };

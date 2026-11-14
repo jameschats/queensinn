@@ -22,6 +22,7 @@ FROM (SELECT '' slug, 'campus-aerial' k, 1 ord UNION ALL SELECT '', 'hero-dusk',
       UNION ALL SELECT 'bookroom', 'room-suite', 1 UNION ALL SELECT 'bookroom', 'room-deluxe', 2
       UNION ALL SELECT 'kvr-mahal', 'mahal-exterior', 1 UNION ALL SELECT 'kvr-mahal', 'mahal-stage', 2 UNION ALL SELECT 'kvr-mahal', 'mahal-hall', 3
       UNION ALL SELECT 'about-us', 'gallery-06', 1
+      UNION ALL SELECT 'activities', 'attraction-basilica', 1
       UNION ALL SELECT 'contact', 'hero-lobby', 1) o
 JOIN `Pages` p ON p.`Slug` = o.`slug`
 JOIN `MediaAssets` m ON m.`FileName` = o.`k`
@@ -39,14 +40,35 @@ WHERE s.`SectionKey` = 'hero' AND p.`Slug` IN ('', 'kvr-mahal')
   AND (JSON_UNQUOTE(JSON_EXTRACT(s.`ContentJson`, '$.videoMediaId')) IS NULL
        OR JSON_UNQUOTE(JSON_EXTRACT(s.`ContentJson`, '$.videoMediaId')) NOT IN (SELECT CAST(`MediaId` AS CHAR) FROM `MediaAssets`));
 
--- Collage gallery (twelve photos) — only when it is empty
+-- Collage gallery (fifteen photos) — only when it is empty
 INSERT INTO `GalleryItems` (`Placement`, `MediaId`, `DisplayOrder`, `ShowOnHome`)
 SELECT 'collage', m.`MediaId`, o.`ord`, 1
 FROM (SELECT 'mahal-stage' k, 1 ord UNION ALL SELECT 'gallery-01', 2 UNION ALL SELECT 'room-suite', 3 UNION ALL SELECT 'pool-aerial-wide', 4
       UNION ALL SELECT 'gallery-03', 5 UNION ALL SELECT 'mahal-backdrop', 6 UNION ALL SELECT 'gallery-02', 7 UNION ALL SELECT 'room-deluxe', 8
-      UNION ALL SELECT 'mahal-aisle', 9 UNION ALL SELECT 'gallery-04', 10 UNION ALL SELECT 'dish-breakfast', 11 UNION ALL SELECT 'gallery-06', 12) o
+      UNION ALL SELECT 'mahal-aisle', 9 UNION ALL SELECT 'gallery-04', 10 UNION ALL SELECT 'dish-breakfast', 11 UNION ALL SELECT 'gallery-06', 12
+      UNION ALL SELECT 'gallery-07', 13 UNION ALL SELECT 'gallery-08', 14 UNION ALL SELECT 'room-twin', 15) o
 JOIN `MediaAssets` m ON m.`FileName` = o.`k`
 WHERE NOT EXISTS (SELECT 1 FROM `GalleryItems` WHERE `Placement` = 'collage');
+
+-- KVR Mahal page strip — only when it is empty
+INSERT INTO `GalleryItems` (`Placement`, `MediaId`, `Title`, `Caption`, `LinkUrl`, `DisplayOrder`, `ShowOnHome`)
+SELECT 'mahal', m.`MediaId`, o.`title`, o.`cap`, NULL, o.`ord`, 1
+FROM (SELECT 'mahal-exterior' k, 'KVR Mahal' title, 'The building and its entrance porch' cap, 1 ord
+      UNION ALL SELECT 'mahal-hall-stage', 'The ceremonial hall', 'Seating facing the main stage', 2
+      UNION ALL SELECT 'mahal-hall', 'Hall and balcony', 'Chandelier, balcony level and front seating', 3
+      UNION ALL SELECT 'mahal-hall-balcony', 'From the stage', 'The hall seen from the front', 4
+      UNION ALL SELECT 'mahal-stage', 'Stage decoration', 'Floral arches and a seat for the couple', 5
+      UNION ALL SELECT 'mahal-backdrop', 'Backdrop styling', 'A draped backdrop with fresh flowers', 6
+      UNION ALL SELECT 'mahal-aisle', 'The aisle', 'Golden arches over the walkway', 7
+      UNION ALL SELECT 'mahal-aisle-day', 'The aisle by day', 'Rows of chairs on either side', 8
+      UNION ALL SELECT 'mahal-doorway', 'The entrance', 'A carved wooden doorway dressed for a ceremony', 9
+      UNION ALL SELECT 'mahal-dining', 'Dining pavilion', 'Long tables for banquet service', 10) o
+JOIN `MediaAssets` m ON m.`FileName` = o.`k`
+WHERE NOT EXISTS (SELECT 1 FROM `GalleryItems` WHERE `Placement` = 'mahal');
+
+-- Executive Triple Room: the extra room photo joins its gallery
+INSERT IGNORE INTO `RoomImages` (`RoomId`, `MediaId`, `DisplayOrder`)
+SELECT r.`RoomId`, m.`MediaId`, 1 FROM `Rooms` r JOIN `MediaAssets` m ON m.`FileName` = 'room-twin' WHERE r.`Slug` = 'executive-triple';
 
 -- Sliding strip — only when it is empty
 INSERT INTO `GalleryItems` (`Placement`, `MediaId`, `Title`, `Caption`, `LinkUrl`, `DisplayOrder`, `ShowOnHome`)
@@ -62,6 +84,20 @@ FROM (SELECT 'room-suite' k, 'The Queen''s Suite' title, 'A separate lounge for 
 JOIN `MediaAssets` m ON m.`FileName` = o.`k`
 WHERE NOT EXISTS (SELECT 1 FROM `GalleryItems` WHERE `Placement` = 'strip');
 
+-- Experiences: a photo for each place (gap-fill, matched by the place's name)
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-basilica'   SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Velankanni Basilica'       AND a.`MediaId` IS NULL;
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-nagore'     SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Nagore Dargah'             AND a.`MediaId` IS NULL;
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-thirunallar' SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Thirunallar Saniswaran'   AND a.`MediaId` IS NULL;
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-calimere'   SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Point Calimere Sanctuary'  AND a.`MediaId` IS NULL;
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-muthupet'   SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Muthupet Mangroves'       AND a.`MediaId` IS NULL;
+UPDATE `Attractions` a JOIN `MediaAssets` m ON m.`FileName` = 'attraction-tranquebar' SET a.`MediaId` = m.`MediaId` WHERE a.`Name` = 'Tranquebar (Dansborg)'    AND a.`MediaId` IS NULL;
+
+-- Logo: shown in place of the text lockup. Set when empty, or when the stored address no longer matches a library photo.
+UPDATE `SiteSettings` s JOIN `MediaAssets` m ON m.`FileName` = 'brand-logo'
+SET s.`SettingValue` = m.`OriginalUrl`
+WHERE s.`SettingKey` = 'LogoLightUrl'
+  AND (s.`SettingValue` IS NULL OR s.`SettingValue` = '' OR s.`SettingValue` NOT IN (SELECT `OriginalUrl` FROM `MediaAssets`));
+
 -- Named photo positions
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'hero-lobby'     SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'intro-main'    AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'gallery-09'     SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'intro-accent'  AND s.`MediaId` IS NULL;
@@ -75,3 +111,4 @@ UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-stage'    SE
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-hall'     SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'mahal-hall'    AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-dining'   SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'mahal-dining'  AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-exterior' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'mahal-night'   AND s.`MediaId` IS NULL;
+UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'attraction-muthupet' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'travel-desk' AND s.`MediaId` IS NULL;

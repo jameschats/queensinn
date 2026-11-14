@@ -331,11 +331,11 @@ export class AdminApiService {
 
   // --- galleries ---
 
-  gallery(placement: 'collage' | 'strip'): Observable<GalleryItemAdmin[]> {
+  gallery(placement: 'collage' | 'strip' | 'mahal'): Observable<GalleryItemAdmin[]> {
     return this.http.get<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`).pipe(map((r) => r.data ?? []));
   }
 
-  saveGallery(placement: 'collage' | 'strip', items: SaveGalleryItem[]): Observable<GalleryItemAdmin[]> {
+  saveGallery(placement: 'collage' | 'strip' | 'mahal', items: SaveGalleryItem[]): Observable<GalleryItemAdmin[]> {
     return this.http.put<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`, items).pipe(map((r) => r.data ?? []));
   }
 

@@ -85,13 +85,13 @@ export const PAGES: PageDef[] = [
     hero: 'media',
     seoDefaults: {
       title: "Hotel Queen's Inn, Velankanni | Luxury Hotel & KVR Mahal",
-      description: 'A three-acre luxury hotel on ECR Main Road, 500 m from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
+      description: 'A three-acre luxury hotel on ECR Main Road, 10 minutes by road from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
     },
     sections: [
       heroSection(
         '',
         'Tranquility meets luxury in the sacred heart of Velankanni',
-        'A serene three-acre sanctuary on ECR Main Road, just 500 metres from the Shrine Basilica. Fifty-one air-conditioned rooms, multi-cuisine dining and the grand KVR Mahal.',
+        'A serene three-acre sanctuary on ECR Main Road, ten minutes by road from the Shrine Basilica. Fifty-one air-conditioned rooms, multi-cuisine dining and the grand KVR Mahal.',
         true,
         ['Request tariff', 'reserve', 'Discover KVR Mahal', '/kvr-mahal'],
       ),
@@ -101,8 +101,8 @@ export const PAGES: PageDef[] = [
         hint: 'The first section below the hero.',
         fields: [
           t('kicker', 'Small line', "Welcome to Queen's Inn"),
-          t('title', 'Heading', 'Half a kilometre from the Basilica. A world away from the crowd.'),
-          area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.', 3),
+          t('title', 'Heading', 'Ten minutes by road from the Basilica. A world away from the crowd.'),
+          area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, ten minutes by road from the Shrine of Our Lady of Good Health.', 3),
           area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns and a swimming pool, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
           t('linkText', 'Link text', 'Read our story'),
         ],
@@ -114,7 +114,7 @@ export const PAGES: PageDef[] = [
         fields: [
           t('n1', 'Figure 1', '3'), t('t1', 'Figure 1 — label', 'acres of gated gardens and lawns'),
           t('n2', 'Figure 2', '51'), t('t2', 'Figure 2 — label', 'air-conditioned rooms in four categories'),
-          t('n3', 'Figure 3', '500 m'), t('t3', 'Figure 3 — label', 'walk to the Shrine Basilica'),
+          t('n3', 'Figure 3', '10 min'), t('t3', 'Figure 3 — label', 'by road to the Shrine Basilica'),
           t('n4', 'Figure 4', '24 h'), t('t4', 'Figure 4 — label', 'reception and in-room dining'),
         ],
       },
@@ -308,6 +308,16 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'gallery',
+        title: 'Photo strip',
+        hint: 'The scrolling row of photos between the dining pavilion and the comparison table. Choose its photos under Galleries → KVR Mahal strip.',
+        fields: [
+          t('kicker', 'Small line', 'Inside KVR Mahal'),
+          t('title', 'Heading', 'A look around the hall'),
+          t('moreText', 'Phone button', 'Show all photos', { hint: 'On phones the photos are listed one under another; this button reveals the rest.' }),
+        ],
+      },
+      {
         key: 'compare',
         title: 'Why one campus',
         fields: [
@@ -352,7 +362,7 @@ export const PAGES: PageDef[] = [
         title: 'The story',
         fields: [
           t('title', 'Heading', 'Built for the people who come to pray, and the families who come with them'),
-          area('lede', 'Lead paragraph', "Queen's Inn opened in October 2017 on East Coast Road, half a kilometre from the Shrine Basilica.", 3),
+          area('lede', 'Lead paragraph', "Queen's Inn opened in October 2017 on East Coast Road, ten minutes by road from the Shrine Basilica.", 3),
           area('body', 'The rest of the story',
             "We set out to give Velankanni a hotel that matched the importance of the journey: rooms that are calm and spotless, food that is honest, and a campus large enough that it never feels crowded, even during the Feast.\n\nToday the three-acre campus holds 51 rooms, the Q Multi-Cuisine Restaurant, garden lawns and KVR Mahal, our ceremonial hall for weddings and community celebrations.",
             8, { hint: 'Leave a blank line between paragraphs.' }),
@@ -374,8 +384,8 @@ export const PAGES: PageDef[] = [
         title: 'Location',
         fields: [
           t('kicker', 'Small line', 'Location'),
-          t('title', 'Heading', 'On ECR, minutes from everything'),
-          area('body', 'Text', "The hotel stands on East Coast Road at Arch West Street, ten minutes' walk from the Basilica and the holy tank, and within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar.", 4),
+          t('title', 'Heading', 'On East Coast Road, near the Shrine'),
+          area('body', 'Text', 'The hotel stands on East Coast Road at Arch West Street, ten minutes by road from the Basilica and the holy tank, with Nagore, Thirunallar, Point Calimere, Muthupet and Tranquebar all reachable as day trips.', 4),
           t('buttonText', 'Button', 'Explore the region'),
         ],
       },
@@ -456,7 +466,7 @@ export const PAGES: PageDef[] = [
         title: 'Visiting us',
         fields: [
           t('title', 'Heading', 'Find us on ECR Main Road'),
-          area('body', 'Directions', 'We are a ten-minute walk from the Shrine Basilica of Our Lady of Good Health. Parking for cars and tour buses is inside the gates.', 3),
+          area('body', 'Directions', 'We are ten minutes by road from the Shrine Basilica of Our Lady of Good Health. Parking for cars and tour buses is inside the gates.', 3),
         ],
       },
     ],
