@@ -146,6 +146,33 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'qbar',
+        title: 'Q Bar',
+        hint: 'The new resto bar, shown after the restaurant. Photos are chosen under the Photos tab. Keep it to atmosphere and food: do not add prices or alcohol brand names until the hotel has confirmed its licence and advertising rules.',
+        fields: [
+          {
+            key: 'show', label: 'Show this section', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show it' }, { value: 'hide', label: 'Hide it' }],
+            hint: 'Choose Hide to take the whole section off the Home page without losing the wording.',
+          },
+          {
+            key: 'badge', label: 'Badge (the small label above the heading)', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show the badge' }, { value: 'hide', label: 'Hide the badge' }],
+            hint: 'Hide it once the bar is open.',
+          },
+          t('status', 'Badge text', 'Opening soon', { hint: 'For example "Opening soon" or "Opens 1 December".' }),
+          t('kicker', 'Small line', "New at Queen's Inn"),
+          t('title', 'Heading', 'Q Bar'),
+          area('body', 'Description', "Q Bar is our new resto bar, a relaxed evening place on the Queen's Inn campus to unwind with family and friends. We will share the details here as soon as it opens.", 4),
+          {
+            key: 'cta', label: 'Button', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show the button' }, { value: 'hide', label: 'Hide the button' }],
+          },
+          t('buttonText', 'Button text', 'Ask about Q Bar', { hint: 'The button opens WhatsApp with the message below.' }),
+          t('message', 'WhatsApp message', "Hello, I would like to know more about Q Bar at Queen's Inn."),
+        ],
+      },
+      {
         key: 'mahal',
         title: 'KVR Mahal feature',
         fields: [
@@ -231,6 +258,9 @@ export const PAGES: PageDef[] = [
       { key: 'dish-2', label: 'Restaurant — photo 2' },
       { key: 'dish-3', label: 'Restaurant — photo 3' },
       { key: 'mahal-feature', label: 'KVR Mahal — arched photo', hint: 'Shows themed artwork until you add a photo.' },
+      { key: 'qbar-1', label: 'Q Bar — large photo', hint: 'The wide photo on top of the Q Bar section. Themed artwork shows until you add one.' },
+      { key: 'qbar-2', label: 'Q Bar — photo 2', hint: 'Square.' },
+      { key: 'qbar-3', label: 'Q Bar — photo 3', hint: 'Square.' },
     ],
   },
   {

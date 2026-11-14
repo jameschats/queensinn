@@ -62,6 +62,10 @@ export class HomeComponent {
     this.cs.rows('home', 'amenities', 'items').map((r, i) => ({ i: HOME_AMENITY_ICONS[i] ?? 'shield', t: r[0] ?? '', d: r[1] ?? '' })));
   protected readonly dining = computed(() => this.cs.rows('home', 'dining', 'hours').map((r) => [r[0] ?? '', r[1] ?? '']));
 
+  // --- Q Bar (the new resto bar) ---
+  protected readonly showQBar = computed(() => this.t('qbar', 'show') !== 'hide');
+  protected readonly qbarLink = computed(() => this.site.whatsapp(this.t('qbar', 'message')));
+
   // --- guest quotes (rotate in the browser only) ---
   protected readonly quoteIndex = signal(0);
 

@@ -73,6 +73,13 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 - [ ] Commercial kitchen with high-pressure burners, RO water plant, banana-leaf service (B)
 - [ ] "Velankanni's grandest" (B, a marketing claim)
 
+## 5b. Q Bar (new resto bar, Home page section)
+
+- [ ] **Wording is a draft written by AI:** "Q Bar is our new resto bar, a relaxed evening place on the Queen's Inn campus to unwind with family and friends. We will share the details here as soon as it opens." Confirm the bar is on the campus and agree the wording.
+- [ ] **Photos:** none yet. The section shows the site's artwork until staff choose three photos in admin: Pages & content → Home → Photos (Q Bar — large, photo 2, photo 3).
+- [ ] **Licence and advertising:** keep the section to atmosphere and food. Do not add prices, offers or alcohol brand names until the hotel has confirmed its liquor licence and the state's advertising rules.
+- [ ] **When it opens:** change or hide the "Opening soon" badge (Pages & content → Home → Q Bar). The section can also be hidden entirely from the same screen.
+
 ## 6. Policies
 
 - [ ] Check-in 12:00 PM, check-out 11:00 AM; government photo ID for every adult guest (B)
