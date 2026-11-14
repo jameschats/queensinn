@@ -75,7 +75,7 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
           <h2 class="h-display">{{ t('enquiry', 'title') }}</h2>
           <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t('enquiry', 'intro') }}</p>
           <div class="mt-9 grid gap-5 text-[15px]">
-            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a>@if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }</span></div>
+            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a>@if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }@if (site.get('Phone3')) { · <a [href]="site.tel('Phone3')">{{ site.get('Phone3') }}</a> }</span></div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="wa" class="mt-1 text-gold-ink" /><a [href]="site.whatsapp()" target="_blank" rel="noopener">Message the front desk</a></div>
           </div>
         </div>

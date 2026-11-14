@@ -31,7 +31,8 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
               <qi-icon name="phone" class="mt-1 text-gold-ink" />
               <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Call</b>
                 <a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a>
-                @if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }</span>
+                @if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }
+                @if (site.get('Phone3')) { · <a [href]="site.tel('Phone3')">{{ site.get('Phone3') }}</a> }</span>
             </div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="wa" class="mt-1 text-gold-ink" />

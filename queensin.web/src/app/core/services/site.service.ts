@@ -67,7 +67,7 @@ export class SiteService {
     }
   }
 
-  tel(key: 'Phone1' | 'Phone2' = 'Phone1'): string {
+  tel(key: 'Phone1' | 'Phone2' | 'Phone3' = 'Phone1'): string {
     return 'tel:' + this.get(key).replace(/\s/g, '');
   }
 

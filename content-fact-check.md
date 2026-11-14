@@ -10,8 +10,8 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 **Applied already:** room starting rates now match the official site (Deluxe Double Rs 3,500, Executive Triple Rs 4,500, Family Room Rs 5,500, Queen's Suite Rs 7,000, plus GST; migration 020). The seeded rates were Rs 2,500 / 3,500 / 4,500 / 6,000. The official logo and favicon are installed.
 
 **The official site disagrees with, or adds to, our text. Client to decide:**
-- [ ] **Third phone** +91 93639 70177 is listed on the official site; ours shows only the first two.
-- [ ] **Emails:** the official site lists reservations@queensinn.co.in and **hotelqueensinn@gmail.com**. Ours also shows **sales@queensinn.co.in**, which the official site does not. Which address should KVR Mahal enquiries use?
+- [x] **Third phone** +91 93639 70177 — added (header-free spots: footer, Home, Rooms and Contact pages; admin Site settings → Third phone). Migration 021.
+- [x] **Emails** — the official site lists reservations@queensinn.co.in and hotelqueensinn@gmail.com. Our "sales@queensinn.co.in" (not on the official site) is replaced by **hotelqueensinn@gmail.com**. KVR Mahal enquiries are emailed to this address, so confirm the hotel reads it. Change it any time in admin Site settings → "Sales & events email".
 - [ ] **"½ km"** on the official site is "from the centre of the town", not from the Basilica. That is where our "500 m from the Basilica" came from.
 - [ ] **Deluxe Double bed:** official says "Double Bed"; the blueprint and our page say "King bed".
 - [ ] **Room categories:** official About text says "03 categories: Suite, Deluxe Double & Deluxe Triple"; it lists four rooms elsewhere.

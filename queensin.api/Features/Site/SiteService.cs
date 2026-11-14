@@ -28,7 +28,7 @@ public sealed partial class SiteService : ISiteService
     /// </summary>
     public static readonly HashSet<string> EditableKeys = new(StringComparer.Ordinal)
     {
-        "HotelName", "LocationLine", "Phone1", "Phone2", "WhatsAppNumber", "WhatsAppMessage",
+        "HotelName", "LocationLine", "Phone1", "Phone2", "Phone3", "WhatsAppNumber", "WhatsAppMessage",
         "ReservationsEmail", "SalesEmail", "Address", "MapUrl", "Latitude", "Longitude",
         "CheckInTime", "CheckOutTime", "LogoLightUrl", "LogoDarkUrl", "FaviconUrl",
         "FacebookUrl", "InstagramUrl", "YouTubeUrl", "ReserveAction", "ReserveLabel", "ReserveMessage",

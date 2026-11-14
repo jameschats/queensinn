@@ -92,6 +92,7 @@
         <ul class="grid gap-2.5">
           <li><a [href]="site.tel('Phone1')" class="hover:text-on-primary">{{ site.get('Phone1') }}</a></li>
           <li><a [href]="site.tel('Phone2')" class="hover:text-on-primary">{{ site.get('Phone2') }}</a></li>
+          @if (site.get('Phone3')) { <li><a [href]="site.tel('Phone3')" class="hover:text-on-primary">{{ site.get('Phone3') }}</a></li> }
           <li><a [href]="'mailto:' + site.get('ReservationsEmail')" class="hover:text-on-primary">{{ site.get('ReservationsEmail') }}</a></li>
           <li><a [href]="'mailto:' + site.get('SalesEmail')" class="hover:text-on-primary">{{ site.get('SalesEmail') }}</a></li>
         </ul>

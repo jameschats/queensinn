@@ -105,6 +105,7 @@ export class SettingsComponent {
       fields: [
         { key: 'Phone1', label: 'Primary phone', type: 'tel' },
         { key: 'Phone2', label: 'Second phone (events desk)', type: 'tel' },
+        { key: 'Phone3', label: 'Third phone (optional)', type: 'tel' },
         { key: 'WhatsAppNumber', label: 'WhatsApp number', hint: 'Digits only, with country code, e.g. 919159399988.' },
         { key: 'WhatsAppMessage', label: 'Default WhatsApp message' },
         { key: 'ReservationsEmail', label: 'Reservations email', type: 'email' },
