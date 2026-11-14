@@ -112,3 +112,6 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 ## Quick-win additions (travel facts and Feast notice)
 - Contact → "How to reach us": railway station and bus stand within about 2 km, Trichy airport about 150 km, Basilica 2.1 km (about 10 minutes by road), parking for cars and tour buses inside the gates. Source: official queensinn.co.in site and the owner's Google Maps check. Editable in Pages & content → Contact.
 - Feast-season notice ("Rooms fill early, book ahead"): automatic only 29 Aug to 8 Sep (Feast of Our Lady of Health, Velankanni). No claim about availability; wording editable under Home → Feast-season notice.
+
+## Watch-the-film sections
+- Home and KVR Mahal now carry the full films (105 s and 55 s, with sound) from the client's VIDEOS folder, re-encoded to 720p. Open item for the client: confirm the music/voice-over in both films is licensed for web use.

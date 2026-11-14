@@ -10,6 +10,7 @@ import { SITE_URL } from '../../core/api.config';
 import { SiteService } from '../../core/services/site.service';
 import { IconComponent } from '../../shared/icon.component';
 import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
+import { FilmComponent } from '../../shared/film.component';
 import { ImageComponent } from '../../shared/image.component';
 import { ParsedLink, parseLink } from '../../shared/link';
 import { PageHeroComponent } from '../../shared/page-hero.component';
@@ -27,7 +28,7 @@ const ATTRACTION_ART = ['basilica', 'minaret', 'gopuram', 'sea', 'mangrove', 'fo
  */
 @Component({
   selector: 'qi-home',
-  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent, ReserveLinkDirective, EnquiryFormComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, ShowcaseStripComponent, ReserveLinkDirective, EnquiryFormComponent, FilmComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.component.html',
 })
@@ -63,6 +64,7 @@ export class HomeComponent {
   protected readonly dining = computed(() => this.cs.rows('home', 'dining', 'hours').map((r) => [r[0] ?? '', r[1] ?? '']));
 
   // --- Q Bar (the new resto bar) ---
+  protected readonly showFilm = computed(() => this.t('film', 'show') !== 'hide');
   protected readonly showQBar = computed(() => this.t('qbar', 'show') !== 'hide');
   protected readonly qbarLink = computed(() => this.site.whatsapp(this.t('qbar', 'message')));
 

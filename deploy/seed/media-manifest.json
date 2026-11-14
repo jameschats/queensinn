@@ -306,5 +306,21 @@
     "key": "brand-favicon",
     "file": "media/brand-favicon.png",
     "kind": "favicon"
+  },
+  {
+    "key": "film-queens-inn",
+    "file": "media/film-queens-inn.mp4",
+    "kind": "video",
+    "category": "Campus",
+    "alt": "Film of Hotel Queen's Inn, with sound: entrance, pool, lobby, restaurant and rooms",
+    "caption": null
+  },
+  {
+    "key": "film-kvr-mahal",
+    "file": "media/film-kvr-mahal.mp4",
+    "kind": "video",
+    "category": "Mahal",
+    "alt": "Film of KVR Mahal, with sound: exterior, entrance, stage decor and the ceremonial hall",
+    "caption": null
   }
 ]

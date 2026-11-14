@@ -7,6 +7,7 @@ import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
 import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
+import { FilmComponent } from '../../shared/film.component';
 import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
@@ -21,7 +22,7 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
  */
 @Component({
   selector: 'qi-kvr-mahal',
-  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent, FilmComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="mandap"
@@ -62,6 +63,19 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
         </div>
       </div>
     </section>
+
+    @if (showFilm() && slot('film-kvr')) {
+      <section class="sec on-dark bg-primary text-on-primary" id="film">
+        <div class="wrap">
+          <div class="mx-auto mb-10 max-w-[60ch] text-center">
+            <span class="kicker">{{ t('film', 'kicker') }}</span>
+            <h2 class="h-display">{{ t('film', 'title') }}</h2>
+            <p class="mt-4 text-on-primary-muted">{{ t('film', 'text') }}</p>
+          </div>
+          <qi-film [video]="slot('film-kvr')" [poster]="slot('film-kvr-poster')" [label]="t('film', 'title')" />
+        </div>
+      </section>
+    }
 
     <section class="sec bg-tint">
       <div class="wrap grid items-center gap-[clamp(40px,7vw,120px)] md:grid-cols-2">
@@ -157,6 +171,8 @@ export class KvrMahalComponent {
   protected t(section: string, field: string): string {
     return this.cs.text('kvr-mahal', section, field);
   }
+
+  protected readonly showFilm = computed(() => this.t('film', 'show') !== 'hide');
 
   protected slot(key: string): MediaItem | null {
     return this.cs.content().slots[key] ?? null;

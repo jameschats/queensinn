@@ -46,6 +46,22 @@ const t = (key: string, label: string, def: string, extra: Partial<FieldDef> = {
 const area = (key: string, label: string, def: string, rows = 4, extra: Partial<FieldDef> = {}): FieldDef =>
   ({ key, label, default: def, type: 'textarea', rows, ...extra });
 
+/** The "Watch the film" section (click-to-play video with sound). The video itself is placed by staff/seed; the poster photo is chosen under Photos. */
+const filmSection = (kicker: string, title: string, text: string): SectionDef => ({
+  key: 'film',
+  title: 'Watch the film',
+  hint: 'A click-to-play film with sound. Nothing is downloaded until a visitor presses play. The cover photo is chosen under the Photos tab.',
+  fields: [
+    {
+      key: 'show', label: 'Show this section', type: 'select', default: 'show',
+      options: [{ value: 'show', label: 'Show it' }, { value: 'hide', label: 'Hide it' }],
+    },
+    t('kicker', 'Small line', kicker),
+    t('title', 'Heading', title),
+    area('text', 'Text', text, 3),
+  ],
+});
+
 /** How much the hero photo is darkened so white text stays readable: one even tint, never a gradient. */
 export const HERO_SHADES: Record<string, number> = { none: 0, light: 25, medium: 40, strong: 55 };
 export const heroShadePercent = (value: string): number => HERO_SHADES[value] ?? HERO_SHADES['light'];
@@ -145,6 +161,7 @@ export const PAGES: PageDef[] = [
             { hint: 'One per line, written as: Meal | Time. Put a | between the two parts.' }),
         ],
       },
+      filmSection('See it for yourself', "A short film of Queen's Inn", 'A walk through the entrance, pool, lobby, restaurant and rooms. Press play to watch with sound.'),
       {
         key: 'qbar',
         title: 'Q Bar',
@@ -279,6 +296,7 @@ export const PAGES: PageDef[] = [
       { key: 'qbar-1', label: 'Q Bar — large photo', hint: 'The wide photo on top of the Q Bar section. Themed artwork shows until you add one.' },
       { key: 'qbar-2', label: 'Q Bar — photo 2', hint: 'Square.' },
       { key: 'qbar-3', label: 'Q Bar — photo 3', hint: 'Square.' },
+      { key: 'film-home-poster', label: 'Film — cover photo', hint: 'Shown on the Watch the film section until a visitor presses play.' },
     ],
   },
   {
@@ -393,6 +411,7 @@ export const PAGES: PageDef[] = [
           t('moreText', 'Phone button', 'Show all photos', { hint: 'On phones the photos are listed one under another; this button reveals the rest.' }),
         ],
       },
+      filmSection('See it for yourself', 'A short film of KVR Mahal', 'A look at the exterior, the entrance, the stage decor and the ceremonial hall. Press play to watch with sound.'),
       {
         key: 'compare',
         title: 'Why one campus',
@@ -420,6 +439,7 @@ export const PAGES: PageDef[] = [
     slots: [
       { key: 'mahal-hall', label: 'Ceremonial hall photo', hint: 'Shown in an arched frame; a tall photo works best. Themed artwork shows until you add one.' },
       { key: 'mahal-dining', label: 'Dining pavilion photo', hint: 'A wide photo works best.' },
+      { key: 'film-kvr-poster', label: 'Film — cover photo', hint: 'Shown on the Watch the film section until a visitor presses play.' },
     ],
   },
   {

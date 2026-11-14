@@ -43,6 +43,20 @@
   </div>
 </section>
 
+<!-- Watch the film (click to play, with sound; hidden when set to "hide" in Pages & content) -->
+@if (showFilm() && slot('film-home')) {
+  <section class="sec on-dark bg-primary text-on-primary" id="film">
+    <div class="wrap">
+      <div class="mx-auto mb-10 max-w-[60ch] text-center">
+        <span class="kicker">{{ t('film', 'kicker') }}</span>
+        <h2 class="h-display">{{ t('film', 'title') }}</h2>
+        <p class="mt-4 text-on-primary-muted">{{ t('film', 'text') }}</p>
+      </div>
+      <qi-film [video]="slot('film-home')" [poster]="slot('film-home-poster')" [label]="t('film', 'title')" />
+    </div>
+  </section>
+}
+
 <!-- Rooms -->
 <section class="sec bg-tint" id="rooms">
   <div class="wrap">
