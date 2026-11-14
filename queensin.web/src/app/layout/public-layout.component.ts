@@ -1,9 +1,10 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import {
   NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet, Scroll,
 } from '@angular/router';
 import { filter } from 'rxjs';
+import { ContentService } from '../core/services/content.service';
 import { SiteService } from '../core/services/site.service';
 import { BrandComponent } from '../shared/brand.component';
 import { IconComponent } from '../shared/icon.component';
@@ -38,6 +39,22 @@ export class PublicLayoutComponent {
   /** True while a page change resets the scroll position, so the header snaps to its new state instead of fading. */
   protected readonly instant = signal(false);
   protected readonly year = new Date().getFullYear();
+
+  private readonly cs = inject(ContentService);
+  protected readonly feastDismissed = signal(false);
+  protected readonly feastVisible = computed(() => {
+    if (this.feastDismissed()) return false;
+    const mode = this.feast('show');
+    if (mode === 'hide') return false;
+    if (mode === 'always') return true;
+    const d = new Date();
+    const md = (d.getMonth() + 1) * 100 + d.getDate();
+    return md >= 829 && md <= 908;
+  });
+
+  protected feast(field: string): string {
+    return this.cs.text('home', 'feast', field);
+  }
 
   protected readonly nav: NavItem[] = [
     { label: 'Stay', link: '/bookroom' },

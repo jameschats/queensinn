@@ -125,3 +125,23 @@
   </a>
 </div>
 <div class="h-[58px] md:hidden" aria-hidden="true"></div>
+
+<!-- Desktop: always-visible WhatsApp (phones have the bar above). -->
+<a [href]="site.whatsappUrl()" target="_blank" rel="noopener" aria-label="Chat with the front desk on WhatsApp"
+   class="fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_26px_rgb(0_0_0/0.3)] transition-transform duration-200 hover:scale-105 active:scale-95 md:flex">
+  <qi-icon name="wa" [size]="28" />
+</a>
+
+<!-- Feast-season notice: automatic 29 Aug to 8 Sep unless the admin changes it. -->
+@if (feastVisible()) {
+  <aside class="fixed bottom-[74px] left-4 right-4 z-40 flex max-w-[380px] items-start gap-3 rounded-2xl border border-line bg-surface p-4 text-ink shadow-[0_8px_30px_rgb(0_0_0/0.25)] md:bottom-6 md:left-6 md:right-auto" role="note">
+    <div class="min-w-0 flex-1 font-sans">
+      <b class="block text-[12.5px] font-medium uppercase tracking-[.14em]">{{ feast('title') }}</b>
+      <p class="mt-1 text-[14.5px]">{{ feast('text') }}</p>
+      @if (feast('buttonText')) {
+        <a qiReserve class="btn btn-gold mt-3 !px-5 !py-2.5 text-[12px]">{{ feast('buttonText') }}</a>
+      }
+    </div>
+    <button type="button" class="p-1 text-muted" aria-label="Dismiss notice" (click)="feastDismissed.set(true)"><qi-icon name="x" [size]="18" /></button>
+  </aside>
+}

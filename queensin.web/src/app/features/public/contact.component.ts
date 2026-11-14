@@ -77,6 +77,20 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
         </aside>
       </div>
 
+      @if (travel().length) {
+        <div class="wrap mt-[clamp(64px,8vw,110px)]">
+          <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('travel', 'title') }}</h2>
+          <ul class="mt-8 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+            @for (r of travel(); track $index) {
+              <li class="border border-line bg-tint p-6">
+                <b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">{{ r[0] }}</b>
+                <span class="mt-2 block text-[15px]">{{ r[1] }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
       <div class="wrap mt-[clamp(64px,8vw,110px)]" id="message">
         <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('message', 'title') }}</h2>
         <p class="mt-4 mb-10 max-w-[62ch] whitespace-pre-line text-muted">{{ t('message', 'intro') }}</p>
@@ -101,6 +115,8 @@ export class ContactComponent {
   protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
 
   protected readonly hours = computed(() => this.cs.rows('contact', 'hours', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']));
+
+  protected readonly travel = computed(() => this.cs.rows('contact', 'travel', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']).filter((r) => r[0]));
 
   constructor() {
     const seo = this.cs.seo('contact');

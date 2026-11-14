@@ -173,6 +173,24 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'feast',
+        title: 'Feast-season notice',
+        hint: 'A small dismissible notice at the bottom-left of every page. By default it appears only from 29 August to 8 September, the Feast of Our Lady of Health.',
+        fields: [
+          {
+            key: 'show', label: 'When to show it', type: 'select', default: 'auto',
+            options: [
+              { value: 'auto', label: 'Only 29 August to 8 September' },
+              { value: 'always', label: 'Always' },
+              { value: 'hide', label: 'Never' },
+            ],
+          },
+          t('title', 'Heading', 'Feast season'),
+          t('text', 'Text', 'Rooms fill early around the Feast. Please book ahead.'),
+          t('buttonText', 'Button text', 'Check availability'),
+        ],
+      },
+      {
         key: 'mahal',
         title: 'KVR Mahal feature',
         fields: [
@@ -509,6 +527,17 @@ export const PAGES: PageDef[] = [
         fields: [
           t('title', 'Heading', 'Good to know'),
           area('rows', 'Lines', 'Reception | Open 24 hours\nIn-room dining | 24 hours', 4, { hint: 'One per line, written as: Label | Value.' }),
+        ],
+      },
+      {
+        key: 'travel',
+        title: 'How to reach us',
+        hint: 'Distances shown as small cards on the Contact page.',
+        fields: [
+          t('title', 'Heading', 'How to reach us'),
+          area('rows', 'Lines',
+            'Railway station and bus stand | Within about 2 km of the hotel\nBasilica | 2.1 km, about 10 minutes by road\nTiruchirappalli airport | About 150 km by road\nParking | Inside the gates, for cars and tour buses', 5,
+            { hint: 'One per line, written as: Place | Distance or note.' }),
         ],
       },
       {
