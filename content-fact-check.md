@@ -13,7 +13,7 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 - [x] **Third phone** +91 93639 70177 — added (header-free spots: footer, Home, Rooms and Contact pages; admin Site settings → Third phone). Migration 021.
 - [x] **Emails** — the official site lists reservations@queensinn.co.in and hotelqueensinn@gmail.com. Our "sales@queensinn.co.in" (not on the official site) is replaced by **hotelqueensinn@gmail.com**. KVR Mahal enquiries are emailed to this address, so confirm the hotel reads it. Change it any time in admin Site settings → "Sales & events email".
 - [ ] **"½ km"** on the official site is "from the centre of the town", not from the Basilica. That is where our "500 m from the Basilica" came from.
-- [ ] **Deluxe Double bed:** official says "Double Bed"; the blueprint and our page say "King bed".
+- [x] **Deluxe Double bed:** the official site says "Double Bed", the blueprint said "King bed". Client chose the official site: now "Double bed" (migration 026).
 - [ ] **Room categories:** official About text says "03 categories: Suite, Deluxe Double & Deluxe Triple"; it lists four rooms elsewhere.
 - [ ] **Facilities the official site mentions that we do not:** spa, swimming pool (confirmed), indoor and outdoor games, campfire, private boating, private trekking for groups, currency exchange, safe deposit lockers, complimentary mineral water, iron and ironing board on request, complimentary accommodation and cafeteria for drivers, banqueting hall.
 - [ ] **Facilities we state that the official site does not:** CCTV and trained night security, silent generators, concierge help with darshan timings.
@@ -51,10 +51,10 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 
 ## 3. Rooms (tariffs and sizes are per night, plus GST)
 
-- [ ] Deluxe Double: 325 sq ft, king bed, garden view, from ₹2,500; split AC, smart TV, tea/coffee kettle (B sizes and features; **tariff S**)
-- [ ] Executive Triple: 350 sq ft, double + single bed, city view, from ₹3,500; Wi-Fi, wardrobe, 24/7 hot water (B; **tariff S**)
-- [ ] Family Room: 405 sq ft, two double beds, balcony, 4 guests, from ₹4,500 (B; **tariff S**)
-- [ ] The Queen's Suite: 576 sq ft, separate living lounge, from ₹6,000 (B; **tariff S**)
+- [x] Deluxe Double: 325 sq ft, **double bed** (client chose the official site over the blueprint's "king"; migration 026), garden view, standard rate Rs 3,500 + GST (official site); split AC, smart TV, tea/coffee kettle
+- [x] Executive Triple: 350 sq ft, double + single bed, city view, standard rate Rs 4,500 + GST (official site); Wi-Fi, wardrobe, 24/7 hot water
+- [x] Family Room: 405 sq ft, two double beds, balcony, 4 guests, standard rate Rs 5,500 + GST (official site)
+- [x] The Queen's Suite: 576 sq ft, separate living lounge, king bed (official site agrees), standard rate Rs 7,000 + GST (official site)
 - [ ] Electronic safe and minibar listed as amenities (S)
 - [ ] **Which photo belongs to which room** (N): matched by eye. The Executive Triple has no clear double-plus-single-bed photo.
 
@@ -62,7 +62,7 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 
 - [ ] "Pure vegetarian delicacies and coastal seafood" prepared in separate, hygienic kitchen zones (B)
 - [ ] Breakfast buffet daily (B)
-- [ ] **Serving times** on Home: breakfast 7:00 to 10:30, lunch 12:30 to 15:30, dinner 19:30 to 22:30 (S)
+- [x] **Serving times** on Home: breakfast 7:00 to 10:30, lunch 12:30 to 15:30, dinner 19:30 to 22:30 — **confirmed by the client, 15 Nov 2026** (no change needed)
 - [ ] South Indian, Chettinad, North Indian and Continental menus; seafood from the Nagapattinam coast (S)
 
 ## 5. KVR Mahal
