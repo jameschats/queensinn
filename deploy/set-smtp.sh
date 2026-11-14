@@ -18,7 +18,9 @@ ask() { local prompt=$1 default=$2 reply; read -rp "$prompt [$default]: " reply;
 echo "Enquiry emails: server settings for the queensinn website"
 echo "(Press Enter to accept the suggestion in [brackets].)"
 echo
-HOST=$(ask "Mail server" "mail.queensinn.co.in")
+# GoDaddy's certificate is issued for its own server name, not for mail.queensinn.co.in, so use the real name
+# (it is shown in the mail server's greeting: connect to mail.queensinn.co.in:587 and read the first line).
+HOST=$(ask "Mail server" "sg2plzcpnl509225.prod.sin2.secureserver.net")
 PORT=$(ask "Port (465 = SSL, 587 = STARTTLS)" "465")
 LOGIN=$(ask "Mailbox login (the full email address)" "reservations@queensinn.co.in")
 read -rsp "Password for $LOGIN (typing is hidden): " PASS; echo
