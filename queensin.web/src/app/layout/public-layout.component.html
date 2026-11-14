@@ -10,26 +10,25 @@
        [class]="scrolled() || solidRoute() ? 'h-[72px]' : 'h-[88px]'">
     <qi-brand />
 
-    <nav class="hidden gap-[clamp(18px,2.2vw,36px)] text-[13px] tracking-[.08em] min-[1081px]:flex" aria-label="Main">
+    <!-- The menu sits in a small white strip, rounded at both ends, set in the theme's own font. White with dark text stays readable over any photo or video. -->
+    <nav class="hidden items-center gap-0.5 rounded-full border border-line bg-surface p-1.5 font-sans text-[13.5px] font-medium tracking-[.02em] text-ink [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:flex" aria-label="Main">
       @for (item of nav; track item.label) {
-        <a [routerLink]="item.link" [fragment]="item.fragment" class="navlink"
+        <a [routerLink]="item.link" [fragment]="item.fragment" class="pill-link"
            [routerLinkActive]="item.fragment ? '' : 'is-active'" [routerLinkActiveOptions]="{ exact: false }">{{ item.label }}</a>
       }
     </nav>
 
-    <div class="flex items-center gap-5">
-      <a [href]="site.tel()" class="navlink hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex">
-        <qi-icon name="phone" [size]="16" />{{ site.get('Phone1') }}
-      </a>
-      <a routerLink="/admin" class="navlink hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex" title="Staff sign-in">
-        <qi-icon name="key" [size]="16" />Admin login
-      </a>
+    <div class="flex items-center gap-3">
+      <div class="hidden items-center gap-0.5 rounded-full border border-line bg-surface p-1.5 font-sans text-[13.5px] font-medium text-ink [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:flex">
+        <a [href]="site.tel()" class="pill-link gap-2"><qi-icon name="phone" [size]="16" />{{ site.get('Phone1') }}</a>
+        <a routerLink="/admin" class="pill-link" title="Staff sign-in" aria-label="Staff sign-in"><qi-icon name="key" [size]="16" /></a>
+      </div>
       <a qiReserve
-         class="hidden h-11 items-center border border-accent px-[22px] text-[11.5px] uppercase tracking-[.2em] transition-colors duration-200 hover:bg-accent hover:text-primary active:scale-95 sm:inline-flex">
+         class="hidden h-[46px] items-center rounded-full border border-accent bg-accent px-[24px] font-sans text-[12px] font-medium uppercase tracking-[.16em] text-primary [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-on-primary active:scale-95 sm:inline-flex">
         {{ site.reserveLabel() }}
       </a>
-      <button type="button" class="p-2.5 min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
-        <qi-icon name="menu" [size]="26" />
+      <button type="button" class="rounded-full border border-line bg-surface p-3 text-ink shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
+        <qi-icon name="menu" [size]="22" />
       </button>
     </div>
   </div>
