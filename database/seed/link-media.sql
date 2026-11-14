@@ -113,7 +113,7 @@ UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-dining'   SE
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-exterior' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'mahal-night'   AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'attraction-muthupet' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'travel-desk' AND s.`MediaId` IS NULL;
 
--- Watch-the-film sections: the full film (with sound) and a cover photo on Home and KVR Mahal. Only fills empty positions.
+-- Watch-the-film sections: the full film and a cover photo on Home and KVR Mahal. Only fills empty positions.
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'film-queens-inn' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-home'        AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'hero-lobby'     SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-home-poster' AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'film-kvr-mahal' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-kvr'         AND s.`MediaId` IS NULL;

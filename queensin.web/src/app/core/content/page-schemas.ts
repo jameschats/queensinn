@@ -46,11 +46,11 @@ const t = (key: string, label: string, def: string, extra: Partial<FieldDef> = {
 const area = (key: string, label: string, def: string, rows = 4, extra: Partial<FieldDef> = {}): FieldDef =>
   ({ key, label, default: def, type: 'textarea', rows, ...extra });
 
-/** The "Watch the film" section (click-to-play video with sound). The video itself is placed by staff/seed; the poster photo is chosen under Photos. */
+/** The "Watch the film" section (click-to-play video). The video itself is placed by staff/seed; the poster photo is chosen under Photos. */
 const filmSection = (kicker: string, title: string, text: string): SectionDef => ({
   key: 'film',
   title: 'Watch the film',
-  hint: 'A click-to-play film with sound. Nothing is downloaded until a visitor presses play. The cover photo is chosen under the Photos tab.',
+  hint: 'A click-to-play film. Nothing is downloaded until a visitor presses play. The cover photo is chosen under the Photos tab.',
   fields: [
     {
       key: 'show', label: 'Show this section', type: 'select', default: 'show',
@@ -161,7 +161,7 @@ export const PAGES: PageDef[] = [
             { hint: 'One per line, written as: Meal | Time. Put a | between the two parts.' }),
         ],
       },
-      filmSection('See it for yourself', "A short film of Queen's Inn", 'A walk through the entrance, pool, lobby, restaurant and rooms. Press play to watch with sound.'),
+      filmSection('See it for yourself', "A short film of Queen's Inn", 'A walk through the entrance, pool, lobby, restaurant and rooms. Press play to watch.'),
       {
         key: 'qbar',
         title: 'Q Bar',
@@ -411,7 +411,7 @@ export const PAGES: PageDef[] = [
           t('moreText', 'Phone button', 'Show all photos', { hint: 'On phones the photos are listed one under another; this button reveals the rest.' }),
         ],
       },
-      filmSection('See it for yourself', 'A short film of KVR Mahal', 'A look at the exterior, the entrance, the stage decor and the ceremonial hall. Press play to watch with sound.'),
+      filmSection('See it for yourself', 'A short film of KVR Mahal', 'A look at the exterior, the entrance, the stage decor and the ceremonial hall. Press play to watch.'),
       {
         key: 'compare',
         title: 'Why one campus',

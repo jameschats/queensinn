@@ -114,4 +114,4 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 - Feast-season notice ("Rooms fill early, book ahead"): automatic only 29 Aug to 8 Sep (Feast of Our Lady of Health, Velankanni). No claim about availability; wording editable under Home → Feast-season notice.
 
 ## Watch-the-film sections
-- Home and KVR Mahal now carry the full films (105 s and 55 s, with sound) from the client's VIDEOS folder, re-encoded to 720p. Open item for the client: confirm the music/voice-over in both films is licensed for web use.
+- Home and KVR Mahal now carry the full films (99 s and 55 s, silent: the source files have no sound) from the client's VIDEOS folder, re-encoded to 720p. The white ending of the hotel film was trimmed.

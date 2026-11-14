@@ -5,7 +5,7 @@ import { IconComponent } from './icon.component';
 import { ImageComponent } from './image.component';
 
 /**
- * A click-to-play film with sound. Until the visitor presses play only the cover photo is loaded (the video has
+ * A click-to-play film. Until the visitor presses play only the cover photo is loaded (the video has
  * preload="none" and is not even in the page), so it costs nothing for people who do not watch it.
  */
 @Component({
