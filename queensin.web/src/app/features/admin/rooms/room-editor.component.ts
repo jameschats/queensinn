@@ -52,7 +52,7 @@ type Target = 'featured' | 'gallery';
             <label class="alabel">Beds<input class="ainput" [(ngModel)]="form.bedType" (ngModelChange)="touch()" name="bed" maxlength="80" placeholder="e.g. King bed" /></label>
             <label class="alabel">View<input class="ainput" [(ngModel)]="form.viewType" (ngModelChange)="touch()" name="view" maxlength="80" placeholder="e.g. Garden view" /></label>
             <label class="alabel">Most guests<input class="ainput" type="number" min="1" max="20" [(ngModel)]="form.maxGuests" (ngModelChange)="touch()" name="guests" /></label>
-            <label class="alabel">Starting price per night (₹)<input class="ainput" type="number" min="0" [(ngModel)]="form.startingTariff" (ngModelChange)="touch()" name="tariff" />
+            <label class="alabel">Standard rate per night (₹)<input class="ainput" type="number" min="0" [(ngModel)]="form.startingTariff" (ngModelChange)="touch()" name="tariff" />
               <span class="ahint">Leave blank to show no price.</span></label>
             <label class="alabel">Tax note<input class="ainput" [(ngModel)]="form.taxNote" (ngModelChange)="touch()" name="tax" maxlength="60" placeholder="+ GST" /></label>
           </div>

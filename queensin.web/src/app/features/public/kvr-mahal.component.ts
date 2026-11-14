@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { absUrl } from '../../core/api.config';
 import { heroShadePercent } from '../../core/content/page-schemas';
 import { MediaItem } from '../../core/models/content.model';
@@ -20,11 +21,16 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
  */
 @Component({
   selector: 'qi-kvr-mahal',
-  imports: [PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="mandap"
-                  [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
+                  [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()">
+      <div class="mt-10 flex flex-wrap gap-3.5">
+        <a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a>
+        <a [href]="site.tel('Phone2')" class="btn btn-ghost">{{ t('hero', 'cta2Text') }}</a>
+      </div>
+    </qi-page-hero>
 
     <section class="on-dark bg-primary py-[clamp(56px,6vw,90px)] text-on-primary">
       <div class="wrap grid grid-cols-2 lg:grid-cols-4">

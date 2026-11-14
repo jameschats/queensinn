@@ -60,7 +60,7 @@
                       class="flex w-full items-baseline justify-between gap-4 border-b border-transparent bg-transparent pb-2.5 text-left transition-colors md:border-b-0 md:py-6"
                       [class]="i === roomIndex() ? 'text-ink border-accent' : 'text-muted hover:text-ink'">
                 <span class="font-serif text-[clamp(22px,2.2vw,32px)] leading-tight" [class.italic]="i === roomIndex()">{{ x.name }}</span>
-                <span class="hidden whitespace-nowrap text-[13px] tracking-[.06em] md:inline">from {{ inr(x.startingTariff) }}</span>
+                <span class="hidden whitespace-nowrap text-[13px] tracking-[.06em] md:inline">{{ inr(x.startingTariff) }}</span>
               </button>
             </li>
           }
@@ -87,7 +87,7 @@
                 <div class="flex items-center gap-3"><qi-icon name="guest" class="text-gold-ink" />Up to {{ r.maxGuests }} guests</div>
               </div>
               @if (r.startingTariff) {
-                <p class="mt-[18px] font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">per night {{ r.taxNote || '+ GST' }}</small></p>
+                <p class="mt-[18px] font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">standard rate per night {{ r.taxNote || '+ GST' }}</small></p>
               }
               <div class="mt-5 flex flex-wrap items-center gap-5">
                 <a [qiReserve]="'Hello Queen\'s Inn, I\'d like to reserve the ' + r.name + '. Please share availability and tariff.'" class="btn">Enquire</a>

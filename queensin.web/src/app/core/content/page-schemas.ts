@@ -75,6 +75,12 @@ const heroSection = (kicker: string, headline: string, lede: string, withButtons
   ],
 });
 
+/** Adds two editable button labels to a hero whose buttons go to fixed places (the event enquiry form and the events phone). */
+const withButtonText = (s: SectionDef, first: string, second: string): SectionDef => ({
+  ...s,
+  fields: [...s.fields, t('cta1Text', 'First button — text', first, { hint: 'Goes to the event enquiry form further down the page.' }), t('cta2Text', 'Second button — text', second, { hint: 'Calls the events desk phone from Site settings.' })],
+});
+
 export const HOME_AMENITY_ICONS = ['bell', 'snow', 'bolt', 'wifi', 'car', 'tray', 'people', 'leaf', 'bed', 'shield'];
 
 export const PAGES: PageDef[] = [
@@ -125,7 +131,7 @@ export const PAGES: PageDef[] = [
         fields: [
           t('kicker', 'Small line', 'Rooms & suites'),
           t('title', 'Heading', 'Rest, well considered'),
-          area('intro', 'Introduction', 'Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.', 3),
+          area('intro', 'Introduction', 'Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Rates shown are standard rates per night; seasonal and offer rates vary.', 3),
         ],
       },
       {
@@ -248,13 +254,22 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'notice',
+        title: 'Notice under the photo',
+        hint: 'Two short lines shown in a slim band under the page photo. Leave a line empty to hide it.',
+        fields: [
+          area('rates', 'About the rates', 'Rates shown are standard rates per night, plus GST. Seasonal and offer rates vary: check today’s price on the booking sites or ask the front desk.', 3),
+          t('peak', 'Busy season', 'Rooms fill quickly during the annual Feast (29 August to 8 September). Book early.'),
+        ],
+      },
+      {
         key: 'book',
         title: 'Booking sites',
-        hint: 'Shown only when booking links are added in Site settings → Booking sites. The buttons open those sites in a new tab.',
+        hint: 'Shown only when booking links are added in Site settings → Booking sites. The buttons open those sites in a new tab; the first one is highlighted.',
         fields: [
-          t('kicker', 'Small line', 'Prefer a booking site?'),
-          t('title', 'Heading', 'Compare prices and book online'),
-          area('intro', 'Introduction', 'You can send us a request above or message the front desk. If you would rather book through a travel site, our rooms are listed on MakeMyTrip, Booking.com, Agoda, Goibibo and more.', 3),
+          t('kicker', 'Small line', 'Book your stay'),
+          t('title', 'Heading', 'Check availability and prices'),
+          area('intro', 'Introduction', 'The quickest way to see live availability and today’s price is on the booking sites. You can also send us a request below or message the front desk.', 3),
         ],
       },
       {
@@ -283,7 +298,10 @@ export const PAGES: PageDef[] = [
       description: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
     },
     sections: [
-      heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
+      withButtonText(
+        heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
+        'Plan your event', 'Call the events desk',
+      ),
       {
         key: 'stats',
         title: 'Key figures',

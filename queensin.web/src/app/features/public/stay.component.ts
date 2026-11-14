@@ -25,6 +25,15 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="room"
                   [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
 
+    @if (t('notice', 'rates') || t('notice', 'peak')) {
+      <div class="bg-tint">
+        <div class="wrap grid gap-1.5 py-5 text-[14.5px] leading-normal text-muted md:grid-cols-2 md:gap-10">
+          @if (t('notice', 'rates')) { <p class="m-0">{{ t('notice', 'rates') }}</p> }
+          @if (t('notice', 'peak')) { <p class="m-0 font-medium text-ink">{{ t('notice', 'peak') }}</p> }
+        </div>
+      </div>
+    }
+
     <section class="sec" id="rooms">
       <div class="wrap grid gap-[clamp(64px,9vw,128px)]">
         @for (r of rooms(); track r.id; let i = $index) {
@@ -57,7 +66,7 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
                 </ul>
               }
               @if (r.startingTariff) {
-                <p class="mt-8 font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">per night {{ r.taxNote || '+ GST' }}</small></p>
+                <p class="mt-8 font-serif text-[30px] leading-[1.1]">{{ inr(r.startingTariff) }} <small class="font-sans text-[13px] tracking-[.04em] text-muted">standard rate per night {{ r.taxNote || '+ GST' }}</small></p>
               }
               <button type="button" class="btn mt-6" (click)="enquire(r)">Enquire for this room</button>
             </div>
@@ -67,6 +76,23 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
         }
       </div>
     </section>
+
+    @if (site.bookingLinks().length) {
+      <section class="sec" id="book-online">
+        <div class="wrap grid items-center gap-8 md:grid-cols-[1fr_auto]">
+          <div>
+            <span class="kicker">{{ t('book', 'kicker') }}</span>
+            <h2 class="h-display">{{ t('book', 'title') }}</h2>
+            <p class="mt-5 max-w-[56ch] whitespace-pre-line text-muted">{{ t('book', 'intro') }}</p>
+          </div>
+          <div class="flex flex-wrap gap-3 md:justify-end">
+            @for (l of site.bookingLinks(); track l.url; let first = $first) {
+              <a [href]="l.url" target="_blank" rel="noopener noreferrer" class="btn inline-flex gap-3" [class.btn-gold]="first" [class.btn-ghost]="!first"><qi-icon name="ext" [size]="16" />{{ l.name }}</a>
+            }
+          </div>
+        </div>
+      </section>
+    }
 
     <section class="sec bg-tint" id="reserve">
       <div class="wrap grid gap-[clamp(40px,7vw,120px)] lg:grid-cols-[.8fr_1.2fr]">
@@ -82,23 +108,6 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
         <qi-enquiry-form type="Room" [roomId]="selectedRoom()" />
       </div>
     </section>
-
-    @if (site.bookingLinks().length) {
-      <section class="sec" id="book-online">
-        <div class="wrap grid items-center gap-8 md:grid-cols-[1fr_auto]">
-          <div>
-            <span class="kicker">{{ t('book', 'kicker') }}</span>
-            <h2 class="h-display">{{ t('book', 'title') }}</h2>
-            <p class="mt-5 max-w-[56ch] whitespace-pre-line text-muted">{{ t('book', 'intro') }}</p>
-          </div>
-          <div class="flex flex-wrap gap-3 md:justify-end">
-            @for (l of site.bookingLinks(); track l.url) {
-              <a [href]="l.url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost inline-flex gap-3"><qi-icon name="ext" [size]="16" />{{ l.name }}</a>
-            }
-          </div>
-        </div>
-      </section>
-    }
 
     <section class="sec">
       <div class="wrap">
