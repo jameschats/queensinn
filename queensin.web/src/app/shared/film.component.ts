@@ -15,7 +15,7 @@ import { ImageComponent } from './image.component';
   template: `
     <div class="relative mx-auto aspect-video w-full max-w-[1040px] overflow-hidden bg-deep shadow-[0_20px_60px_rgb(0_0_0/0.35)]">
       @if (playing()) {
-        <video class="absolute inset-0 h-full w-full bg-black" [src]="src()" [attr.poster]="posterUrl()" controls autoplay playsinline preload="auto"
+        <video class="absolute inset-0 h-full w-full bg-black" [src]="src()" [attr.poster]="posterUrl()" controls autoplay loop playsinline preload="auto"
                [attr.aria-label]="label()"></video>
       } @else {
         <qi-image class="absolute inset-0 h-full w-full" [media]="poster()" art="dusk" [alt]="label()" sizes="(min-width: 1100px) 1040px, 100vw" />
