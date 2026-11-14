@@ -15,7 +15,8 @@ esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
 try() {   # try <port> <scheme>
   local port=$1 scheme=$2 out
   # The credentials go to curl on stdin, so they never appear in a process list or in the output below.
-  out=$(printf 'url = "%s://%s:%s"\nuser = "%s:%s"\n' "$scheme" "$HOST" "$port" "$(esc "$USER_NAME")" "$(esc "$PASS")" \
+  local tls=""; [ "$scheme" = "smtp" ] && tls='ssl-reqd'     # port 587 must upgrade to TLS before the login is sent
+  out=$(printf 'url = "%s://%s:%s"\nuser = "%s:%s"\n%s\n' "$scheme" "$HOST" "$port" "$(esc "$USER_NAME")" "$(esc "$PASS")" "$tls" \
         | curl -sS -v -m 25 -K - -X NOOP 2>&1) || true
   if   grep -qE '^< 235' <<<"$out"; then echo "  port $port: LOGIN ACCEPTED"; return 0
   elif grep -qE '^< 535' <<<"$out"; then echo "  port $port: login REJECTED (535 incorrect authentication data)"; return 1
@@ -31,6 +32,6 @@ if [ $r1 -eq 0 ] || [ $r2 -eq 0 ]; then
   echo "RESULT: the server accepts this login. The password is right, so the problem is in how the website stored it. Tell Claude."
 else
   echo "RESULT: the server does NOT accept this mailbox name and password."
-  echo "Check in GoDaddy: Email Accounts, find $USER_NAME, use Check Email (webmail) with the same password."
-  echo "If webmail also refuses it, set a new password (letters and digits only) and run this test again."
+  echo "Check the login name and password with whoever hosts the mail (for GoDaddy: Email Accounts, then Check Email;"
+  echo "for Brevo: the login and SMTP key shown under SMTP & API, SMTP). Fix it and run this test again."
 fi
