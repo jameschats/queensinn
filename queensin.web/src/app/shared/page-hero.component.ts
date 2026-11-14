@@ -32,9 +32,12 @@ import { ImageComponent } from './image.component';
                [src]="videoUrl(v)" [muted]="true" loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"
                (canplay)="videoReady.set(true)" (error)="videoFailed()"></video>
       }
-      <!-- No gradients over the photo. This flat, even tint (not a gradient) only keeps white text legible on bright photos; remove it for the untouched photo. -->
-      <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
-      <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
+      <!-- Nothing is laid over the photo or video by default, so its true colours show. The admin can still choose a flat, even tint
+           (Pages & content → Hero text → Darken the photo); the white text stays readable through a soft shadow of its own instead. -->
+      @if (shade() > 0) {
+        <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
+      }
+      <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)] [text-shadow:0_1px_2px_rgb(0_0_0/0.75),0_2px_18px_rgb(0_0_0/0.6),0_0_40px_rgb(0_0_0/0.35)]">
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
         <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
             [class]="full() ? 'max-w-[17ch] text-[clamp(36px,4.8vw,76px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>

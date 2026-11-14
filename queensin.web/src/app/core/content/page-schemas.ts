@@ -51,7 +51,7 @@ export const HERO_SHADES: Record<string, number> = { none: 0, light: 25, medium:
 export const heroShadePercent = (value: string): number => HERO_SHADES[value] ?? HERO_SHADES['light'];
 
 /** The hero's wording, shared by every page. */
-const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'medium'): SectionDef => ({
+const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'none'): SectionDef => ({
   key: 'hero',
   title: 'Hero text',
   hint: 'The large heading at the top of the page.',
@@ -486,7 +486,7 @@ export const PAGES: PageDef[] = [
       description: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
     },
     sections: [
-      heroSection('Contact', "We're a call away", 'Our front desk is open round the clock. Call, message or write to us.', false, undefined, 'medium'),
+      heroSection('Contact', "We're a call away", 'Our front desk is open round the clock. Call, message or write to us.', false, undefined, 'none'),
       {
         key: 'details',
         title: 'Contact details',

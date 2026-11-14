@@ -4,10 +4,8 @@
   [class.!duration-0]="instant()"
   [class]="scrolled() || solidRoute()
     ? 'bg-surface/95 text-ink shadow-[0_1px_0_var(--color-line)] backdrop-blur-md'
-    : 'text-on-primary'">
-  <!-- soft shade so the menu stays readable over bright photos while the bar is transparent -->
-  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-primary/55 to-transparent transition-opacity duration-300"
-       [class.opacity-0]="scrolled() || solidRoute()" [class.!duration-0]="instant()"></div>
+    : 'text-on-primary [text-shadow:0_1px_2px_rgb(0_0_0/0.7),0_1px_12px_rgb(0_0_0/0.55)]'">
+  <!-- No dark gradient behind the menu: the photo or video keeps its true colours, and the menu text carries its own soft shadow while the bar is transparent. -->
   <div class="wrap flex items-center justify-between gap-6 transition-[height] duration-300"
        [class]="scrolled() || solidRoute() ? 'h-[72px]' : 'h-[88px]'">
     <qi-brand />
