@@ -40,8 +40,10 @@ public static class MailTester
             await smtp.ConnectAsync(host, port, port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls);
             Console.WriteLine("Connected.");
             if (!string.IsNullOrWhiteSpace(user)) { await smtp.AuthenticateAsync(user, config["Smtp:Password"]); Console.WriteLine("Login accepted."); }
-            await smtp.SendAsync(msg);
+            var reply = await smtp.SendAsync(msg);
             await smtp.DisconnectAsync(true);
+            Console.WriteLine("Server reply: " + reply);
+            Console.WriteLine("Message-ID: " + msg.MessageId + "  (use it to find this message in the provider's delivery log)");
             Console.WriteLine("Sent. Check the inbox (and the spam folder) of " + recipient.Address + ".");
             return 0;
         }
