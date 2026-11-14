@@ -30,8 +30,8 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 - [x] **Distance to the Shrine Basilica** — the client confirmed: about **10 minutes by road** (about 30 minutes on foot, which the site does not state). The old "500 m" / "half a kilometre" / "ten-minute walk" wording (B and S) is replaced with "ten minutes by road" in the Home hero, welcome heading and figure ("10 min · by road to the Shrine Basilica"), About lead and location text, Contact directions, and the Home search description (migration 018 and page defaults).
 - [x] **Basilica distance in kilometres on the Experiences page** — now **2.1 km** (Google Maps, fastest road route about 8 minutes in usual traffic, 29 minutes on foot; migration 024). The text says "ten minutes by road", which allows for busy-season traffic.
 - [ ] "Within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar" (S) — removed. The blueprint lists them at 14 to 55 km; drive times are not stated.
-- [ ] Attraction distances: Nagore 14 km, Thirunallar 35 km, Point Calimere 45 km, Muthupet 50 km, Tranquebar 55 km (B). Confirm by road from the hotel.
-- [ ] Map coordinates saved in Site settings: 10.6806, 79.8474 (S). Used for the search-engine "Hotel" data. Confirm against the hotel's Google Maps pin.
+- [x] Attraction distances now measured on Google Maps (driving, fastest route from the hotel, 14 Nov 2026; migration 025): Basilica 2.1 km, Nagore 17.9 km, Thirunallar 33.2 km, Tranquebar 41.9 km, Point Calimere 47.1 km, Muthupet Mangrove Forest 57.4 km. The blueprint's figures (0.5, 14, 35, 45, 50, 55) were rough. Muthupet depends on where the boat trip starts; check with the hotel's tour desk.
+- [x] Map coordinates now Google's own pin for the hotel: 10.686307, 79.832944 (the saved 10.6806, 79.8474 was about 1.5 km off).
 - [ ] Address: "# 41/A, ECR Main Road, Arch West Street, Velankanni 611 111, Tamil Nadu" (S).
 
 ## 2. The property
