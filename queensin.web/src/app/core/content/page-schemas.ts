@@ -51,7 +51,7 @@ export const HERO_SHADES: Record<string, number> = { none: 0, light: 25, medium:
 export const heroShadePercent = (value: string): number => HERO_SHADES[value] ?? HERO_SHADES['light'];
 
 /** The hero's wording, shared by every page. */
-const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'light'): SectionDef => ({
+const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'medium'): SectionDef => ({
   key: 'hero',
   title: 'Hero text',
   hint: 'The large heading at the top of the page.',
@@ -91,7 +91,7 @@ export const PAGES: PageDef[] = [
       heroSection(
         '',
         'Tranquility meets luxury in the sacred heart of Velankanni',
-        'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.',
+        'A serene three-acre sanctuary on ECR Main Road, just 500 metres from the Shrine Basilica. Fifty-one air-conditioned rooms, multi-cuisine dining and the grand KVR Mahal.',
         true,
         ['Request tariff', 'reserve', 'Discover KVR Mahal', '/kvr-mahal'],
       ),
@@ -103,7 +103,7 @@ export const PAGES: PageDef[] = [
           t('kicker', 'Small line', "Welcome to Queen's Inn"),
           t('title', 'Heading', 'Half a kilometre from the Basilica. A world away from the crowd.'),
           area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.', 3),
-          area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
+          area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns and a swimming pool, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
           t('linkText', 'Link text', 'Read our story'),
         ],
       },
@@ -183,7 +183,7 @@ export const PAGES: PageDef[] = [
               'Secure parking | 100+ cars and tour buses inside the gates',
               'In-room dining | Served around the clock',
               'Meeting hall | For family gatherings and business groups',
-              'Garden lawns | With a children’s play area',
+              'Pool & garden lawns | A swimming pool, landscaped lawns and a children’s play area',
               'Driver quarters | Rest rooms, washrooms and meals for drivers',
               'Gated & guarded | CCTV and round-the-clock security',
             ].join('\n'),

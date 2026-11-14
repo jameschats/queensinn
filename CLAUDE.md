@@ -41,5 +41,5 @@ cd queensin.web && npx ng build && node dist/queensin-web/server/server.mjs
 ## Status
 - ✅ Stage 1 — design + HTML prototype
 - ✅ Stage 2 — solution, full schema (001–009), staff auth/roles, site settings, theme engine, admin: login, change password, dashboard, theme, settings, staff users; public layout + all routes (SSR, SEO tags, 404)
-- ⏭ Stage 3 — media pipeline (ImageSharp WebP), `qi-image`, hero images, design-system components
-- Stage 4 — rooms + pages/content admin · Stage 5 — public pages · Stage 6 — enquiries + email · Stage 7 — SEO/perf · Stage 8 — go-live
+- ✅ Stages 3–6 built (media pipeline, rooms, pages/content admin, public pages, enquiries) — see git log
+- ✅ Launch content pass — 34 real photos + 2 silent hero loops (`deploy/seed/media/`), room and policy text (migration 017). Open items for the client: room-to-photo matching, dining hours, pool details, Feast cancellation terms, refund timeline, real guest quotes, Experiences photos- Stage 4 — rooms + pages/content admin · Stage 5 — public pages · Stage 6 — enquiries + email · Stage 7 — SEO/perf · Stage 8 — go-live
