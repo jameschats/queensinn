@@ -41,15 +41,13 @@ import { ImageComponent } from './image.component';
         <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
       }
       <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)] [text-shadow:0_1px_2px_rgb(0_0_0/0.75),0_2px_18px_rgb(0_0_0/0.6),0_0_40px_rgb(0_0_0/0.35)]">
-        <!-- A small frosted panel behind the words only; the photo or video around it is untouched. -->
-        <div class="inline-block max-w-full rounded-2xl bg-primary/35 p-[clamp(20px,2.4vw,36px)] backdrop-blur-md">
+        <!-- A small frosted panel behind the small paragraph only (never the big headline); the photo or video around it is untouched. -->
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
         <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
             [class]="full() ? 'max-w-[17ch] text-[clamp(36px,4.8vw,76px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>
         @if (lede()) {
-          <p class="mt-7 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] text-on-primary/90 animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
+          <p class="mt-7 w-fit max-w-[46ch] rounded-xl bg-primary/40 px-4 py-3 text-[clamp(16px,1.3vw,19px)] text-on-primary backdrop-blur-md animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
         }
-        </div>
         <ng-content />
         @if (slides().length > 1 && !playingVideo()) {
           <div class="mt-8 flex gap-1" role="tablist" aria-label="Hero photos">
