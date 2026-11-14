@@ -28,6 +28,13 @@ export class SiteService {
     return a === 'call' || a === 'enquiry' ? a : 'whatsapp';
   });
   readonly reserveLabel = computed(() => this.get('ReserveLabel') || 'Reserve');
+  /** Buttons for the booking sites the hotel sells on, from the "Name | https://address" lines in Site settings. Anything that is not an http(s) address is ignored. */
+  readonly bookingLinks = computed(() =>
+    this.get('BookingLinks').split('\n').map((l) => l.split('|')).flatMap((p) => {
+      const name = (p[0] ?? '').trim();
+      const url = p.slice(1).join('|').trim();
+      return name && /^https?:\/\//i.test(url) ? [{ name, url }] : [];
+    }).slice(0, 8));
 
   load(): Observable<void> {
     return this.http.get<ApiResponse<SiteData>>(`${API_BASE_URL}/site`).pipe(

@@ -248,6 +248,16 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'book',
+        title: 'Booking sites',
+        hint: 'Shown only when booking links are added in Site settings → Booking sites. The buttons open those sites in a new tab.',
+        fields: [
+          t('kicker', 'Small line', 'Prefer a booking site?'),
+          t('title', 'Heading', 'Compare prices and book online'),
+          area('intro', 'Introduction', 'You can send us a request above or message the front desk. If you would rather book through a travel site, our rooms are listed on MakeMyTrip, Booking.com, Agoda, Goibibo and more.', 3),
+        ],
+      },
+      {
         key: 'know',
         title: 'Good to know',
         hint: 'Check-in and check-out times come from Site settings: write {checkin} and {checkout} where the times belong.',

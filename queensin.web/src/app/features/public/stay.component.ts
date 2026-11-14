@@ -83,6 +83,23 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
       </div>
     </section>
 
+    @if (site.bookingLinks().length) {
+      <section class="sec" id="book-online">
+        <div class="wrap grid items-center gap-8 md:grid-cols-[1fr_auto]">
+          <div>
+            <span class="kicker">{{ t('book', 'kicker') }}</span>
+            <h2 class="h-display">{{ t('book', 'title') }}</h2>
+            <p class="mt-5 max-w-[56ch] whitespace-pre-line text-muted">{{ t('book', 'intro') }}</p>
+          </div>
+          <div class="flex flex-wrap gap-3 md:justify-end">
+            @for (l of site.bookingLinks(); track l.url) {
+              <a [href]="l.url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost inline-flex gap-3"><qi-icon name="ext" [size]="16" />{{ l.name }}</a>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
     <section class="sec">
       <div class="wrap">
         <div class="mb-[clamp(36px,5vw,64px)] flex flex-wrap items-end justify-between gap-6">

@@ -20,7 +20,9 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 - [ ] **Restaurant:** official lists South Indian, North Indian, Continental, Chinese, Seafood, Italian and French, cocktails, juices, desserts, buffet breakfast, lunch and dinner. It gives no serving hours (ours are unverified).
 - [ ] **Experiences:** official also lists **Karaikal**, **Poompuhar** and **Velankanni Beach**; it does not list Tranquebar (which came from the blueprint).
 - [ ] **Distances from the official About page:** 150 km from Trichy airport; within 2 km of Velankanni railway station and bus stand.
-- [ ] **Old URLs to keep (100% URL preservation):** the official site also has `/book-online` and `/properties`, which our site does not serve yet. Redirect them (for example to /bookroom).
+- [x] **Old URLs kept (100% URL preservation):** `/book-online` (an empty booking widget) and `/properties` (an unused listing template) now redirect permanently (301) to /bookroom.
+- [x] **Online booking:** the official site's own booking system is blocked and nothing links to a booking site. The hotel sells through MakeMyTrip, Booking.com, Agoda, Goibibo, Cleartrip and others, so the Rooms page now has a "Prefer a booking site?" section. It is seeded with the hotel's Google Hotels listing (which compares all of them). The client can add each site's own listing link in admin Site settings → Booking sites (one "Name | https://address" per line).
+- [ ] **Rate parity:** on Google Hotels the booking sites show Deluxe Double at about Rs 2,787 to 3,657 for a night (taxes included), while our site and the official site say "from Rs 3,500 + GST". A guest comparing may find the booking sites cheaper than booking direct. The hotel should decide its rates.
 - [ ] **Search title and description on the official site:** "Hotel Queen's Inn, Velankanni | High End Luxury Hotel". Ours is "... | Luxury Hotel & KVR Mahal". Keep ours or match theirs.
 
 ## 1. Location and distances (most important)

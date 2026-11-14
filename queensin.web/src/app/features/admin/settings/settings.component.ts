@@ -131,6 +131,15 @@ export class SettingsComponent {
       ],
     },
     {
+      title: 'Booking sites',
+      fields: [
+        {
+          key: 'BookingLinks', label: 'Booking site links', type: 'textarea', wide: true,
+          hint: 'Buttons on the Rooms page that open a booking site in a new tab. One per line, written as: Name | https://address. For example: Booking.com | https://www.booking.com/hotel/in/… Leave empty to hide the section.',
+        },
+      ],
+    },
+    {
       title: 'Stay',
       fields: [
         { key: 'CheckInTime', label: 'Check-in time' },
