@@ -15,7 +15,7 @@ import { CrownComponent } from './icon.component';
   template: `
     @if (logo(); as src) {
       <a [routerLink]="link()" class="block leading-none" [attr.aria-label]="site.hotelName() + ' home'">
-        <img [src]="src" [alt]="'Hotel ' + site.hotelName() + ', ' + site.get('LocationLine')" height="60" class="h-[60px] w-auto max-w-[220px] object-contain" />
+        <img [src]="src" [alt]="'Hotel ' + site.hotelName() + ', ' + site.get('LocationLine')" width="165" height="60" class="h-[60px] w-auto max-w-[220px] object-contain" />
       </a>
     } @else {
       <a [routerLink]="link()" class="flex items-center gap-3 leading-none" [attr.aria-label]="site.hotelName() + ' home'">
@@ -36,6 +36,8 @@ export class BrandComponent {
   /** The logo image address from Site settings (site-relative uploads are completed with the API address), or '' for the text lockup. */
   protected readonly logo = computed(() => {
     const u = this.site.get('LogoLightUrl') || this.site.get('LogoDarkUrl');
-    return u ? absUrl(u) : '';
+    // The logo is shown about 190 px wide, so the 480 px copy of an uploaded photo is plenty (even on sharp phone screens)
+    // and is a fraction of the size of the full one. Other addresses are used as they are.
+    return u ? absUrl(u.replace(/-\d+\.webp$/, '-480.webp')) : '';
   });
 }

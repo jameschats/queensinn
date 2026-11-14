@@ -55,7 +55,7 @@
       <div class="grid items-start gap-[clamp(32px,6vw,96px)] md:grid-cols-[minmax(260px,.8fr)_1.6fr]">
         <ul class="m-0 flex list-none gap-6 overflow-x-auto border-0 p-0 md:block md:overflow-visible md:border-t md:border-line" role="tablist" aria-label="Room categories">
           @for (x of rooms(); track x.id; let i = $index) {
-            <li class="flex-none md:border-b md:border-line">
+            <li class="flex-none md:border-b md:border-line" role="presentation">
               <button type="button" role="tab" [attr.aria-selected]="i === roomIndex()" (click)="roomIndex.set(i)"
                       class="flex w-full items-baseline justify-between gap-4 border-b border-transparent bg-transparent pb-2.5 text-left transition-colors md:border-b-0 md:py-6"
                       [class]="i === roomIndex() ? 'text-ink border-accent' : 'text-muted hover:text-ink'">

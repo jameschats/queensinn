@@ -4,7 +4,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { API_BASE_URL, absUrl } from '../api.config';
 import { ApiResponse } from '../models/api.model';
-import { fontStack, googleFontsUrl } from '../models/fonts';
+import { BUNDLED_FONTS, fontStack, googleFontsUrl } from '../models/fonts';
 import { DEFAULT_SETTINGS, DEFAULT_THEME, SiteData, Theme } from '../models/site.model';
 
 /**
@@ -94,10 +94,12 @@ export class SiteService {
     style.setProperty('--font-weight-light', String(theme.bodyWeight));
     style.setProperty('--base-size', `${theme.baseSize}px`);
     style.setProperty('--font-scale', String(theme.baseSize / DEFAULT_THEME.baseSize));
-    this.setFontLink('qi-fonts', googleFontsUrl([
-      { name: theme.headingFont, role: 'heading' },
-      { name: theme.bodyFont, role: 'body' },
-    ]));
+    // Fonts that ship with the site need no request to Google; only other chosen fonts are loaded from there.
+    const remote = [
+      { name: theme.headingFont, role: 'heading' as const },
+      { name: theme.bodyFont, role: 'body' as const },
+    ].filter((f) => !BUNDLED_FONTS.includes(f.name));
+    this.setFontLink('qi-fonts', remote.length ? googleFontsUrl(remote) : '');
   }
 
   /**
@@ -138,6 +140,7 @@ export class SiteService {
   private setFontLink(id: string, href: string): void {
     const head = this.doc.head;
     let link = head.querySelector<HTMLLinkElement>(`link#${id}`);
+    if (!href) { link?.remove(); return; }       // nothing to load: the fonts are bundled
     if (!link) {
       link = this.doc.createElement('link');
       link.id = id;

@@ -92,6 +92,9 @@ export function findFont(name: string): FontOption | undefined {
 }
 
 /** CSS font stack with a same-kind fallback, so text never drops to a mismatched face while loading. */
+/** Fonts shipped with the site itself (see the @font-face rules in styles.css); every other font is loaded from Google. */
+export const BUNDLED_FONTS: readonly string[] = ['Lora', 'Nunito Sans'];
+
 export function fontStack(name: string): string {
   const kind = findFont(name)?.kind ?? 'sans';
   const fallback = kind === 'serif' ? 'Georgia, "Times New Roman", serif' : '"Helvetica Neue", Arial, sans-serif';

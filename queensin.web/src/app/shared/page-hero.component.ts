@@ -19,11 +19,14 @@ import { ImageComponent } from './image.component';
   template: `
     <section class="on-dark relative flex overflow-hidden bg-primary text-on-primary"
              [class]="full() ? 'h-svh min-h-[640px]' : 'min-h-[70vh] pt-[150px]'">
+      <!-- Only the first photo is fetched at once; the others follow a moment later, so the first one (and the page) paints sooner. -->
       @for (s of slides(); track s.id; let i = $index) {
-        <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
-             [class.kb]="i === active() && !playingVideo()" [attr.aria-hidden]="i !== active()">
-          <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
-        </div>
+        @if (i === 0 || more()) {
+          <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
+               [class.kb]="i === active() && !playingVideo()" [attr.aria-hidden]="i !== active()">
+            <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
+          </div>
+        }
       } @empty {
         <qi-image class="absolute inset-0 h-full w-full opacity-40" [art]="art()" />
       }
@@ -77,6 +80,8 @@ export class PageHeroComponent {
   readonly shade = input(25);
 
   protected readonly active = signal(0);
+  /** True a moment after load: the photos after the first are rendered (and fetched) only then. */
+  protected readonly more = signal(false);
   protected readonly playingVideo = signal(false);
   protected readonly videoReady = signal(false);
   private readonly videoEl = viewChild<ElementRef<HTMLVideoElement>>('vid');
@@ -90,7 +95,8 @@ export class PageHeroComponent {
       const wide = window.matchMedia('(min-width: 768px)').matches;
       if (this.video() && wide && !reduced && !saveData) this.playingVideo.set(true);
       else if (!reduced) this.start();
-      this.destroyRef.onDestroy(() => clearInterval(this.timer));
+      const later = setTimeout(() => this.more.set(true), 2500);
+      this.destroyRef.onDestroy(() => { clearInterval(this.timer); clearTimeout(later); });
     });
     // The muted *property* (not the attribute) is what lets browsers autoplay, so set it and start playback explicitly.
     effect(() => {
@@ -114,6 +120,7 @@ export class PageHeroComponent {
   }
 
   protected go(i: number): void {
+    this.more.set(true);
     this.active.set(i);
     clearInterval(this.timer);   // a visitor's choice restarts the countdown
     this.start();
