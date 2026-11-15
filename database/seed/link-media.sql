@@ -118,3 +118,19 @@ UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'film-queens-inn' S
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'hero-lobby'     SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-home-poster' AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'film-kvr-mahal' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-kvr'         AND s.`MediaId` IS NULL;
 UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'mahal-stage'    SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'film-kvr-poster'  AND s.`MediaId` IS NULL;
+
+-- More hero photos for every page (they slide on phones and desktops). Only added to a page that still has no more than its
+-- original seeded photos, so a page whose photos staff have already chosen is never touched; each photo is added once.
+INSERT INTO `HeroSlides` (`PageId`, `MediaId`, `DisplayOrder`)
+SELECT p.`PageId`, m.`MediaId`, o.`ord`
+FROM (SELECT '' slug, 'pool-aerial-wide' k, 4 ord, 3 seeded UNION ALL SELECT '', 'gallery-01', 5, 3
+      UNION ALL SELECT 'bookroom', 'room-family', 3, 2 UNION ALL SELECT 'bookroom', 'room-executive', 4, 2 UNION ALL SELECT 'bookroom', 'room-twin', 5, 2
+      UNION ALL SELECT 'kvr-mahal', 'mahal-aisle', 4, 3 UNION ALL SELECT 'kvr-mahal', 'mahal-backdrop', 5, 3
+      UNION ALL SELECT 'about-us', 'hero-dusk', 2, 1 UNION ALL SELECT 'about-us', 'gallery-03', 3, 1 UNION ALL SELECT 'about-us', 'hero-garden', 4, 1
+      UNION ALL SELECT 'activities', 'attraction-nagore', 2, 1 UNION ALL SELECT 'activities', 'attraction-thirunallar', 3, 1 UNION ALL SELECT 'activities', 'attraction-calimere', 4, 1
+      UNION ALL SELECT 'activities', 'attraction-muthupet', 5, 1 UNION ALL SELECT 'activities', 'attraction-tranquebar', 6, 1
+      UNION ALL SELECT 'contact', 'gallery-01', 2, 1 UNION ALL SELECT 'contact', 'gallery-02', 3, 1 UNION ALL SELECT 'contact', 'dish-breakfast', 4, 1) o
+JOIN `Pages` p ON p.`Slug` = o.`slug`
+JOIN `MediaAssets` m ON m.`FileName` = o.`k`
+WHERE (SELECT COUNT(*) FROM `HeroSlides` h WHERE h.`PageId` = p.`PageId` AND h.`MediaId` IS NOT NULL) <= o.`seeded`
+  AND NOT EXISTS (SELECT 1 FROM `HeroSlides` h2 WHERE h2.`PageId` = p.`PageId` AND h2.`MediaId` = m.`MediaId`);
