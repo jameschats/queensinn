@@ -35,7 +35,7 @@ const MOBILE_LIMIT = 6;
     </div>
 
     <!-- phones: one card per row -->
-    <ul class="m-0 grid list-none gap-9 p-0 md:hidden">
+    <ul class="m-0 grid list-none gap-9 px-[var(--pad)] py-0 md:hidden">
       @for (it of mobileItems(); track it.id) {
         <li><ng-container *ngTemplateOutlet="card; context: { $implicit: it, sizes: '100vw', ratio: 'aspect-[4/5]', hidden: false }" /></li>
       }
