@@ -97,12 +97,9 @@ public sealed partial class AnalyticsService
             }
         }
 
-        var pages = await q.GroupBy(v => v.Path)
-            .Select(g => new CountRow(g.Key, g.Count(), g.Select(x => x.VisitorHash).Distinct().Count())).OrderByDescending(r => r.Views).Take(10).ToListAsync(ct);
-        var refs = await q.GroupBy(v => v.Referrer ?? "")
-            .Select(g => new CountRow(g.Key, g.Count(), g.Select(x => x.VisitorHash).Distinct().Count())).OrderByDescending(r => r.Views).Take(10).ToListAsync(ct);
-        var devices = await q.GroupBy(v => v.Device)
-            .Select(g => new CountRow(g.Key, g.Count(), g.Select(x => x.VisitorHash).Distinct().Count())).OrderByDescending(r => r.Views).ToListAsync(ct);
+        var pages = (await q.GroupBy(v => v.Path).Select(g => new { Label = g.Key, Views = g.Count(), Visitors = g.Select(x => x.VisitorHash).Distinct().Count() }).OrderByDescending(r => r.Views).Take(10).ToListAsync(ct)).Select(r => new CountRow(r.Label, r.Views, r.Visitors)).ToList();
+        var refs = (await q.GroupBy(v => v.Referrer ?? "").Select(g => new { Label = g.Key, Views = g.Count(), Visitors = g.Select(x => x.VisitorHash).Distinct().Count() }).OrderByDescending(r => r.Views).Take(10).ToListAsync(ct)).Select(r => new CountRow(r.Label, r.Views, r.Visitors)).ToList();
+        var devices = (await q.GroupBy(v => v.Device).Select(g => new { Label = g.Key, Views = g.Count(), Visitors = g.Select(x => x.VisitorHash).Distinct().Count() }).OrderByDescending(r => r.Views).ToListAsync(ct)).Select(r => new CountRow(r.Label, r.Views, r.Visitors)).ToList();
 
         return new AnalyticsDto(from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"), monthly ? "month" : "day",
             new Totals(daily.Sum(d => d.Views), daily.Sum(d => d.Visitors)), new Totals(prev.Sum(d => d.Views), prev.Sum(d => d.Visitors)),
