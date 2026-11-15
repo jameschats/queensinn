@@ -115,3 +115,6 @@ Tick a line when confirmed; correct it in the admin (Pages & content, Rooms, Exp
 
 ## Watch-the-film sections
 - Home and KVR Mahal now carry the full films (99 s and 55 s, silent: the source files have no sound) from the client's VIDEOS folder, re-encoded to 720p. The white ending of the hotel film was trimmed.
+
+## Q Bar photos
+- Three photos supplied in chat (a bar counter, two cocktails, crystal glasses) are now in the Q Bar section. They do not look like pictures of Queen's Inn's own bar (the bar photo has Western-style bottles and beer taps), so they read as stock or mood photos. Open item for the client: confirm where they came from (licence) and replace them with photos of the real Q Bar once it is built. Check the alcohol-advertising rules before showing drinks in public marketing.

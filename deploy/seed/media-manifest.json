@@ -322,5 +322,26 @@
     "category": "Mahal",
     "alt": "Film of KVR Mahal: exterior, entrance, stage decor and the ceremonial hall",
     "caption": null
+  },
+  {
+    "key": "qbar-bar",
+    "file": "media/qbar-bar.jpg",
+    "category": "Dining",
+    "alt": "A warmly lit bar counter with wooden panelling, tall stools and glowing globe lamps",
+    "caption": null
+  },
+  {
+    "key": "qbar-cocktails",
+    "file": "media/qbar-cocktails.jpg",
+    "category": "Dining",
+    "alt": "Two colourful drinks with mint, lime and strawberry on a wooden table in a softly lit restaurant",
+    "caption": null
+  },
+  {
+    "key": "qbar-glasses",
+    "file": "media/qbar-glasses.jpg",
+    "category": "Dining",
+    "alt": "Crystal glasses and a tall glass with cucumber ribbon on a marble bar top",
+    "caption": null
   }
 ]

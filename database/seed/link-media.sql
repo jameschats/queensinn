@@ -134,3 +134,8 @@ JOIN `Pages` p ON p.`Slug` = o.`slug`
 JOIN `MediaAssets` m ON m.`FileName` = o.`k`
 WHERE (SELECT COUNT(*) FROM `HeroSlides` h WHERE h.`PageId` = p.`PageId` AND h.`MediaId` IS NOT NULL) <= o.`seeded`
   AND NOT EXISTS (SELECT 1 FROM `HeroSlides` h2 WHERE h2.`PageId` = p.`PageId` AND h2.`MediaId` = m.`MediaId`);
+
+-- Q Bar photos (Home). Only fills empty positions.
+UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'qbar-bar'       SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'qbar-1' AND s.`MediaId` IS NULL;
+UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'qbar-cocktails' SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'qbar-2' AND s.`MediaId` IS NULL;
+UPDATE `ImageSlots` s JOIN `MediaAssets` m ON m.`FileName` = 'qbar-glasses'   SET s.`MediaId` = m.`MediaId` WHERE s.`SlotKey` = 'qbar-3' AND s.`MediaId` IS NULL;
