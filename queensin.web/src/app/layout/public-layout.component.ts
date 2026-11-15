@@ -4,6 +4,8 @@ import {
   NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet, Scroll,
 } from '@angular/router';
 import { filter } from 'rxjs';
+import { API_BASE_URL } from '../core/api.config';
+import { AuthService } from '../core/services/auth.service';
 import { ContentService } from '../core/services/content.service';
 import { SiteService } from '../core/services/site.service';
 import { BrandComponent } from '../shared/brand.component';
@@ -32,6 +34,8 @@ export class PublicLayoutComponent {
   protected readonly site = inject(SiteService);
   private readonly router = inject(Router);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly auth = inject(AuthService);
+  private lastTracked = '';
 
   protected readonly scrolled = signal(false);
   protected readonly solidRoute = signal(false);
@@ -89,7 +93,23 @@ export class PublicLayoutComponent {
         this.instant.set(false);
       }
     });
-    inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); });
+    const tracker = this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)).subscribe((e) => this.track(e.urlAfterRedirects));
+    inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); tracker.unsubscribe(); });
+  }
+
+  /** Counts the page view (no cookies, nothing personal). Skipped for signed-in staff, and when only the #section changes. */
+  private track(url: string): void {
+    if (!this.isBrowser || this.auth.isAuthenticated()) return;
+    const path = url.split(/[?#]/)[0];
+    if (path === this.lastTracked) return;
+    const first = this.lastTracked === '';
+    this.lastTracked = path;
+    try {
+      void fetch(`${API_BASE_URL}/track`, {
+        method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, referrer: first ? document.referrer : '' }),
+      }).catch(() => {});
+    } catch { /* never get in the visitor's way */ }
   }
 
   protected onScroll(): void {

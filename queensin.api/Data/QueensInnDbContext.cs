@@ -37,6 +37,7 @@ public sealed class QueensInnDbContext : DbContext
     public DbSet<PolicyPage> PolicyPages => Set<PolicyPage>();
     public DbSet<Enquiry> Enquiries => Set<Enquiry>();
     public DbSet<EnquiryNote> EnquiryNotes => Set<EnquiryNote>();
+    public DbSet<PageView> PageViews => Set<PageView>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -61,6 +62,7 @@ public sealed class QueensInnDbContext : DbContext
         b.Entity<PolicyPage>(e => { e.ToTable("PolicyPages"); e.HasKey(x => x.Slug); });
         b.Entity<Enquiry>(e => { e.ToTable("Enquiries"); e.HasKey(x => x.EnquiryId); });
         b.Entity<EnquiryNote>(e => { e.ToTable("EnquiryNotes"); e.HasKey(x => x.EnquiryNoteId); });
+        b.Entity<PageView>(e => { e.ToTable("PageViews"); e.HasKey(x => x.PageViewId); });
 
         b.Entity<User>(e =>
         {

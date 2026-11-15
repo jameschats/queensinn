@@ -76,6 +76,7 @@ builder.Services.AddAuthorization(o =>
 
 // --- Features --------------------------------------------------------------
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<queensin.api.Features.Analytics.AnalyticsService>();
 builder.Services.AddScoped<IStaffUserService, StaffUserService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IFaviconService, FaviconService>();
@@ -121,6 +122,10 @@ builder.Services.AddRateLimiter(o =>
     o.AddPolicy("enquiry", ctx => RateLimitPartition.GetFixedWindowLimiter(
         ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+    // Page-view counting: generous, only there to stop a runaway script.
+    o.AddPolicy("track", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
 });
 
 var app = builder.Build();

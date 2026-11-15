@@ -160,6 +160,13 @@ export interface EnquiryDetail {
   notes: { id: number; note: string; by: string | null; createdAt: string }[];
 }
 
+export interface AnalyticsCount { label: string; views: number; visitors: number; }
+export interface Analytics {
+  from: string; to: string; bucket: 'day' | 'month';
+  current: { views: number; visitors: number }; previous: { views: number; visitors: number };
+  series: AnalyticsCount[]; topPages: AnalyticsCount[]; referrers: AnalyticsCount[]; devices: AnalyticsCount[];
+}
+
 export interface EnquiryCounts {
   new: number;
   total: number;
@@ -307,6 +314,10 @@ export class AdminApiService {
     const params: Record<string, string> = {};
     for (const [k, v] of Object.entries(p)) if (v !== undefined && v !== '') params[k] = String(v);
     return this.http.get<ApiResponse<{ items: EnquirySummary[]; totalCount: number }>>(`${this.base}/enquiries`, { params }).pipe(map((r) => r.data!));
+  }
+
+  analytics(from: string, to: string): Observable<Analytics> {
+    return this.http.get<ApiResponse<Analytics>>(`${this.base}/analytics`, { params: { from, to } }).pipe(map((r) => r.data!));
   }
 
   enquiryCounts(): Observable<EnquiryCounts> {
