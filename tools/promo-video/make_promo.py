@@ -41,6 +41,23 @@ for _s in (sys.stdout, sys.stderr):
     except Exception: pass
 
 
+def load_key():
+    """The key comes from tools/promo-video/.env (a line GEMINI_API_KEY=...), else from the GEMINI_API_KEY environment variable.
+    It is never printed. A file named .env is ignored by git."""
+    key = ""
+    env = HERE / ".env"
+    if env.exists():
+        for line in env.read_text(encoding="utf-8-sig").splitlines():
+            line = line.strip()
+            if line.startswith("GEMINI_API_KEY") and "=" in line:
+                key = line.split("=", 1)[1].strip().strip('"').strip("'")
+    key = key or os.environ.get("GEMINI_API_KEY", "").strip()
+    if key and not (key.startswith("AIza") and len(key) >= 35):
+        print("Note: the saved key does not look like a Google AI Studio key (they start with AIza and are about 39 characters). "
+              "Copy it again with the copy button on aistudio.google.com/apikey if Google rejects it.")
+    return key
+
+
 def die(msg):
     print("\n" + msg, file=sys.stderr)
     sys.exit(1)
@@ -280,7 +297,7 @@ def main():
 
     if shutil.which("ffmpeg") is None or shutil.which("ffprobe") is None:
         die("ffmpeg and ffprobe must be installed and on PATH.")
-    key = os.environ.get("GEMINI_API_KEY", "")
+    key = load_key()
     if not key and not a.dry_run:
         die("Set your Google AI Studio key first (type it in your own terminal, not in a chat):\n"
             "  PowerShell:  $env:GEMINI_API_KEY = 'your-key'\n  then run this script again.")

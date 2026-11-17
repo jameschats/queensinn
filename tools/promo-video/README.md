@@ -5,13 +5,8 @@ text-to-speech (the voices in Google AI Studio). The words are in `scenes.json`;
 
 ## One-time
 1. Get a free key at https://aistudio.google.com/apikey.
-2. In **your own** PowerShell window (never paste the key into a chat or a file in the repo):
-
-   ```powershell
-   $env:GEMINI_API_KEY = "paste-your-key-here"
-   ```
-
-   The key lives only in that window and goes away when you close it.
+2. Open `tools\promo-video\.env` (created empty, and ignored by git) and paste the key after `GEMINI_API_KEY=` with no quotes. Save it.
+   Never paste the key into a chat or into any file that is committed.
 3. Needs Python 3, ffmpeg (already installed on this PC) and Microsoft Edge or Google Chrome.
 
 ## Run
