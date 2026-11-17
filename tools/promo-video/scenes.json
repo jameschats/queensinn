@@ -1,0 +1,47 @@
+{
+  "_note": "Facts come from the website and content-fact-check.md. 'say' is what the voice reads (numbers and the web address are spelled out so they are pronounced well); 'title' and 'sub' are the on-screen words. Edit freely, then run make_promo.py again.",
+  "scenes": [
+    {
+      "images": ["hero-dusk.jpg"],
+      "en": { "say": "Coming to Velankanni?", "title": "Coming to Velankanni?", "sub": "" },
+      "ta": { "say": "வேளாங்கண்ணிக்கு வருகிறீர்களா?", "title": "வேளாங்கண்ணிக்கு வருகிறீர்களா?", "sub": "" }
+    },
+    {
+      "images": ["campus-aerial.jpg", "hero-garden.jpg"],
+      "en": { "say": "Stay at Hotel Queen's Inn: three gated acres of garden, just ten minutes by road from the Basilica.", "title": "Hotel Queen's Inn", "sub": "10 minutes by road from the Basilica" },
+      "ta": { "say": "ஹோட்டல் குயின்ஸ் இன்னில் தங்குங்கள். மூன்று ஏக்கர் பரந்த தோட்டம், பேராலயத்திலிருந்து சாலை வழியாக பத்து நிமிடங்களில்.", "title": "ஹோட்டல் குயின்ஸ் இன்", "sub": "பேராலயத்திலிருந்து சாலை வழியாக 10 நிமிடங்கள்" }
+    },
+    {
+      "images": ["room-deluxe.jpg", "room-suite.jpg"],
+      "en": { "say": "Air-conditioned rooms made for a good night's rest, from the Deluxe Double to the Queen's Suite. Rooms from three thousand five hundred rupees, plus G S T.", "title": "Air-conditioned rooms", "sub": "From Rs 3,500 + GST" },
+      "ta": { "say": "நிம்மதியான உறக்கத்திற்கு ஏற்ற குளிர்சாதன அறைகள், டீலக்ஸ் டபுள் முதல் குயின்ஸ் சூட் வரை. கட்டணம் மூவாயிரத்து ஐந்நூறு ரூபாயிலிருந்து, ஜி.எஸ்.டி தனி.", "title": "குளிர்சாதன அறைகள்", "sub": "₹3,500 முதல் + ஜி.எஸ்.டி" }
+    },
+    {
+      "images": ["pool-aerial-wide.jpg", "gallery-02.jpg"],
+      "en": { "say": "Unwind by the swimming pool after a long day of darshan.", "title": "Swimming pool and gardens", "sub": "" },
+      "ta": { "say": "நாள் முழுவதும் தரிசனம் முடிந்த பிறகு, நீச்சல் குளக்கரையில் ஓய்வெடுங்கள்.", "title": "நீச்சல் குளம் மற்றும் தோட்டம்", "sub": "" }
+    },
+    {
+      "images": ["dish-seafood.jpg", "dish-breakfast.jpg"],
+      "en": { "say": "Breakfast, lunch and dinner at our restaurant, with South Indian and North Indian dishes and fresh coastal seafood.", "title": "Q Multi-Cuisine Restaurant", "sub": "Breakfast · Lunch · Dinner" },
+      "ta": { "say": "எங்கள் உணவகத்தில் காலை, மதியம், இரவு உணவு. தென்னிந்திய, வட இந்திய உணவுகளும், புதிய கடல் உணவும்.", "title": "Q மல்டி-குசைன் உணவகம்", "sub": "காலை · மதியம் · இரவு" }
+    },
+    {
+      "images": ["mahal-hall.jpg", "mahal-dining.jpg", "mahal-stage.jpg"],
+      "en": { "say": "Planning a wedding? K V R Mahal is a fully air-conditioned hall with a three-hundred-seat dining pavilion, and your guests stay right beside it.", "title": "KVR Mahal", "sub": "Fully air-conditioned · 300-seat dining pavilion" },
+      "ta": { "say": "திருமணம் திட்டமிடுகிறீர்களா? கே.வி.ஆர் மஹால் முழுவதும் குளிர்சாதன வசதி கொண்ட மண்டபம், முந்நூறு பேர் அமரும் உணவு அரங்குடன். உங்கள் விருந்தினர்கள் அருகிலேயே தங்கலாம்.", "title": "கே.வி.ஆர் மஹால்", "sub": "முழுவதும் குளிர்சாதனம் · 300 இருக்கை உணவு அரங்கு" }
+    },
+    {
+      "images": ["hero-lobby.jpg", "exterior-night.jpg"],
+      "en": { "say": "Our front desk is open round the clock, to help with temple timings and travel.", "title": "Front desk open 24 hours", "sub": "Temple timings and travel help" },
+      "ta": { "say": "எங்கள் வரவேற்பு மேசை இரவும் பகலும் திறந்திருக்கும். கோயில் நேரங்கள், பயண ஏற்பாடுகளில் உதவ தயாராக.", "title": "வரவேற்பு 24 மணி நேரமும்", "sub": "கோயில் நேரம் மற்றும் பயண உதவி" }
+    },
+    {
+      "end": true,
+      "images": ["exterior-night.jpg"],
+      "logo": "brand-logo.png",
+      "en": { "say": "Hotel Queen's Inn, Velankanni. Message us on WhatsApp, or visit queensinn dot co dot in.", "title": "Hotel Queen's Inn, Velankanni", "sub": "WhatsApp us · queensinn.co.in" },
+      "ta": { "say": "ஹோட்டல் குயின்ஸ் இன், வேளாங்கண்ணி. வாட்ஸ்அப்பில் தொடர்பு கொள்ளுங்கள், அல்லது குயின்ஸ் இன் டாட் கோ டாட் இன் இணையதளத்தைப் பாருங்கள்.", "title": "ஹோட்டல் குயின்ஸ் இன், வேளாங்கண்ணி", "sub": "வாட்ஸ்அப் · queensinn.co.in" }
+    }
+  ]
+}
