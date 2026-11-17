@@ -152,6 +152,7 @@ export class SettingsComponent {
         { key: 'FacebookUrl', label: 'Facebook', type: 'url' },
         { key: 'InstagramUrl', label: 'Instagram', type: 'url' },
         { key: 'YouTubeUrl', label: 'YouTube', type: 'url' },
+        { key: 'GoogleProfileUrl', label: 'Google listing (reviews and directions)', type: 'url', wide: true, hint: "The hotel's Google Business Profile link. Shown in the footer as Google reviews." },
       ],
     },
   ];
