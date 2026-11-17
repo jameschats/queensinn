@@ -108,7 +108,7 @@
       <p class="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] tracking-[.04em]">
         @if (site.get('InstagramUrl')) { <a [href]="site.get('InstagramUrl')" target="_blank" rel="noopener me" class="inline-flex items-center gap-2 hover:text-on-primary" aria-label="Instagram"><qi-icon name="ig" [size]="22" />Instagram</a> }
         @if (site.get('FacebookUrl')) { <a [href]="site.get('FacebookUrl')" target="_blank" rel="noopener me" class="inline-flex items-center gap-2 hover:text-on-primary" aria-label="Facebook"><qi-icon name="fb" [size]="22" />Facebook</a> }
-        @if (site.get('GoogleProfileUrl')) { <a [href]="site.get('GoogleProfileUrl')" target="_blank" rel="noopener" class="hover:text-on-primary">Google reviews</a> }
+        @if (site.get('GoogleProfileUrl')) { <a [href]="site.get('GoogleProfileUrl')" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-on-primary"><qi-icon name="g" [size]="22" />Google reviews</a> }
       </p>
     }
     <p class="mt-6 text-center text-[12.5px] tracking-[.04em]">
