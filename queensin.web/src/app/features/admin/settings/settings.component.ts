@@ -140,6 +140,12 @@ export class SettingsComponent {
       ],
     },
     {
+      title: 'Analytics',
+      fields: [
+        { key: 'GoogleAnalyticsId', label: 'Google Analytics 4 Measurement ID', hint: 'Looks like G-XXXXXXXXXX. Visitors are counted in Google Analytics too. Leave empty to turn it off. Signed-in staff are never counted.' },
+      ],
+    },
+    {
       title: 'Stay',
       fields: [
         { key: 'CheckInTime', label: 'Check-in time' },

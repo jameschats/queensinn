@@ -104,11 +104,32 @@ export class PublicLayoutComponent {
     if (path === this.lastTracked) return;
     const first = this.lastTracked === '';
     this.lastTracked = path;
+    this.googleAnalytics(path);
     try {
       void fetch(`${API_BASE_URL}/track`, {
         method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path, referrer: first ? document.referrer : '' }),
       }).catch(() => {});
+    } catch { /* never get in the visitor's way */ }
+  }
+
+  /** Google Analytics 4, only when a Measurement ID is set in Site settings. Loads the script once, then sends one page_view per page change. */
+  private googleAnalytics(path: string): void {
+    const id = this.site.get('GoogleAnalyticsId').trim();
+    if (!/^G-[A-Z0-9]{4,20}$/.test(id)) return;
+    try {
+      const w = window as unknown as { dataLayer?: unknown[]; gtag?: (...a: unknown[]) => void };
+      if (!w.gtag) {
+        w.dataLayer = w.dataLayer || [];
+        w.gtag = function () { (w.dataLayer as unknown[]).push(arguments); };
+        w.gtag('js', new Date());
+        w.gtag('config', id, { send_page_view: false });
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+        document.head.appendChild(s);
+      }
+      w.gtag('event', 'page_view', { page_path: path, page_location: location.href, page_title: document.title });
     } catch { /* never get in the visitor's way */ }
   }
 

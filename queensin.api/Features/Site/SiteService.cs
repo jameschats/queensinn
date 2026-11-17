@@ -31,7 +31,7 @@ public sealed partial class SiteService : ISiteService
         "HotelName", "LocationLine", "Phone1", "Phone2", "Phone3", "WhatsAppNumber", "WhatsAppMessage",
         "ReservationsEmail", "SalesEmail", "Address", "MapUrl", "Latitude", "Longitude",
         "CheckInTime", "CheckOutTime", "LogoLightUrl", "LogoDarkUrl", "FaviconUrl",
-        "FacebookUrl", "InstagramUrl", "YouTubeUrl", "GoogleProfileUrl", "ReserveAction", "ReserveLabel", "ReserveMessage",
+        "FacebookUrl", "InstagramUrl", "YouTubeUrl", "GoogleProfileUrl", "GoogleAnalyticsId","ReserveAction", "ReserveLabel", "ReserveMessage",
         "BookingLinks",
     };
 
