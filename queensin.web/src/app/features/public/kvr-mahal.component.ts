@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { absUrl } from '../../core/api.config';
+import { SITE_URL, absUrl } from '../../core/api.config';
 import { heroShadePercent } from '../../core/content/page-schemas';
 import { MediaItem } from '../../core/models/content.model';
 import { ContentService } from '../../core/services/content.service';
@@ -165,7 +165,31 @@ export class KvrMahalComponent {
 
   constructor() {
     const seo = this.cs.seo('kvr-mahal');
-    inject(SeoService).set({ title: seo.title, description: seo.description, path: '/kvr-mahal', image: seo.image ? absUrl(seo.image) : undefined });
+    const seoService = inject(SeoService);
+    seoService.set({ title: seo.title, description: seo.description, path: '/kvr-mahal', image: seo.image ? absUrl(seo.image) : undefined });
+    seoService.setJsonLd(this.venueData(seo.image ? absUrl(seo.image) : undefined));
+  }
+
+  /**
+   * schema.org "EventVenue" for KVR Mahal, tied to the hotel it stands beside. The full name "KVR Mahal, Velankanni" is used on purpose:
+   * other halls share the plain name "KVR Mahal" (one in Coimbatore district), so search engines need the place to tell them apart.
+   */
+  private venueData(image?: string): object {
+    const s = this.site;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'EventVenue',
+      name: `KVR Mahal, ${s.get('LocationLine')}`,
+      alternateName: ['KVR Mahal Velankanni', 'KVR Thirumana Mahal Velankanni'],
+      description: "Fully air-conditioned wedding and reception hall for 500 to 1,000 guests, with a 300-seat dining pavilion, beside Hotel Queen's Inn.",
+      url: `${SITE_URL}/kvr-mahal`,
+      image,
+      telephone: s.get('Phone1'),
+      maximumAttendeeCapacity: 1000,
+      address: { '@type': 'PostalAddress', streetAddress: s.get('Address'), addressLocality: s.get('LocationLine'), addressRegion: 'Tamil Nadu', addressCountry: 'IN' },
+      geo: s.get('Latitude') && s.get('Longitude') ? { '@type': 'GeoCoordinates', latitude: s.get('Latitude'), longitude: s.get('Longitude') } : undefined,
+      containedInPlace: { '@type': 'Hotel', name: `Hotel ${s.hotelName()}, ${s.get('LocationLine')}`, url: SITE_URL },
+    };
   }
 
   protected t(section: string, field: string): string {

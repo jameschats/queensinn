@@ -115,6 +115,7 @@ export class HomeComponent {
       address: { '@type': 'PostalAddress', streetAddress: s.get('Address'), addressLocality: s.get('LocationLine'), addressCountry: 'IN' },
       geo: s.get('Latitude') && s.get('Longitude') ? { '@type': 'GeoCoordinates', latitude: s.get('Latitude'), longitude: s.get('Longitude') } : undefined,
       sameAs: social.length ? social : undefined,
+      containsPlace: { '@type': 'EventVenue', name: `KVR Mahal, ${s.get('LocationLine')}`, url: `${SITE_URL}/kvr-mahal` },
     };
   }
 

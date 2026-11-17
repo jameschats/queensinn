@@ -360,12 +360,12 @@ export const PAGES: PageDef[] = [
     path: '/kvr-mahal',
     hero: 'media',
     seoDefaults: {
-      title: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
-      description: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
+      title: "KVR Mahal Velankanni | Wedding Hall at Hotel Queen's Inn",
+      description: "KVR Mahal in Velankanni, Nagapattinam: a fully air-conditioned wedding and reception hall for 500–1,000 guests with a 300-seat dining pavilion, beside Hotel Queen's Inn on ECR Road.",
     },
     sections: [
       withButtonText(
-        heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
+        heroSection('KVR Mahal, Velankanni', 'Where sacred vows meet timeless hospitality', "KVR Mahal in Velankanni, Nagapattinam district: a fully air-conditioned ceremonial mandapam with a dining pavilion and luxury rooms on the same gated campus beside Hotel Queen's Inn.", false),
         'Plan your event', 'Call the events desk',
       ),
       {
