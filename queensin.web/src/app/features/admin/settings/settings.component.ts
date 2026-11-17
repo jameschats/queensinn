@@ -97,6 +97,7 @@ export class SettingsComponent {
       fields: [
         { key: 'HotelName', label: 'Hotel name', hint: 'Shown in the logo lockup.' },
         { key: 'LocationLine', label: 'Location line', hint: 'Small line under the name.' },
+        { key: 'LogoLightUrl', label: 'Logo image address', type: 'text', wide: true, hint: 'Shown in the header, menu and footer in place of the text logo. Use the address of a photo from the media library (it starts with /uploads/). Leave empty to show the text logo.' },
       ],
     },
     {
@@ -104,6 +105,7 @@ export class SettingsComponent {
       fields: [
         { key: 'Phone1', label: 'Primary phone', type: 'tel' },
         { key: 'Phone2', label: 'Second phone (events desk)', type: 'tel' },
+        { key: 'Phone3', label: 'Third phone (optional)', type: 'tel' },
         { key: 'WhatsAppNumber', label: 'WhatsApp number', hint: 'Digits only, with country code, e.g. 919159399988.' },
         { key: 'WhatsAppMessage', label: 'Default WhatsApp message' },
         { key: 'ReservationsEmail', label: 'Reservations email', type: 'email' },
@@ -129,6 +131,21 @@ export class SettingsComponent {
       ],
     },
     {
+      title: 'Booking sites',
+      fields: [
+        {
+          key: 'BookingLinks', label: 'Booking site links', type: 'textarea', wide: true,
+          hint: 'Buttons on the Rooms page that open a booking site in a new tab. One per line, written as: Name | https://address. For example: Booking.com | https://www.booking.com/hotel/in/… Leave empty to hide the section.',
+        },
+      ],
+    },
+    {
+      title: 'Analytics',
+      fields: [
+        { key: 'GoogleAnalyticsId', label: 'Google Analytics 4 Measurement ID', hint: 'Looks like G-XXXXXXXXXX. Visitors are counted in Google Analytics too. Leave empty to turn it off. Signed-in staff are never counted.' },
+      ],
+    },
+    {
       title: 'Stay',
       fields: [
         { key: 'CheckInTime', label: 'Check-in time' },
@@ -141,6 +158,7 @@ export class SettingsComponent {
         { key: 'FacebookUrl', label: 'Facebook', type: 'url' },
         { key: 'InstagramUrl', label: 'Instagram', type: 'url' },
         { key: 'YouTubeUrl', label: 'YouTube', type: 'url' },
+        { key: 'GoogleProfileUrl', label: 'Google listing (reviews and directions)', type: 'url', wide: true, hint: "The hotel's Google Business Profile link. Shown in the footer as Google reviews." },
       ],
     },
   ];

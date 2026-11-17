@@ -29,24 +29,25 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
           <div class="mt-9 grid gap-[26px] text-[15px]">
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="phone" class="mt-1 text-gold-ink" />
-              <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Call</b>
+              <span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Call</b>
                 <a [href]="site.tel('Phone1')">{{ site.get('Phone1') }}</a>
-                @if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }</span>
+                @if (site.get('Phone2')) { · <a [href]="site.tel('Phone2')">{{ site.get('Phone2') }}</a> }
+                @if (site.get('Phone3')) { · <a [href]="site.tel('Phone3')">{{ site.get('Phone3') }}</a> }</span>
             </div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="wa" class="mt-1 text-gold-ink" />
-              <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">WhatsApp</b>
+              <span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">WhatsApp</b>
                 <a [href]="site.whatsapp()" target="_blank" rel="noopener">Message the front desk</a></span>
             </div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="mail" class="mt-1 text-gold-ink" />
-              <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Email</b>
+              <span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Email</b>
                 <a [href]="'mailto:' + site.get('ReservationsEmail')">{{ site.get('ReservationsEmail') }}</a>
                 @if (site.get('SalesEmail')) { <br /><a [href]="'mailto:' + site.get('SalesEmail')">{{ site.get('SalesEmail') }}</a> <span class="ml-1 text-muted">(events &amp; sales)</span> }</span>
             </div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5">
               <qi-icon name="pin" class="mt-1 text-gold-ink" />
-              <span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Address</b>
+              <span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Address</b>
                 <span class="whitespace-pre-line">{{ site.get('Address') }}</span>
                 @if (site.get('MapUrl')) { <br /><a [href]="site.get('MapUrl')" target="_blank" rel="noopener" class="link mt-2 inline-block">Open in Google Maps</a> }</span>
             </div>
@@ -76,6 +77,20 @@ import { PageHeroComponent } from '../../shared/page-hero.component';
         </aside>
       </div>
 
+      @if (travel().length) {
+        <div class="wrap mt-[clamp(64px,8vw,110px)]">
+          <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('travel', 'title') }}</h2>
+          <ul class="mt-8 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+            @for (r of travel(); track $index) {
+              <li class="border border-line bg-tint p-6">
+                <b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">{{ r[0] }}</b>
+                <span class="mt-2 block text-[15px]">{{ r[1] }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
       <div class="wrap mt-[clamp(64px,8vw,110px)]" id="message">
         <h2 class="text-[clamp(26px,2.6vw,38px)]">{{ t('message', 'title') }}</h2>
         <p class="mt-4 mb-10 max-w-[62ch] whitespace-pre-line text-muted">{{ t('message', 'intro') }}</p>
@@ -100,6 +115,8 @@ export class ContactComponent {
   protected readonly shade = computed(() => heroShadePercent(this.t('hero', 'shade')));
 
   protected readonly hours = computed(() => this.cs.rows('contact', 'hours', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']));
+
+  protected readonly travel = computed(() => this.cs.rows('contact', 'travel', 'rows').map((r) => [r[0] ?? '', r[1] ?? '']).filter((r) => r[0]));
 
   constructor() {
     const seo = this.cs.seo('contact');

@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { absUrl } from '../../core/api.config';
+import { RouterLink } from '@angular/router';
+import { SITE_URL, absUrl } from '../../core/api.config';
 import { heroShadePercent } from '../../core/content/page-schemas';
 import { MediaItem } from '../../core/models/content.model';
 import { ContentService } from '../../core/services/content.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SiteService } from '../../core/services/site.service';
 import { EnquiryFormComponent } from '../../shared/enquiry-form.component';
+import { FilmComponent } from '../../shared/film.component';
 import { IconComponent } from '../../shared/icon.component';
 import { ImageComponent } from '../../shared/image.component';
 import { PageHeroComponent } from '../../shared/page-hero.component';
+import { ShowcaseStripComponent } from '../../shared/showcase-strip.component';
 
 const HALL_ICONS = ['stage', 'sound', 'ac'];
 const DINING_ICONS = ['pot', 'flow', 'drop'];
@@ -19,11 +22,16 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
  */
 @Component({
   selector: 'qi-kvr-mahal',
-  imports: [PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent],
+  imports: [RouterLink, PageHeroComponent, ImageComponent, IconComponent, EnquiryFormComponent, ShowcaseStripComponent, FilmComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <qi-page-hero [kicker]="t('hero', 'kicker')" [title]="t('hero', 'headline')" [lede]="t('hero', 'lede')" art="mandap"
-                  [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()" />
+                  [slides]="heroPhotos()" [video]="heroVideo()" [shade]="shade()">
+      <div class="mt-10 flex flex-wrap gap-3.5">
+        <a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="btn btn-gold">{{ t('hero', 'cta1Text') }}</a>
+        <a [href]="site.tel('Phone2')" class="btn btn-ghost">{{ t('hero', 'cta2Text') }}</a>
+      </div>
+    </qi-page-hero>
 
     <section class="on-dark bg-primary py-[clamp(56px,6vw,90px)] text-on-primary">
       <div class="wrap grid grid-cols-2 lg:grid-cols-4">
@@ -56,6 +64,19 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
       </div>
     </section>
 
+    @if (showFilm() && slot('film-kvr')) {
+      <section class="sec on-dark bg-primary text-on-primary" id="film">
+        <div class="wrap">
+          <div class="mx-auto mb-10 max-w-[60ch] text-center">
+            <span class="kicker">{{ t('film', 'kicker') }}</span>
+            <h2 class="h-display">{{ t('film', 'title') }}</h2>
+            <p class="mt-4 text-on-primary-muted">{{ t('film', 'text') }}</p>
+          </div>
+          <qi-film [video]="slot('film-kvr')" [poster]="slot('film-kvr-poster')" [label]="t('film', 'title')" />
+        </div>
+      </section>
+    }
+
     <section class="sec bg-tint">
       <div class="wrap grid items-center gap-[clamp(40px,7vw,120px)] md:grid-cols-2">
         <qi-image class="aspect-[4/3] md:order-2" [media]="slot('mahal-dining')" art="leaf" [alt]="t('dining', 'title')" sizes="(min-width: 768px) 50vw, 100vw" />
@@ -72,6 +93,15 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
         </div>
       </div>
     </section>
+
+    @if (strip().length) {
+      <section class="sec">
+        <div class="wrap">
+          <div class="mb-[clamp(28px,4vw,48px)]"><span class="kicker">{{ t('gallery', 'kicker') }}</span><h2 class="h-display">{{ t('gallery', 'title') }}</h2></div>
+        </div>
+        <qi-showcase-strip [items]="strip()" [moreText]="t('gallery', 'moreText')" />
+      </section>
+    }
 
     <section class="sec">
       <div class="wrap">
@@ -109,8 +139,8 @@ const DINING_ICONS = ['pot', 'flow', 'drop'];
           <h2 class="h-display">{{ t('enquiry', 'title') }}</h2>
           <p class="mt-6 max-w-[44ch] whitespace-pre-line text-muted">{{ t('enquiry', 'intro') }}</p>
           <div class="mt-9 grid gap-5 text-[15px]">
-            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Events desk</b><a [href]="site.tel('Phone2')">{{ site.get('Phone2') || site.get('Phone1') }}</a></span></div>
-            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[11.5px] font-normal uppercase tracking-[.2em] text-muted">Email</b><a [href]="'mailto:' + (site.get('SalesEmail') || site.get('ReservationsEmail'))">{{ site.get('SalesEmail') || site.get('ReservationsEmail') }}</a></span></div>
+            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="phone" class="mt-1 text-gold-ink" /><span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Events desk</b><a [href]="site.tel('Phone2')">{{ site.get('Phone2') || site.get('Phone1') }}</a></span></div>
+            <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="mail" class="mt-1 text-gold-ink" /><span><b class="block text-[12.5px] font-medium uppercase tracking-[.14em] text-ink/85">Email</b><a [href]="'mailto:' + (site.get('SalesEmail') || site.get('ReservationsEmail'))">{{ site.get('SalesEmail') || site.get('ReservationsEmail') }}</a></span></div>
             <div class="grid grid-cols-[28px_1fr] gap-3.5"><qi-icon name="wa" class="mt-1 text-gold-ink" /><a [href]="site.whatsapp('Hello, I would like to enquire about KVR Mahal for an event.')" target="_blank" rel="noopener">WhatsApp the events desk</a></div>
           </div>
         </div>
@@ -131,15 +161,42 @@ export class KvrMahalComponent {
   protected readonly hall = computed(() => this.cs.rows('kvr-mahal', 'hall', 'items').map((r, i) => ({ icon: HALL_ICONS[i] ?? 'shield', text: r[0] ?? '' })));
   protected readonly dining = computed(() => this.cs.rows('kvr-mahal', 'dining', 'items').map((r, i) => ({ icon: DINING_ICONS[i] ?? 'shield', text: r[0] ?? '' })));
   protected readonly compare = computed(() => this.cs.rows('kvr-mahal', 'compare', 'rows'));
+  protected readonly strip = computed(() => this.cs.content().mahalStrip);
 
   constructor() {
     const seo = this.cs.seo('kvr-mahal');
-    inject(SeoService).set({ title: seo.title, description: seo.description, path: '/kvr-mahal', image: seo.image ? absUrl(seo.image) : undefined });
+    const seoService = inject(SeoService);
+    seoService.set({ title: seo.title, description: seo.description, path: '/kvr-mahal', image: seo.image ? absUrl(seo.image) : undefined });
+    seoService.setJsonLd(this.venueData(seo.image ? absUrl(seo.image) : undefined));
+  }
+
+  /**
+   * schema.org "EventVenue" for KVR Mahal, tied to the hotel it stands beside. The full name "KVR Mahal, Velankanni" is used on purpose:
+   * other halls share the plain name "KVR Mahal" (one in Coimbatore district), so search engines need the place to tell them apart.
+   */
+  private venueData(image?: string): object {
+    const s = this.site;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'EventVenue',
+      name: `KVR Mahal, ${s.get('LocationLine')}`,
+      alternateName: ['KVR Mahal Velankanni', 'KVR Thirumana Mahal Velankanni'],
+      description: "Fully air-conditioned wedding and reception hall for 500 to 1,000 guests, with a 300-seat dining pavilion, beside Hotel Queen's Inn.",
+      url: `${SITE_URL}/kvr-mahal`,
+      image,
+      telephone: s.get('Phone1'),
+      maximumAttendeeCapacity: 1000,
+      address: { '@type': 'PostalAddress', streetAddress: s.get('Address'), addressLocality: s.get('LocationLine'), addressRegion: 'Tamil Nadu', addressCountry: 'IN' },
+      geo: s.get('Latitude') && s.get('Longitude') ? { '@type': 'GeoCoordinates', latitude: s.get('Latitude'), longitude: s.get('Longitude') } : undefined,
+      containedInPlace: { '@type': 'Hotel', name: `Hotel ${s.hotelName()}, ${s.get('LocationLine')}`, url: SITE_URL },
+    };
   }
 
   protected t(section: string, field: string): string {
     return this.cs.text('kvr-mahal', section, field);
   }
+
+  protected readonly showFilm = computed(() => this.t('film', 'show') !== 'hide');
 
   protected slot(key: string): MediaItem | null {
     return this.cs.content().slots[key] ?? null;

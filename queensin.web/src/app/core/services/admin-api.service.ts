@@ -160,6 +160,13 @@ export interface EnquiryDetail {
   notes: { id: number; note: string; by: string | null; createdAt: string }[];
 }
 
+export interface AnalyticsCount { label: string; views: number; visitors: number; }
+export interface Analytics {
+  from: string; to: string; bucket: 'day' | 'month';
+  current: { views: number; visitors: number }; previous: { views: number; visitors: number };
+  series: AnalyticsCount[]; topPages: AnalyticsCount[]; referrers: AnalyticsCount[]; devices: AnalyticsCount[];
+}
+
 export interface EnquiryCounts {
   new: number;
   total: number;
@@ -309,6 +316,10 @@ export class AdminApiService {
     return this.http.get<ApiResponse<{ items: EnquirySummary[]; totalCount: number }>>(`${this.base}/enquiries`, { params }).pipe(map((r) => r.data!));
   }
 
+  analytics(from: string, to: string): Observable<Analytics> {
+    return this.http.get<ApiResponse<Analytics>>(`${this.base}/analytics`, { params: { from, to } }).pipe(map((r) => r.data!));
+  }
+
   enquiryCounts(): Observable<EnquiryCounts> {
     return this.http.get<ApiResponse<EnquiryCounts>>(`${this.base}/enquiries/counts`).pipe(map((r) => r.data!));
   }
@@ -331,11 +342,11 @@ export class AdminApiService {
 
   // --- galleries ---
 
-  gallery(placement: 'collage' | 'strip'): Observable<GalleryItemAdmin[]> {
+  gallery(placement: 'collage' | 'strip' | 'mahal'): Observable<GalleryItemAdmin[]> {
     return this.http.get<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`).pipe(map((r) => r.data ?? []));
   }
 
-  saveGallery(placement: 'collage' | 'strip', items: SaveGalleryItem[]): Observable<GalleryItemAdmin[]> {
+  saveGallery(placement: 'collage' | 'strip' | 'mahal', items: SaveGalleryItem[]): Observable<GalleryItemAdmin[]> {
     return this.http.put<ApiResponse<GalleryItemAdmin[]>>(`${this.base}/gallery/${placement}`, items).pipe(map((r) => r.data ?? []));
   }
 

@@ -17,13 +17,19 @@ import { ImageComponent } from './image.component';
   imports: [ImageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="on-dark relative flex overflow-hidden bg-primary text-on-primary"
-             [class]="full() ? 'h-svh min-h-[640px]' : 'min-h-[70vh] pt-[150px]'">
+    <section class="on-dark relative flex flex-col overflow-hidden bg-primary text-on-primary md:flex-row"
+             [class]="full() ? 'md:h-svh md:min-h-[640px]' : 'md:min-h-[70vh] md:pt-[150px]'">
+      <!-- Phones: the photo sits on its own at the top and the words follow on a plain panel below it, so neither hides the other.
+           From tablet width up the words sit over the photo, as before. -->
+      <div class="relative h-[calc(88px+68vw)] shrink-0 overflow-hidden md:absolute md:inset-0 md:h-auto">
+      <!-- Only the first photo is fetched at once; the others follow a moment later, so the first one (and the page) paints sooner. -->
       @for (s of slides(); track s.id; let i = $index) {
-        <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
-             [class.kb]="i === active() && !playingVideo()" [attr.aria-hidden]="i !== active()">
-          <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
-        </div>
+        @if (i === 0 || more()) {
+          <div class="slide absolute inset-0 transition-opacity duration-[1600ms] ease-linear" [class.opacity-0]="i !== active()"
+               [class.kb]="i === active() && !playingVideo()" [attr.aria-hidden]="i !== active()">
+            <qi-image class="h-full w-full" [media]="s" [art]="art()" sizes="100vw" [priority]="i === 0" />
+          </div>
+        }
       } @empty {
         <qi-image class="absolute inset-0 h-full w-full opacity-40" [art]="art()" />
       }
@@ -32,14 +38,19 @@ import { ImageComponent } from './image.component';
                [src]="videoUrl(v)" [muted]="true" loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"
                (canplay)="videoReady.set(true)" (error)="videoFailed()"></video>
       }
-      <!-- No gradients over the photo. This flat, even tint (not a gradient) only keeps white text legible on bright photos; remove it for the untouched photo. -->
-      <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
-      <div class="wrap relative z-10 mt-auto pb-[clamp(64px,12vh,140px)]">
+      <!-- Nothing is laid over the photo or video by default, so its true colours show. The admin can still choose a flat, even tint
+           (Pages & content → Hero text → Darken the photo); the white text stays readable through a soft shadow of its own instead. -->
+      @if (shade() > 0) {
+        <div class="absolute inset-0" [style.background-color]="'color-mix(in srgb, var(--color-primary) ' + shade() + '%, transparent)'"></div>
+      }
+      </div>
+      <div class="wrap relative z-10 py-9 md:mt-auto md:py-0 md:pb-[clamp(64px,12vh,140px)] md:[text-shadow:0_1px_2px_rgb(0_0_0/0.75),0_2px_18px_rgb(0_0_0/0.6),0_0_40px_rgb(0_0_0/0.35)]">
+        <!-- A small frosted panel behind the small paragraph only (never the big headline); the photo or video around it is untouched. -->
         @if (kicker()) { <span class="kicker">{{ kicker() }}</span> }
-        <h1 class="leading-none tracking-[-.01em] animate-[qi-up_1.4s_var(--ease-lux)_both]"
-            [class]="full() ? 'max-w-[17ch] text-[clamp(36px,4.8vw,76px)]' : 'max-w-[18ch] text-[clamp(40px,5.2vw,84px)]'">{{ title() }}</h1>
+        <h1 class="mt-2 tracking-[-.01em] md:mt-0 animate-[qi-up_1.4s_var(--ease-lux)_both]"
+            [class]="full() ? 'text-[34px] leading-[1.08] md:max-w-[17ch] md:text-[clamp(36px,4.8vw,76px)] md:leading-none' : 'text-[34px] leading-[1.08] md:max-w-[18ch] md:text-[clamp(40px,5.2vw,84px)] md:leading-none'">{{ title() }}</h1>
         @if (lede()) {
-          <p class="mt-7 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] text-on-primary/90 animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
+          <p class="mt-4 max-w-[46ch] text-[16px] leading-relaxed text-on-primary/90 md:mt-7 md:w-fit md:rounded-xl md:bg-primary/40 md:px-4 md:py-3 md:text-[clamp(16px,1.3vw,19px)] md:text-on-primary md:backdrop-blur-md animate-[qi-up_1.4s_.25s_var(--ease-lux)_both]">{{ lede() }}</p>
         }
         <ng-content />
         @if (slides().length > 1 && !playingVideo()) {
@@ -74,6 +85,8 @@ export class PageHeroComponent {
   readonly shade = input(25);
 
   protected readonly active = signal(0);
+  /** True a moment after load: the photos after the first are rendered (and fetched) only then. */
+  protected readonly more = signal(false);
   protected readonly playingVideo = signal(false);
   protected readonly videoReady = signal(false);
   private readonly videoEl = viewChild<ElementRef<HTMLVideoElement>>('vid');
@@ -87,7 +100,8 @@ export class PageHeroComponent {
       const wide = window.matchMedia('(min-width: 768px)').matches;
       if (this.video() && wide && !reduced && !saveData) this.playingVideo.set(true);
       else if (!reduced) this.start();
-      this.destroyRef.onDestroy(() => clearInterval(this.timer));
+      const later = setTimeout(() => this.more.set(true), 2500);
+      this.destroyRef.onDestroy(() => { clearInterval(this.timer); clearTimeout(later); });
     });
     // The muted *property* (not the attribute) is what lets browsers autoplay, so set it and start playback explicitly.
     effect(() => {
@@ -111,6 +125,7 @@ export class PageHeroComponent {
   }
 
   protected go(i: number): void {
+    this.more.set(true);
     this.active.set(i);
     clearInterval(this.timer);   // a visitor's choice restarts the countdown
     this.start();

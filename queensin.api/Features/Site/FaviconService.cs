@@ -12,9 +12,9 @@ namespace queensin.api.Features.Site;
 public interface IFaviconService
 {
     /// <summary>Crops to a centred square, writes the PNG sizes and points the FaviconUrl setting at them.</summary>
-    Task<string> SetAsync(long actorId, Stream source, CancellationToken ct = default);
+    Task<string> SetAsync(long? actorId, Stream source, CancellationToken ct = default);
     /// <summary>Removes the uploaded favicon so the site falls back to its built-in icon.</summary>
-    Task ClearAsync(long actorId, CancellationToken ct = default);
+    Task ClearAsync(long? actorId, CancellationToken ct = default);
 }
 
 /// <summary>
@@ -43,7 +43,7 @@ public sealed class FaviconService : IFaviconService
         _requestPath = (config["Media:RequestPath"] ?? "/uploads").TrimEnd('/');
     }
 
-    public async Task<string> SetAsync(long actorId, Stream source, CancellationToken ct = default)
+    public async Task<string> SetAsync(long? actorId, Stream source, CancellationToken ct = default)
     {
         using var buffer = new MemoryStream();
         await source.CopyToAsync(buffer, ct);
@@ -95,7 +95,7 @@ public sealed class FaviconService : IFaviconService
         return url;
     }
 
-    public async Task ClearAsync(long actorId, CancellationToken ct = default)
+    public async Task ClearAsync(long? actorId, CancellationToken ct = default)
     {
         var row = await _db.SiteSettings.FirstOrDefaultAsync(s => s.SettingKey == SettingKey, ct);
         if (row?.SettingValue is null) return;

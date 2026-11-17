@@ -4,7 +4,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { API_BASE_URL, absUrl } from '../api.config';
 import { ApiResponse } from '../models/api.model';
-import { fontStack, googleFontsUrl } from '../models/fonts';
+import { BUNDLED_FONTS, fontStack, googleFontsUrl } from '../models/fonts';
 import { DEFAULT_SETTINGS, DEFAULT_THEME, SiteData, Theme } from '../models/site.model';
 
 /**
@@ -28,6 +28,13 @@ export class SiteService {
     return a === 'call' || a === 'enquiry' ? a : 'whatsapp';
   });
   readonly reserveLabel = computed(() => this.get('ReserveLabel') || 'Reserve');
+  /** Buttons for the booking sites the hotel sells on, from the "Name | https://address" lines in Site settings. Anything that is not an http(s) address is ignored. */
+  readonly bookingLinks = computed(() =>
+    this.get('BookingLinks').split('\n').map((l) => l.split('|')).flatMap((p) => {
+      const name = (p[0] ?? '').trim();
+      const url = p.slice(1).join('|').trim();
+      return name && /^https?:\/\//i.test(url) ? [{ name, url }] : [];
+    }).slice(0, 8));
 
   load(): Observable<void> {
     return this.http.get<ApiResponse<SiteData>>(`${API_BASE_URL}/site`).pipe(
@@ -67,7 +74,7 @@ export class SiteService {
     }
   }
 
-  tel(key: 'Phone1' | 'Phone2' = 'Phone1'): string {
+  tel(key: 'Phone1' | 'Phone2' | 'Phone3' = 'Phone1'): string {
     return 'tel:' + this.get(key).replace(/\s/g, '');
   }
 
@@ -87,10 +94,12 @@ export class SiteService {
     style.setProperty('--font-weight-light', String(theme.bodyWeight));
     style.setProperty('--base-size', `${theme.baseSize}px`);
     style.setProperty('--font-scale', String(theme.baseSize / DEFAULT_THEME.baseSize));
-    this.setFontLink('qi-fonts', googleFontsUrl([
-      { name: theme.headingFont, role: 'heading' },
-      { name: theme.bodyFont, role: 'body' },
-    ]));
+    // Fonts that ship with the site need no request to Google; only other chosen fonts are loaded from there.
+    const remote = [
+      { name: theme.headingFont, role: 'heading' as const },
+      { name: theme.bodyFont, role: 'body' as const },
+    ].filter((f) => !BUNDLED_FONTS.includes(f.name));
+    this.setFontLink('qi-fonts', remote.length ? googleFontsUrl(remote) : '');
   }
 
   /**
@@ -131,6 +140,7 @@ export class SiteService {
   private setFontLink(id: string, href: string): void {
     const head = this.doc.head;
     let link = head.querySelector<HTMLLinkElement>(`link#${id}`);
+    if (!href) { link?.remove(); return; }       // nothing to load: the fonts are bundled
     if (!link) {
       link = this.doc.createElement('link');
       link.id = id;

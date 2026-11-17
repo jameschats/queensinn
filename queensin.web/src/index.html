@@ -6,8 +6,10 @@
   <base href="/">
   <meta name="theme-color" content="#0F243E">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- The theme's two fonts are served from this site (see styles.css), so there is no connection to Google's font servers.
+       The main files are preloaded so text shows in the right font straight away. -->
+  <link rel="preload" href="fonts/lora-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/nunito-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <!-- Default icon set. If the admin uploads a favicon, SiteService swaps these (data-qi-icon) for the uploaded one. -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg" data-qi-icon="svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" data-qi-icon="png">
@@ -15,7 +17,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" data-qi-icon="apple">
   <link rel="manifest" href="site.webmanifest">
   <!-- Per-environment runtime config (API URL, site URL). Written by deploy; see deploy/README.md. -->
-  <script src="/config.js"></script>
+  <script src="/config.js" defer></script>
 </head>
 <body>
   <app-root></app-root>

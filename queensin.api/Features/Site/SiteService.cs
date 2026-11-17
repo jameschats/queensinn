@@ -28,11 +28,14 @@ public sealed partial class SiteService : ISiteService
     /// </summary>
     public static readonly HashSet<string> EditableKeys = new(StringComparer.Ordinal)
     {
-        "HotelName", "LocationLine", "Phone1", "Phone2", "WhatsAppNumber", "WhatsAppMessage",
+        "HotelName", "LocationLine", "Phone1", "Phone2", "Phone3", "WhatsAppNumber", "WhatsAppMessage",
         "ReservationsEmail", "SalesEmail", "Address", "MapUrl", "Latitude", "Longitude",
         "CheckInTime", "CheckOutTime", "LogoLightUrl", "LogoDarkUrl", "FaviconUrl",
-        "FacebookUrl", "InstagramUrl", "YouTubeUrl", "ReserveAction", "ReserveLabel", "ReserveMessage",
+        "FacebookUrl", "InstagramUrl", "YouTubeUrl", "GoogleProfileUrl", "GoogleAnalyticsId","ReserveAction", "ReserveLabel", "ReserveMessage",
+        "BookingLinks",
     };
+
+    private const int MaxBookingLinks = 8;
 
     private readonly QueensInnDbContext _db;
     private readonly IAuditService _audit;
@@ -66,6 +69,8 @@ public sealed partial class SiteService : ISiteService
             throw new AppException("The Reserve button can open WhatsApp, call, or go to the enquiry form.");
         if (values.TryGetValue("ReserveLabel", out var rl) && rl is { Length: > 30 }) throw new AppException("The Reserve button text is too long (30 characters at most).");
 
+        if (values.TryGetValue("BookingLinks", out var bl) && !string.IsNullOrWhiteSpace(bl)) ValidateBookingLinks(bl);
+
         var keys = values.Keys.ToList();
         var existing = await _db.SiteSettings.Where(s => keys.Contains(s.SettingKey)).ToListAsync(ct);
         foreach (var (key, raw) in values)
@@ -78,6 +83,21 @@ public sealed partial class SiteService : ISiteService
         _audit.Record(actorId, "Update", "SiteSettings", null, string.Join(", ", values.Keys));
         await _db.SaveChangesAsync(ct);
         return (await GetAsync(ct)).Settings;
+    }
+
+    /// <summary>One link per line, written as "Name | https://address". Only http(s) addresses are accepted, because the site turns each line into a button.</summary>
+    private static void ValidateBookingLinks(string text)
+    {
+        var lines = text.Replace("\r\n", "\n").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (lines.Length > MaxBookingLinks) throw new AppException($"Add at most {MaxBookingLinks} booking links.");
+        foreach (var line in lines)
+        {
+            var parts = line.Split('|', 2, StringSplitOptions.TrimEntries);
+            if (parts.Length != 2 || parts[0].Length == 0 || parts[0].Length > 60)
+                throw new AppException($"Booking link “{(line.Length > 40 ? line[..40] + "…" : line)}” must be written as: Name | https://address (name up to 60 characters).");
+            if (!Uri.TryCreate(parts[1], UriKind.Absolute, out var u) || (u.Scheme != Uri.UriSchemeHttps && u.Scheme != Uri.UriSchemeHttp))
+                throw new AppException($"The address for “{parts[0]}” must start with https://.");
+        }
     }
 
     public async Task<ThemeDto> UpdateThemeAsync(long actorId, ThemeDto theme, CancellationToken ct = default)

@@ -13,12 +13,13 @@ using queensin.api.Features.Site;
 
 namespace queensin.api.Features.Content;
 
-/// <summary>The two home-page galleries: the masonry "collage" and the sliding "strip".</summary>
+/// <summary>The galleries: the home page's masonry "collage" and sliding "strip", and the KVR Mahal page's own strip.</summary>
 public static class GalleryPlacement
 {
     public const string Collage = "collage";
     public const string Strip = "strip";
-    public static bool IsValid(string p) => p is Collage or Strip;
+    public const string Mahal = "mahal";
+    public static bool IsValid(string p) => p is Collage or Strip or Mahal;
 }
 
 public sealed record GalleryItemDto(long Id, long MediaId, MediaDto? Media, string? Title, string? Caption, string? LinkUrl, bool Visible);
@@ -69,7 +70,7 @@ public sealed class GalleryAdminService : IGalleryAdminService
         foreach (var item in items)
         {
             order++;
-            var strip = placement == GalleryPlacement.Strip;     // the collage is photos only
+            var strip = placement != GalleryPlacement.Collage;     // the collage is photos only; strip cards carry a title, caption and link
             var title = strip ? Clean(item.Title, 120) : null;
             var caption = strip ? Clean(item.Caption, 300) : null;
             var link = strip ? CleanLink(item.LinkUrl) : null;

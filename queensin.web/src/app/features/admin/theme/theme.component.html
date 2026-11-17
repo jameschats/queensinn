@@ -88,7 +88,7 @@
       <button type="button" (click)="usePairing(p)" class="rounded-lg border border-[#E3E6EB] bg-white p-4 text-left"
               [class.outline]="matchedPairing() === p && !customOpen()" [class.outline-2]="matchedPairing() === p && !customOpen()" [class.outline-accent]="matchedPairing() === p && !customOpen()">
         <span class="block text-[24px] leading-tight text-[#1D2430]" [style.font-family]="stack(p.headingFont)" [style.font-weight]="p.headingWeight">Rest, well considered</span>
-        <span class="mt-1.5 block text-[13.5px] text-[#4A5465]" [style.font-family]="stack(p.bodyFont)" [style.font-weight]="p.bodyWeight">Garden and balcony views, a short walk from the basilica.</span>
+        <span class="mt-1.5 block text-[13.5px] text-[#4A5465]" [style.font-family]="stack(p.bodyFont)" [style.font-weight]="p.bodyWeight">Garden and balcony views, near the basilica.</span>
         <span class="mt-2.5 block text-[12px] text-[#6B7485]"><b class="font-medium text-[#1D2430]">{{ p.name }}</b> · {{ p.headingFont }} + {{ p.bodyFont }}</span>
       </button>
     }

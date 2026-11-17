@@ -65,6 +65,12 @@ app.get('/sitemap.xml', (_req, res) => {
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 });
 
+// Two addresses from the old Wix site that no longer have a page of their own. A permanent redirect keeps old links
+// and search results working: /book-online was an empty booking widget and /properties an unused listing template.
+app.get(['/book-online', '/properties'], (_req, res) => {
+  res.redirect(301, '/bookroom');
+});
+
 app.use(express.static(browserDistFolder, { maxAge: '1y', index: false, redirect: false }));
 
 app.use((req, res, next) => {

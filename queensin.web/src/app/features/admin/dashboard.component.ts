@@ -3,12 +3,13 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { Perm } from '../../core/models/auth.model';
 import { AdminApiService, EnquirySummary } from '../../core/services/admin-api.service';
+import { AnalyticsPanelComponent } from './analytics-panel.component';
 import { AuthService } from '../../core/services/auth.service';
 import { EnquiryCountsService } from '../../core/services/enquiry-counts.service';
 
 @Component({
   selector: 'qi-dashboard',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, AnalyticsPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="mb-6">
@@ -42,6 +43,8 @@ import { EnquiryCountsService } from '../../core/services/enquiry-counts.service
         }
       </section>
     }
+
+    @if (auth.can(perm.SettingsManage)) { <qi-analytics-panel /> }
 
     <div class="grid gap-4 md:grid-cols-3">
       @if (auth.can(perm.RoomManage)) {

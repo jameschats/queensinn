@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../core/api.config';
 import { ApiResponse } from '../core/models/api.model';
 import { ContentService } from '../core/services/content.service';
 import { SiteService } from '../core/services/site.service';
+import { DateFieldComponent } from './date-field.component';
 import { IconComponent } from './icon.component';
 
 export type EnquiryType = 'Room' | 'Mahal' | 'Contact';
@@ -26,7 +27,7 @@ function today(): string {
  */
 @Component({
   selector: 'qi-enquiry-form',
-  imports: [FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent, DateFieldComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (receipt(); as r) {
@@ -50,8 +51,8 @@ function today(): string {
 
         @switch (type()) {
           @case ('Room') {
-            <label class="fld"><span>Check-in</span><input name="checkIn" type="date" [(ngModel)]="model.checkIn" required [min]="min" /></label>
-            <label class="fld"><span>Check-out</span><input name="checkOut" type="date" [(ngModel)]="model.checkOut" [min]="model.checkIn || min" /></label>
+            <label class="fld"><span>Check-in</span><qi-date name="checkIn" [(ngModel)]="model.checkIn" required [min]="min"></qi-date></label>
+            <label class="fld"><span>Check-out</span><qi-date name="checkOut" [(ngModel)]="model.checkOut" [min]="model.checkIn || min"></qi-date></label>
             <label class="fld"><span>Room</span>
               <select name="roomId" [(ngModel)]="model.roomId">
                 <option [ngValue]="null">Any room</option>
@@ -67,8 +68,8 @@ function today(): string {
                 @for (t of eventTypes; track t) { <option [value]="t">{{ t }}</option> }
               </select>
             </label>
-            <label class="fld"><span>Event date</span><input name="eventDate" type="date" [(ngModel)]="model.eventDate" required [min]="min" /></label>
-            <label class="fld"><span>Alternative date <i class="normal-case tracking-normal">(optional)</i></span><input name="altDate" type="date" [(ngModel)]="model.altDate" [min]="min" /></label>
+            <label class="fld"><span>Event date</span><qi-date name="eventDate" [(ngModel)]="model.eventDate" required [min]="min"></qi-date></label>
+            <label class="fld"><span>Alternative date <i class="normal-case tracking-normal">(optional)</i></span><qi-date name="altDate" [(ngModel)]="model.altDate" [min]="min"></qi-date></label>
             <label class="fld"><span>Expected guests</span>
               <select name="guestCount" [(ngModel)]="model.guestCount">
                 <option value="">Not sure yet</option>

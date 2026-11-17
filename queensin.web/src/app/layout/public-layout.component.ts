@@ -1,9 +1,12 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import {
   NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet, Scroll,
 } from '@angular/router';
 import { filter } from 'rxjs';
+import { API_BASE_URL } from '../core/api.config';
+import { AuthService } from '../core/services/auth.service';
+import { ContentService } from '../core/services/content.service';
 import { SiteService } from '../core/services/site.service';
 import { BrandComponent } from '../shared/brand.component';
 import { IconComponent } from '../shared/icon.component';
@@ -31,6 +34,8 @@ export class PublicLayoutComponent {
   protected readonly site = inject(SiteService);
   private readonly router = inject(Router);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly auth = inject(AuthService);
+  private lastTracked = '';
 
   protected readonly scrolled = signal(false);
   protected readonly solidRoute = signal(false);
@@ -38,6 +43,22 @@ export class PublicLayoutComponent {
   /** True while a page change resets the scroll position, so the header snaps to its new state instead of fading. */
   protected readonly instant = signal(false);
   protected readonly year = new Date().getFullYear();
+
+  private readonly cs = inject(ContentService);
+  protected readonly feastDismissed = signal(false);
+  protected readonly feastVisible = computed(() => {
+    if (this.feastDismissed()) return false;
+    const mode = this.feast('show');
+    if (mode === 'hide') return false;
+    if (mode === 'always') return true;
+    const d = new Date();
+    const md = (d.getMonth() + 1) * 100 + d.getDate();
+    return md >= 829 && md <= 908;
+  });
+
+  protected feast(field: string): string {
+    return this.cs.text('home', 'feast', field);
+  }
 
   protected readonly nav: NavItem[] = [
     { label: 'Stay', link: '/bookroom' },
@@ -72,7 +93,44 @@ export class PublicLayoutComponent {
         this.instant.set(false);
       }
     });
-    inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); });
+    const tracker = this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)).subscribe((e) => this.track(e.urlAfterRedirects));
+    inject(DestroyRef).onDestroy(() => { sub.unsubscribe(); instantUntilScrolled.unsubscribe(); tracker.unsubscribe(); });
+  }
+
+  /** Counts the page view (no cookies, nothing personal). Skipped for signed-in staff, and when only the #section changes. */
+  private track(url: string): void {
+    if (!this.isBrowser || this.auth.isAuthenticated()) return;
+    const path = url.split(/[?#]/)[0];
+    if (path === this.lastTracked) return;
+    const first = this.lastTracked === '';
+    this.lastTracked = path;
+    this.googleAnalytics(path);
+    try {
+      void fetch(`${API_BASE_URL}/track`, {
+        method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, referrer: first ? document.referrer : '' }),
+      }).catch(() => {});
+    } catch { /* never get in the visitor's way */ }
+  }
+
+  /** Google Analytics 4, only when a Measurement ID is set in Site settings. Loads the script once, then sends one page_view per page change. */
+  private googleAnalytics(path: string): void {
+    const id = this.site.get('GoogleAnalyticsId').trim();
+    if (!/^G-[A-Z0-9]{4,20}$/.test(id)) return;
+    try {
+      const w = window as unknown as { dataLayer?: unknown[]; gtag?: (...a: unknown[]) => void };
+      if (!w.gtag) {
+        w.dataLayer = w.dataLayer || [];
+        w.gtag = function () { (w.dataLayer as unknown[]).push(arguments); };
+        w.gtag('js', new Date());
+        w.gtag('config', id, { send_page_view: false });
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+        document.head.appendChild(s);
+      }
+      w.gtag('event', 'page_view', { page_path: path, page_location: location.href, page_title: document.title });
+    } catch { /* never get in the visitor's way */ }
   }
 
   protected onScroll(): void {

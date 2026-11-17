@@ -76,6 +76,7 @@ builder.Services.AddAuthorization(o =>
 
 // --- Features --------------------------------------------------------------
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<queensin.api.Features.Analytics.AnalyticsService>();
 builder.Services.AddScoped<IStaffUserService, StaffUserService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IFaviconService, FaviconService>();
@@ -121,11 +122,18 @@ builder.Services.AddRateLimiter(o =>
     o.AddPolicy("enquiry", ctx => RateLimitPartition.GetFixedWindowLimiter(
         ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+    // Page-view counting: generous, only there to stop a runaway script.
+    o.AddPolicy("track", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
 });
 
 var app = builder.Build();
 
-// Operator commands run instead of the web server: `dotnet queensin.api.dll import-media <manifest.json>`.
+// Operator commands run instead of the web server: `dotnet queensin.api.dll test-email <address>` and `... import-media <manifest.json>`.
+if (args.Length >= 2 && args[0] == queensin.api.Features.Enquiries.MailTester.Command)
+    return await queensin.api.Features.Enquiries.MailTester.RunAsync(app.Services, args[1]);
+
 if (args.Length >= 2 && args[0] == queensin.api.Features.Media.MediaImporter.Command)
 {
     var replace = args.Skip(2).Where(a => a.StartsWith("--replace=")).SelectMany(a => a["--replace=".Length..].Split(',', StringSplitOptions.RemoveEmptyEntries))

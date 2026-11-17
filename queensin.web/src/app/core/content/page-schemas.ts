@@ -46,12 +46,28 @@ const t = (key: string, label: string, def: string, extra: Partial<FieldDef> = {
 const area = (key: string, label: string, def: string, rows = 4, extra: Partial<FieldDef> = {}): FieldDef =>
   ({ key, label, default: def, type: 'textarea', rows, ...extra });
 
+/** The "Watch the film" section (click-to-play video). The video itself is placed by staff/seed; the poster photo is chosen under Photos. */
+const filmSection = (kicker: string, title: string, text: string): SectionDef => ({
+  key: 'film',
+  title: 'Watch the film',
+  hint: 'A click-to-play film. Nothing is downloaded until a visitor presses play. The cover photo is chosen under the Photos tab.',
+  fields: [
+    {
+      key: 'show', label: 'Show this section', type: 'select', default: 'show',
+      options: [{ value: 'show', label: 'Show it' }, { value: 'hide', label: 'Hide it' }],
+    },
+    t('kicker', 'Small line', kicker),
+    t('title', 'Heading', title),
+    area('text', 'Text', text, 3),
+  ],
+});
+
 /** How much the hero photo is darkened so white text stays readable: one even tint, never a gradient. */
 export const HERO_SHADES: Record<string, number> = { none: 0, light: 25, medium: 40, strong: 55 };
 export const heroShadePercent = (value: string): number => HERO_SHADES[value] ?? HERO_SHADES['light'];
 
 /** The hero's wording, shared by every page. */
-const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'light'): SectionDef => ({
+const heroSection = (kicker: string, headline: string, lede: string, withButtons: boolean, buttons?: [string, string, string, string], shade = 'none'): SectionDef => ({
   key: 'hero',
   title: 'Hero text',
   hint: 'The large heading at the top of the page.',
@@ -75,6 +91,12 @@ const heroSection = (kicker: string, headline: string, lede: string, withButtons
   ],
 });
 
+/** Adds two editable button labels to a hero whose buttons go to fixed places (the event enquiry form and the events phone). */
+const withButtonText = (s: SectionDef, first: string, second: string): SectionDef => ({
+  ...s,
+  fields: [...s.fields, t('cta1Text', 'First button — text', first, { hint: 'Goes to the event enquiry form further down the page.' }), t('cta2Text', 'Second button — text', second, { hint: 'Calls the events desk phone from Site settings.' })],
+});
+
 export const HOME_AMENITY_ICONS = ['bell', 'snow', 'bolt', 'wifi', 'car', 'tray', 'people', 'leaf', 'bed', 'shield'];
 
 export const PAGES: PageDef[] = [
@@ -85,13 +107,13 @@ export const PAGES: PageDef[] = [
     hero: 'media',
     seoDefaults: {
       title: "Hotel Queen's Inn, Velankanni | Luxury Hotel & KVR Mahal",
-      description: 'A three-acre luxury hotel on ECR Main Road, 500 m from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
+      description: 'A three-acre luxury hotel on ECR Main Road, 10 minutes by road from the Velankanni Basilica. 51 AC rooms, multi-cuisine dining and KVR Mahal for weddings.',
     },
     sections: [
       heroSection(
         '',
         'Tranquility meets luxury in the sacred heart of Velankanni',
-        'A three-acre sanctuary on ECR Main Road, 500 metres from the Shrine Basilica. Fifty-one rooms, a multi-cuisine restaurant and the grand KVR Mahal.',
+        'A serene three-acre sanctuary on ECR Main Road, ten minutes by road from the Shrine Basilica. Fifty-one air-conditioned rooms, multi-cuisine dining and the grand KVR Mahal.',
         true,
         ['Request tariff', 'reserve', 'Discover KVR Mahal', '/kvr-mahal'],
       ),
@@ -101,9 +123,9 @@ export const PAGES: PageDef[] = [
         hint: 'The first section below the hero.',
         fields: [
           t('kicker', 'Small line', "Welcome to Queen's Inn"),
-          t('title', 'Heading', 'Half a kilometre from the Basilica. A world away from the crowd.'),
-          area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, a ten-minute walk from the Shrine of Our Lady of Good Health.', 3),
-          area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
+          t('title', 'Heading', 'Ten minutes by road from the Basilica. A world away from the crowd.'),
+          area('lede', 'Lead paragraph', 'Three gated acres of garden on ECR Main Road, ten minutes by road from the Shrine of Our Lady of Good Health.', 3),
+          area('body', 'Paragraph', "Pilgrims, families and wedding parties return for the quiet: deep lawns and a swimming pool, silent central cooling, food made with care, and a team that has looked after Velankanni's visitors since 2017."),
           t('linkText', 'Link text', 'Read our story'),
         ],
       },
@@ -114,7 +136,7 @@ export const PAGES: PageDef[] = [
         fields: [
           t('n1', 'Figure 1', '3'), t('t1', 'Figure 1 — label', 'acres of gated gardens and lawns'),
           t('n2', 'Figure 2', '51'), t('t2', 'Figure 2 — label', 'air-conditioned rooms in four categories'),
-          t('n3', 'Figure 3', '500 m'), t('t3', 'Figure 3 — label', 'walk to the Shrine Basilica'),
+          t('n3', 'Figure 3', '10 min'), t('t3', 'Figure 3 — label', 'by road to the Shrine Basilica'),
           t('n4', 'Figure 4', '24 h'), t('t4', 'Figure 4 — label', 'reception and in-room dining'),
         ],
       },
@@ -125,7 +147,7 @@ export const PAGES: PageDef[] = [
         fields: [
           t('kicker', 'Small line', 'Rooms & suites'),
           t('title', 'Heading', 'Rest, well considered'),
-          area('intro', 'Introduction', 'Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Tariffs shown are starting rates per night.', 3),
+          area('intro', 'Introduction', 'Four room categories, each with air conditioning, Wi-Fi and 24-hour service. Rates shown are standard rates per night; seasonal and offer rates vary.', 3),
         ],
       },
       {
@@ -137,6 +159,52 @@ export const PAGES: PageDef[] = [
           area('body', 'Description', 'South Indian and Chettinad classics, North Indian and Continental plates, and seafood from the Nagapattinam coast. Vegetarian and non-vegetarian dishes are prepared in separate kitchens.'),
           area('hours', 'Serving times', 'Breakfast buffet | 7:00 – 10:30\nLunch | 12:30 – 15:30\nDinner | 19:30 – 22:30\nIn-room dining | 24 hours', 5,
             { hint: 'One per line, written as: Meal | Time. Put a | between the two parts.' }),
+        ],
+      },
+      filmSection('See it for yourself', "A short film of Queen's Inn", 'A walk through the entrance, pool, lobby, restaurant and rooms. Press play to watch.'),
+      {
+        key: 'qbar',
+        title: 'Q Bar',
+        hint: 'The new resto bar, shown after the restaurant. Photos are chosen under the Photos tab. Keep it to atmosphere and food: do not add prices or alcohol brand names until the hotel has confirmed its licence and advertising rules.',
+        fields: [
+          {
+            key: 'show', label: 'Show this section', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show it' }, { value: 'hide', label: 'Hide it' }],
+            hint: 'Choose Hide to take the whole section off the Home page without losing the wording.',
+          },
+          {
+            key: 'badge', label: 'Badge (the small label above the heading)', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show the badge' }, { value: 'hide', label: 'Hide the badge' }],
+            hint: 'Hide it once the bar is open.',
+          },
+          t('status', 'Badge text', 'Opening soon', { hint: 'For example "Opening soon" or "Opens 1 December".' }),
+          t('kicker', 'Small line', "New at Queen's Inn"),
+          t('title', 'Heading', 'Q Bar'),
+          area('body', 'Description', "Q Bar is our new resto bar, a relaxed evening place on the Queen's Inn campus to unwind with family and friends. We will share the details here as soon as it opens.", 4),
+          {
+            key: 'cta', label: 'Button', type: 'select', default: 'show',
+            options: [{ value: 'show', label: 'Show the button' }, { value: 'hide', label: 'Hide the button' }],
+          },
+          t('buttonText', 'Button text', 'Ask about Q Bar', { hint: 'The button opens WhatsApp with the message below.' }),
+          t('message', 'WhatsApp message', "Hello, I would like to know more about Q Bar at Queen's Inn."),
+        ],
+      },
+      {
+        key: 'feast',
+        title: 'Feast-season notice',
+        hint: 'A small dismissible notice at the bottom-left of every page. By default it appears only from 29 August to 8 September, the Feast of Our Lady of Health.',
+        fields: [
+          {
+            key: 'show', label: 'When to show it', type: 'select', default: 'auto',
+            options: [
+              { value: 'auto', label: 'Only 29 August to 8 September' },
+              { value: 'always', label: 'Always' },
+              { value: 'hide', label: 'Never' },
+            ],
+          },
+          t('title', 'Heading', 'Feast season'),
+          t('text', 'Text', 'Rooms fill early around the Feast. Please book ahead.'),
+          t('buttonText', 'Button text', 'Check availability'),
         ],
       },
       {
@@ -183,7 +251,7 @@ export const PAGES: PageDef[] = [
               'Secure parking | 100+ cars and tour buses inside the gates',
               'In-room dining | Served around the clock',
               'Meeting hall | For family gatherings and business groups',
-              'Garden lawns | With a children’s play area',
+              'Pool & garden lawns | A swimming pool, landscaped lawns and a children’s play area',
               'Driver quarters | Rest rooms, washrooms and meals for drivers',
               'Gated & guarded | CCTV and round-the-clock security',
             ].join('\n'),
@@ -225,6 +293,10 @@ export const PAGES: PageDef[] = [
       { key: 'dish-2', label: 'Restaurant — photo 2' },
       { key: 'dish-3', label: 'Restaurant — photo 3' },
       { key: 'mahal-feature', label: 'KVR Mahal — arched photo', hint: 'Shows themed artwork until you add a photo.' },
+      { key: 'qbar-1', label: 'Q Bar — large photo', hint: 'The wide photo on top of the Q Bar section. Themed artwork shows until you add one.' },
+      { key: 'qbar-2', label: 'Q Bar — photo 2', hint: 'Square.' },
+      { key: 'qbar-3', label: 'Q Bar — photo 3', hint: 'Square.' },
+      { key: 'film-home-poster', label: 'Film — cover photo', hint: 'Shown on the Watch the film section until a visitor presses play.' },
     ],
   },
   {
@@ -245,6 +317,25 @@ export const PAGES: PageDef[] = [
           t('kicker', 'Small line', 'Reserve your stay'),
           t('title', 'Heading', 'Request a reservation'),
           area('intro', 'Introduction', "We don't take bookings or payments online. Send your dates and the desk will confirm by phone or WhatsApp.", 3),
+        ],
+      },
+      {
+        key: 'notice',
+        title: 'Notice under the photo',
+        hint: 'Two short lines shown in a slim band under the page photo. Leave a line empty to hide it.',
+        fields: [
+          area('rates', 'About the rates', 'Rates shown are standard rates per night, plus GST. Seasonal and offer rates vary: check today’s price on the booking sites or ask the front desk.', 3),
+          t('peak', 'Busy season', 'Rooms fill quickly during the annual Feast (29 August to 8 September). Book early.'),
+        ],
+      },
+      {
+        key: 'book',
+        title: 'Booking sites',
+        hint: 'Shown only when booking links are added in Site settings → Booking sites. The buttons open those sites in a new tab; the first one is highlighted.',
+        fields: [
+          t('kicker', 'Small line', 'Book your stay'),
+          t('title', 'Heading', 'Check availability and prices'),
+          area('intro', 'Introduction', 'The quickest way to see live availability and today’s price is on the booking sites. You can also send us a request below or message the front desk.', 3),
         ],
       },
       {
@@ -269,11 +360,14 @@ export const PAGES: PageDef[] = [
     path: '/kvr-mahal',
     hero: 'media',
     seoDefaults: {
-      title: 'KVR Mahal | Wedding & Reception Hall in Velankanni',
-      description: "Velankanni's grandest air-conditioned mandapam for 500–1,000 guests, with a 300-seat dining pavilion and 51 hotel rooms on one campus.",
+      title: "KVR Mahal Velankanni | Wedding Hall at Hotel Queen's Inn",
+      description: "KVR Mahal in Velankanni, Nagapattinam: a fully air-conditioned wedding and reception hall for 500–1,000 guests with a 300-seat dining pavilion, beside Hotel Queen's Inn on ECR Road.",
     },
     sections: [
-      heroSection('KVR Mahal', 'Where sacred vows meet timeless hospitality', "Velankanni's grandest air-conditioned ceremonial mandapam, with a dining pavilion and luxury rooms on the same gated campus.", false),
+      withButtonText(
+        heroSection('KVR Mahal, Velankanni', 'Where sacred vows meet timeless hospitality', "KVR Mahal in Velankanni, Nagapattinam district: a fully air-conditioned ceremonial mandapam with a dining pavilion and luxury rooms on the same gated campus beside Hotel Queen's Inn.", false),
+        'Plan your event', 'Call the events desk',
+      ),
       {
         key: 'stats',
         title: 'Key figures',
@@ -308,6 +402,17 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'gallery',
+        title: 'Photo strip',
+        hint: 'The scrolling row of photos between the dining pavilion and the comparison table. Choose its photos under Galleries → KVR Mahal strip.',
+        fields: [
+          t('kicker', 'Small line', 'Inside KVR Mahal'),
+          t('title', 'Heading', 'A look around the hall'),
+          t('moreText', 'Phone button', 'Show all photos', { hint: 'On phones the photos are listed one under another; this button reveals the rest.' }),
+        ],
+      },
+      filmSection('See it for yourself', 'A short film of KVR Mahal', 'A look at the exterior, the entrance, the stage decor and the ceremonial hall. Press play to watch.'),
+      {
         key: 'compare',
         title: 'Why one campus',
         fields: [
@@ -334,6 +439,7 @@ export const PAGES: PageDef[] = [
     slots: [
       { key: 'mahal-hall', label: 'Ceremonial hall photo', hint: 'Shown in an arched frame; a tall photo works best. Themed artwork shows until you add one.' },
       { key: 'mahal-dining', label: 'Dining pavilion photo', hint: 'A wide photo works best.' },
+      { key: 'film-kvr-poster', label: 'Film — cover photo', hint: 'Shown on the Watch the film section until a visitor presses play.' },
     ],
   },
   {
@@ -352,7 +458,7 @@ export const PAGES: PageDef[] = [
         title: 'The story',
         fields: [
           t('title', 'Heading', 'Built for the people who come to pray, and the families who come with them'),
-          area('lede', 'Lead paragraph', "Queen's Inn opened in October 2017 on East Coast Road, half a kilometre from the Shrine Basilica.", 3),
+          area('lede', 'Lead paragraph', "Queen's Inn opened in October 2017 on East Coast Road, ten minutes by road from the Shrine Basilica.", 3),
           area('body', 'The rest of the story',
             "We set out to give Velankanni a hotel that matched the importance of the journey: rooms that are calm and spotless, food that is honest, and a campus large enough that it never feels crowded, even during the Feast.\n\nToday the three-acre campus holds 51 rooms, the Q Multi-Cuisine Restaurant, garden lawns and KVR Mahal, our ceremonial hall for weddings and community celebrations.",
             8, { hint: 'Leave a blank line between paragraphs.' }),
@@ -374,8 +480,8 @@ export const PAGES: PageDef[] = [
         title: 'Location',
         fields: [
           t('kicker', 'Small line', 'Location'),
-          t('title', 'Heading', 'On ECR, minutes from everything'),
-          area('body', 'Text', "The hotel stands on East Coast Road at Arch West Street, ten minutes' walk from the Basilica and the holy tank, and within an hour of Nagore, Thirunallar, Point Calimere and Tranquebar.", 4),
+          t('title', 'Heading', 'On East Coast Road, near the Shrine'),
+          area('body', 'Text', 'The hotel stands on East Coast Road at Arch West Street, ten minutes by road from the Basilica and the holy tank, with Nagore, Thirunallar, Point Calimere, Muthupet and Tranquebar all reachable as day trips.', 4),
           t('buttonText', 'Button', 'Explore the region'),
         ],
       },
@@ -418,7 +524,7 @@ export const PAGES: PageDef[] = [
       description: "Call, WhatsApp or email Hotel Queen's Inn, ECR Main Road, Velankanni 611 111.",
     },
     sections: [
-      heroSection('Contact', "We're a call away", 'Our front desk is open round the clock. Call, message or write to us.', false, undefined, 'medium'),
+      heroSection('Contact', "We're a call away", 'Our front desk is open round the clock. Call, message or write to us.', false, undefined, 'none'),
       {
         key: 'details',
         title: 'Contact details',
@@ -444,6 +550,17 @@ export const PAGES: PageDef[] = [
         ],
       },
       {
+        key: 'travel',
+        title: 'How to reach us',
+        hint: 'Distances shown as small cards on the Contact page.',
+        fields: [
+          t('title', 'Heading', 'How to reach us'),
+          area('rows', 'Lines',
+            'Railway station and bus stand | Within about 2 km of the hotel\nBasilica | 2.1 km, about 10 minutes by road\nTiruchirappalli airport | About 150 km by road\nParking | Inside the gates, for cars and tour buses', 5,
+            { hint: 'One per line, written as: Place | Distance or note.' }),
+        ],
+      },
+      {
         key: 'message',
         title: 'Message form',
         fields: [
@@ -456,7 +573,7 @@ export const PAGES: PageDef[] = [
         title: 'Visiting us',
         fields: [
           t('title', 'Heading', 'Find us on ECR Main Road'),
-          area('body', 'Directions', 'We are a ten-minute walk from the Shrine Basilica of Our Lady of Good Health. Parking for cars and tour buses is inside the gates.', 3),
+          area('body', 'Directions', 'We are ten minutes by road from the Shrine Basilica of Our Lady of Good Health. Parking for cars and tour buses is inside the gates.', 3),
         ],
       },
     ],

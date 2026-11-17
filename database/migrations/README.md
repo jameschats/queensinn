@@ -17,3 +17,9 @@ Forward-only, numbered SQL scripts. **SQL is the source of truth**; EF Core enti
 | 007 | Pages, PageSections, HeroSlides, Attractions, GalleryCategories, GalleryItems, Testimonials, PolicyPages (+ seeds) |
 | 008 | Enquiries, EnquiryNotes |
 | 009 | AuditLog |
+| 010–016 | Photo links, image slots, page hero photos, home strip gallery, contact hero, travel-desk slot |
+| 017 | Launch content: room descriptions and the three policy pages (one-off; replaces the starter text) |
+
+Photos and hero videos are not migrations: they ship in `deploy/seed/media/`, are listed in `deploy/seed/media-manifest.json`,
+imported by `import-media` and placed by `database/seed/link-media.sql`. To swap the whole set on an existing site:
+`REPLACE_KEYS=all DOMAIN=... ./deploy/deploy.sh`.

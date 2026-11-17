@@ -4,34 +4,31 @@
   [class.!duration-0]="instant()"
   [class]="scrolled() || solidRoute()
     ? 'bg-surface/95 text-ink shadow-[0_1px_0_var(--color-line)] backdrop-blur-md'
-    : 'text-on-primary'">
-  <!-- soft shade so the menu stays readable over bright photos while the bar is transparent -->
-  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-primary/55 to-transparent transition-opacity duration-300"
-       [class.opacity-0]="scrolled() || solidRoute()" [class.!duration-0]="instant()"></div>
+    : 'text-on-primary [text-shadow:0_1px_2px_rgb(0_0_0/0.7),0_1px_12px_rgb(0_0_0/0.55)]'">
+  <!-- No dark gradient behind the menu: the photo or video keeps its true colours, and the menu text carries its own soft shadow while the bar is transparent. -->
   <div class="wrap flex items-center justify-between gap-6 transition-[height] duration-300"
        [class]="scrolled() || solidRoute() ? 'h-[72px]' : 'h-[88px]'">
     <qi-brand />
 
-    <nav class="hidden gap-[clamp(18px,2.2vw,36px)] text-[13px] tracking-[.08em] min-[1081px]:flex" aria-label="Main">
+    <!-- The menu sits in a small white strip, rounded at both ends, set in the theme's own font. White with dark text stays readable over any photo or video. -->
+    <nav class="hidden items-center gap-0.5 rounded-full border border-line bg-surface p-1.5 font-sans text-[13.5px] font-medium tracking-[.02em] text-ink [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:flex" aria-label="Main">
       @for (item of nav; track item.label) {
-        <a [routerLink]="item.link" [fragment]="item.fragment" class="navlink"
+        <a [routerLink]="item.link" [fragment]="item.fragment" class="pill-link"
            [routerLinkActive]="item.fragment ? '' : 'is-active'" [routerLinkActiveOptions]="{ exact: false }">{{ item.label }}</a>
       }
     </nav>
 
-    <div class="flex items-center gap-5">
-      <a [href]="site.tel()" class="navlink hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex">
-        <qi-icon name="phone" [size]="16" />{{ site.get('Phone1') }}
-      </a>
-      <a routerLink="/admin" class="navlink hidden items-center gap-2 text-[13px] tracking-[.06em] min-[1081px]:flex" title="Staff sign-in">
-        <qi-icon name="key" [size]="16" />Admin login
-      </a>
+    <div class="flex items-center gap-3">
+      <div class="hidden items-center gap-0.5 rounded-full border border-line bg-surface p-1.5 font-sans text-[13.5px] font-medium text-ink [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:flex">
+        <a [href]="site.tel()" class="pill-link gap-2"><qi-icon name="phone" [size]="16" />{{ site.get('Phone1') }}</a>
+        <a routerLink="/admin" class="pill-link" title="Staff sign-in" aria-label="Staff sign-in"><qi-icon name="key" [size]="16" /></a>
+      </div>
       <a qiReserve
-         class="hidden h-11 items-center border border-accent px-[22px] text-[11.5px] uppercase tracking-[.2em] transition-colors duration-200 hover:bg-accent hover:text-primary active:scale-95 sm:inline-flex">
+         class="hidden h-[46px] items-center rounded-full border border-accent bg-accent px-[24px] font-sans text-[12px] font-medium uppercase tracking-[.16em] text-primary [text-shadow:none] shadow-[0_6px_26px_rgb(0_0_0/0.2)] transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-on-primary active:scale-95 sm:inline-flex">
         {{ site.reserveLabel() }}
       </a>
-      <button type="button" class="p-2.5 min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
-        <qi-icon name="menu" [size]="26" />
+      <button type="button" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface p-0 text-ink shadow-[0_6px_26px_rgb(0_0_0/0.2)] min-[1081px]:hidden" aria-label="Open menu" (click)="menuOpen.set(true)">
+        <qi-icon name="menu" [size]="22" />
       </button>
     </div>
   </div>
@@ -70,7 +67,7 @@
         </a>
       </div>
       <div>
-        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Stay</h4>
+        <h3 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Stay</h3>
         <ul class="grid gap-2.5">
           <li><a routerLink="/bookroom" class="hover:text-on-primary">Rooms &amp; tariffs</a></li>
           <li><a routerLink="/" fragment="restaurant" class="hover:text-on-primary">Dining</a></li>
@@ -79,7 +76,7 @@
         </ul>
       </div>
       <div>
-        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Celebrate</h4>
+        <h3 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Celebrate</h3>
         <ul class="grid gap-2.5">
           <li><a routerLink="/kvr-mahal" class="hover:text-on-primary">KVR Mahal</a></li>
           <li><a routerLink="/kvr-mahal" fragment="mahal-enquiry" class="hover:text-on-primary">Plan an event</a></li>
@@ -88,10 +85,11 @@
         </ul>
       </div>
       <div>
-        <h4 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Reach us</h4>
+        <h3 class="mb-5 font-sans text-[11.5px] font-normal uppercase tracking-[.22em] text-accent">Reach us</h3>
         <ul class="grid gap-2.5">
           <li><a [href]="site.tel('Phone1')" class="hover:text-on-primary">{{ site.get('Phone1') }}</a></li>
           <li><a [href]="site.tel('Phone2')" class="hover:text-on-primary">{{ site.get('Phone2') }}</a></li>
+          @if (site.get('Phone3')) { <li><a [href]="site.tel('Phone3')" class="hover:text-on-primary">{{ site.get('Phone3') }}</a></li> }
           <li><a [href]="'mailto:' + site.get('ReservationsEmail')" class="hover:text-on-primary">{{ site.get('ReservationsEmail') }}</a></li>
           <li><a [href]="'mailto:' + site.get('SalesEmail')" class="hover:text-on-primary">{{ site.get('SalesEmail') }}</a></li>
         </ul>
@@ -106,6 +104,17 @@
         <a routerLink="/admin" class="hover:text-on-primary">Admin login</a>
       </span>
     </div>
+    @if (site.get('InstagramUrl') || site.get('FacebookUrl') || site.get('GoogleProfileUrl')) {
+      <p class="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] tracking-[.04em]">
+        @if (site.get('InstagramUrl')) { <a [href]="site.get('InstagramUrl')" target="_blank" rel="noopener me" class="inline-flex items-center gap-2 hover:text-on-primary" aria-label="Instagram"><qi-icon name="ig" [size]="22" />Instagram</a> }
+        @if (site.get('FacebookUrl')) { <a [href]="site.get('FacebookUrl')" target="_blank" rel="noopener me" class="inline-flex items-center gap-2 hover:text-on-primary" aria-label="Facebook"><qi-icon name="fb" [size]="22" />Facebook</a> }
+        @if (site.get('GoogleProfileUrl')) { <a [href]="site.get('GoogleProfileUrl')" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-on-primary"><qi-icon name="g" [size]="22" />Google reviews</a> }
+      </p>
+    }
+    <p class="mt-6 text-center text-[12.5px] tracking-[.04em]">
+      Designed and maintained by
+      <a href="https://wa.me/919600955240?text=Hi%2C%20I%20saw%20the%20Queen%E2%80%99s%20Inn%20website" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-on-primary">Chris Graphic Design Studio</a>
+    </p>
   </div>
 </footer>
 
@@ -127,3 +136,23 @@
   </a>
 </div>
 <div class="h-[58px] md:hidden" aria-hidden="true"></div>
+
+<!-- Desktop: always-visible WhatsApp (phones have the bar above). -->
+<a [href]="site.whatsappUrl()" target="_blank" rel="noopener" aria-label="Chat with the front desk on WhatsApp"
+   class="fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_26px_rgb(0_0_0/0.3)] transition-transform duration-200 hover:scale-105 active:scale-95 md:flex">
+  <qi-icon name="wa" [size]="28" />
+</a>
+
+<!-- Feast-season notice: automatic 29 Aug to 8 Sep unless the admin changes it. -->
+@if (feastVisible()) {
+  <aside class="fixed bottom-[74px] left-4 right-4 z-40 flex max-w-[380px] items-start gap-3 rounded-2xl border border-line bg-surface p-4 text-ink shadow-[0_8px_30px_rgb(0_0_0/0.25)] md:bottom-6 md:left-6 md:right-auto" role="note">
+    <div class="min-w-0 flex-1 font-sans">
+      <b class="block text-[12.5px] font-medium uppercase tracking-[.14em]">{{ feast('title') }}</b>
+      <p class="mt-1 text-[14.5px]">{{ feast('text') }}</p>
+      @if (feast('buttonText')) {
+        <a qiReserve class="btn btn-gold mt-3 !px-5 !py-2.5 text-[12px]">{{ feast('buttonText') }}</a>
+      }
+    </div>
+    <button type="button" class="p-1 text-muted" aria-label="Dismiss notice" (click)="feastDismissed.set(true)"><qi-icon name="x" [size]="18" /></button>
+  </aside>
+}
