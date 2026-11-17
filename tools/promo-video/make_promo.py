@@ -32,8 +32,7 @@ FEMALE_VOICES = [
     ("Vindemiatrix", "Gentle"), ("Laomedeia", "Upbeat"), ("Autonoe", "Bright"), ("Gacrux", "Mature"), ("Pulcherrima", "Forward"),
 ]
 LANGS = {"en": "English", "ta": "Tamil (தமிழ்)"}
-STYLE = {"en": "Say warmly, calmly and clearly, like a hotel promo voiceover",
-         "ta": "Say in Tamil, warmly, calmly and clearly, like a hotel promo voiceover"}
+# Note: no spoken "style instruction" is added to the text. The voice reads everything it is given, including instructions.
 
 
 for _s in (sys.stdout, sys.stderr):
@@ -42,19 +41,24 @@ for _s in (sys.stdout, sys.stderr):
 
 
 def load_key():
-    """The key comes from tools/promo-video/.env (a line GEMINI_API_KEY=...), else from the GEMINI_API_KEY environment variable.
-    It is never printed. A file named .env is ignored by git."""
+    """The key comes from tools/promo-video/.env, else from the GEMINI_API_KEY environment variable. In .env it may be written as
+    GEMINI_API_KEY=the-key or simply pasted on a line of its own. It is never printed. A file named .env is ignored by git."""
     key = ""
     env = HERE / ".env"
     if env.exists():
         for line in env.read_text(encoding="utf-8-sig").splitlines():
             line = line.strip()
-            if line.startswith("GEMINI_API_KEY") and "=" in line:
-                key = line.split("=", 1)[1].strip().strip('"').strip("'")
+            if not line or line.startswith("#"):
+                continue
+            if line.startswith("GEMINI_API_KEY"):
+                value = line.split("=", 1)[1].strip().strip('"').strip("'") if "=" in line else ""
+            else:
+                value = line.strip('"').strip("'")
+            if value:
+                key = value
     key = key or os.environ.get("GEMINI_API_KEY", "").strip()
-    if key and not (key.startswith("AIza") and len(key) >= 35):
-        print("Note: the saved key does not look like a Google AI Studio key (they start with AIza and are about 39 characters). "
-              "Copy it again with the copy button on aistudio.google.com/apikey if Google rejects it.")
+    if key and (len(key) < 20 or any(c.isspace() for c in key)):
+        print("Note: the saved key looks too short or has a space in it. Copy it again with the copy button on aistudio.google.com/apikey.")
     return key
 
 
@@ -89,13 +93,14 @@ def pick_model(key, forced):
              if "tts" in m["name"] and "generateContent" in m.get("supportedGenerationMethods", [])]
     if not names:
         die("No text-to-speech model is available for this key. Use --model with a model name from AI Studio.")
-    names.sort(key=lambda n: (("flash" not in n), ("preview" in n), n))   # prefer flash, prefer released over preview
+    names.sort(reverse=True)                                              # newest version first
+    names.sort(key=lambda n: (("lite" in n), ("preview" in n), ("flash" not in n)))   # then: full quality, released, flash
     return names[0]
 
 
 def synth(key, model, voice, text, lang, retries=6):
     """Returns 24 kHz mono 16-bit PCM bytes."""
-    body = {"contents": [{"parts": [{"text": f"{STYLE[lang]}: {text}"}]}],
+    body = {"contents": [{"parts": [{"text": text}]}],
             "generationConfig": {"responseModalities": ["AUDIO"],
                                  "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}
     for attempt in range(retries):
@@ -256,7 +261,8 @@ def build(lang, voice, model, key, dry, music, scenes):
         lst.write_text("".join(f"file '{p.as_posix()}'\n" for p in parts))
         joined = td / "joined.mp4"
         run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst),
-             "-c:v", "libx264", "-crf", "20", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
+             "-c:v", "libx264", "-crf", "20", "-preset", "veryfast", "-pix_fmt", "yuv420p",
+             "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k",
              "-movflags", "+faststart", str(joined)])
         if music:
             run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(joined), "-stream_loop", "-1", "-i", str(music),
